@@ -19,7 +19,7 @@ export default function TimelinePage() {
   const [selected, setSelected] = useState<string[]>([]);
   const [duration, setDuration] = useState(120);
   const [range, setRange] = useState({ start: new Date().toISOString().slice(0, 10), end: new Date().toISOString().slice(0, 10) });
-  const [zoom, setZoom] = useState<'1h' | '6h' | '12h' | '24h'>('6h');
+  const [zoom, setZoom] = useState<'1h' | '6h' | '12h' | '24h' | 'day' | 'week'>('day');
   const [previewId, setPreviewId] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const pageSize = 4;
@@ -44,6 +44,14 @@ export default function TimelinePage() {
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const pageItems = filtered.slice((page - 1) * pageSize, page * pageSize);
+
+  // Map TimelineControls zoom to BehaviorTimeline zoomScale
+  const zoomToScale = (z: typeof zoom): 'hour' | 'day' | 'week' => {
+    if (z === '1h') return 'hour';
+    if (z === 'week') return 'week';
+    return 'day';
+    // 6h/12h/24h map to 'day' scale for simplicity in this mock implementation
+  };
 
   return (
     <div className="space-y-4">
@@ -77,9 +85,11 @@ export default function TimelinePage() {
                 type: b.type,
                 start: b.startMin,
                 end: b.endMin,
-                camera: b.camera
+                camera: b.camera,
+                confidence: b.confidence,
               }))}
               onSelect={(id: string) => setPreviewId(id)}
+              zoomScale={zoomToScale(zoom)}
             />
           </div>
         </CardBody>

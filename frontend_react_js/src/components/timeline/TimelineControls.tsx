@@ -3,13 +3,16 @@ import Button from '@/components/ui/Button';
 import Tabs from '@/components/ui/Tabs';
 
 type Props = {
-  zoom: '1h' | '6h' | '12h' | '24h';
-  onZoomChange: (z: '1h' | '6h' | '12h' | '24h') => void;
+  zoom: '1h' | '6h' | '12h' | '24h' | 'day' | 'week';
+  onZoomChange: (z: '1h' | '6h' | '12h' | '24h' | 'day' | 'week') => void;
   onScrollLeft: () => void;
   onScrollRight: () => void;
 };
 
-// PUBLIC_INTERFACE
+/**
+ * PUBLIC_INTERFACE
+ * TimelineControls displays zoom options including hour/day/week and scroll buttons.
+ */
 export default function TimelineControls({ zoom, onZoomChange, onScrollLeft, onScrollRight }: Props) {
   /** Timeline zoom and scroll controls */
   return (
@@ -19,7 +22,9 @@ export default function TimelineControls({ zoom, onZoomChange, onScrollLeft, onS
           { id: '1h', label: '1h' },
           { id: '6h', label: '6h' },
           { id: '12h', label: '12h' },
-          { id: '24h', label: '24h' }
+          { id: '24h', label: '24h' },
+          { id: 'day', label: 'Day' },
+          { id: 'week', label: 'Week' },
         ]}
         value={zoom}
         onChange={(id: string) => onZoomChange(id as any)}

@@ -3,12 +3,29 @@ import { Outlet, NavLink, useLocation, useNavigate, Link } from 'react-router-do
 import TopNav from '@/components/layout/TopNav';
 import Sidebar from '@/components/layout/Sidebar';
 import Dropdown from '@/components/ui/Dropdown';
+import DateRangePicker from '@/components/ui/DateRangePicker';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/store';
+import { setDateRange } from '@/store/slices/filterSlice';
 
 const tabs = [
   { to: '/dashboard', label: 'Dashboard' },
   { to: '/timeline', label: 'Timeline' },
   { to: '/reports', label: 'Reports' }
 ];
+
+function GlobalDateSelector() {
+  const dispatch = useDispatch();
+  const { dateRange } = useSelector((s: RootState) => s.filters);
+  return (
+    <div className="hidden md:flex items-center">
+      <DateRangePicker
+        value={dateRange}
+        onChange={(v) => dispatch(setDateRange(v))}
+      />
+    </div>
+  );
+}
 
 export default function RootLayout() {
   const location = useLocation();
@@ -47,6 +64,7 @@ export default function RootLayout() {
               />
             </div>
             <div className="flex-1" />
+            <GlobalDateSelector />
             <div className="hidden md:flex items-center gap-2">
               <Link to="/settings" className="px-2 py-1.5 text-sm rounded hover:bg-neutral-100">Settings</Link>
               <a className="px-2 py-1.5 text-sm rounded hover:bg-neutral-100" href="https://example.com/help" target="_blank" rel="noreferrer">Help</a>

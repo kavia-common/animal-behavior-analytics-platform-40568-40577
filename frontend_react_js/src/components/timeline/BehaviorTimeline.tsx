@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
-import { colorScale } from '@/lib/colorScale';
+import { getBehaviorColor } from '@/lib/behaviorPalette';
+import { minToTime } from '@/lib/format';
 
 type Segment = {
   id: string;
@@ -7,16 +8,22 @@ type Segment = {
   start: number; // minutes from 0..1440
   end: number;
   camera: string;
+  confidence?: number;
 };
 
 type Props = {
   segments: Segment[];
   onSelect: (id: string) => void;
+  zoomScale?: 'hour' | 'day' | 'week';
 };
 
-// PUBLIC_INTERFACE
-export default function BehaviorTimeline({ segments, onSelect }: Props) {
-  /** Horizontal timeline with segments across 24h */
+/**
+ * PUBLIC_INTERFACE
+ * BehaviorTimeline draws segments across a 24h grid with unique colors per behavior,
+ * detailed hover tooltips, and basic zoom scaling support.
+ */
+export default function BehaviorTimeline({ segments, onSelect, zoomScale = 'day' }: Props) {
+  /** Group segments by camera row */
   const rows = useMemo(() => {
     const byCam: Record<string, Segment[]> = {};
     segments.forEach(s => {
@@ -25,6 +32,9 @@ export default function BehaviorTimeline({ segments, onSelect }: Props) {
     });
     return Object.entries(byCam);
   }, [segments]);
+
+  // width denominator for x-scaling; day => 1440 mins, hour => 60 mins, week => 10080 mins
+  const scaleDenominator = zoomScale === 'hour' ? 60 : zoomScale === 'week' ? 10080 : 1440;
 
   return (
     <div className="w-full overflow-x-auto">
@@ -39,15 +49,28 @@ export default function BehaviorTimeline({ segments, onSelect }: Props) {
               <div className="text-xs mb-1">{camera}</div>
               <div className="relative h-8 bg-neutral-100 rounded">
                 {segs.map(s => {
-                  const left = `${(s.start / 1440) * 100}%`;
-                  const width = `${((s.end - s.start) / 1440) * 100}%`;
+                  const leftPct = (s.start / scaleDenominator) * 100;
+                  const widthPct = ((s.end - s.start) / scaleDenominator) * 100;
+                  const startTime = minToTime(s.start);
+                  const endTime = minToTime(s.end);
+                  const duration = s.end - s.start;
+                  const tooltip = [
+                    `Behavior: ${s.type}`,
+                    `Start: ${startTime}`,
+                    `End: ${endTime}`,
+                    `Duration: ${duration} min`,
+                    `Confidence: ${s.confidence ?? '—'}%`,
+                    `Camera: ${s.camera}`
+                  ].join('\n');
+
                   return (
                     <button
                       key={s.id}
-                      title={`${s.type} ${s.start}-${s.end}`}
-                      className="absolute top-1 bottom-1 rounded shadow-soft"
-                      style={{ left, width, backgroundColor: colorScale((s.end - s.start) / 120) }}
+                      title={tooltip}
+                      className="absolute top-1 bottom-1 rounded shadow-soft hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                      style={{ left: `${leftPct}%`, width: `${Math.max(0.4, widthPct)}%`, backgroundColor: getBehaviorColor(s.type) }}
                       onClick={() => onSelect(s.id)}
+                      aria-label={`${s.type} from ${startTime} to ${endTime} on ${s.camera}`}
                     />
                   );
                 })}

@@ -9,23 +9,26 @@ import DailyHeatmap from '@/components/charts/DailyHeatmap';
 import { LineChart, Line, ResponsiveContainer } from 'recharts';
 import { PlaceholderImage, Skeleton, EmptyState } from '@/components/ui/Placeholders';
 import Button from '@/components/ui/Button';
-import DateRangePicker from '@/components/ui/DateRangePicker';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import type { RootState } from '@/store';
 
 /**
  * PUBLIC_INTERFACE
  * DashboardPage shows KPIs and visualizations including:
  * - Anteater Profile card (placeholder avatar, name, age, sex, enclosure, status badge, last-updated)
- * - Date range selector (Today/7/30/custom)
- * - Behavior count bar with click-to-drilldown
+ * - Global Date range selector (Today/7/30/custom) located in TopNav; this page reacts to global state
+ * - Behavior count bar with legend toggles and click-to-drilldown
  * - Duration stacked bar with pie toggle and stats
- * - 24h heatmap with hover titles
+ * - 24h heatmap with hover titles and confidence
  * - Loading/empty/error states
  */
 export default function DashboardPage() {
-  const [range, setRange] = useState({ start: new Date().toISOString().slice(0,10), end: new Date().toISOString().slice(0,10) });
   const [chartMode, setChartMode] = useState<'pie'|'stacked'>('pie');
   const navigate = useNavigate();
+
+  // Use global date range from Redux so all charts react to changes
+  const range = useSelector((s: RootState) => s.filters.dateRange);
 
   const animalQ = useQuery({ queryKey: ['selectedAnimal', range], queryFn: api.getSelectedAnimal });
   const countsQ = useQuery({ queryKey: ['behaviorCounts', range], queryFn: api.getBehaviorCounts });
@@ -70,14 +73,14 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-4">
-      {/* Anteater Profile Card with date range selector on the right */}
+      {/* Anteater Profile Card; global date selector is in TopNav (RootLayout) */}
       <section className="card p-4 flex items-center gap-4">
         <PlaceholderImage label="Anteater" className="w-16 h-16 rounded-full" />
         <div className="flex-1">
           <div className="font-heading font-semibold flex items-center gap-2">
             {animalQ.isLoading ? <Skeleton className="h-5 w-36" /> : (animalQ.data?.name ?? '—')}
             <span className="text-xs rounded-full px-2 py-0.5 bg-green-50 text-success border border-green-200">
-              {animalQ.data?.status ?? 'Online'}
+              {animalQ.data?.status ?? 'Healthy'}
             </span>
           </div>
           <div className="text-xs text-neutral-600 flex flex-wrap gap-2">
@@ -98,8 +101,8 @@ export default function DashboardPage() {
             )}
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <DateRangePicker value={range} onChange={setRange} />
+        <div className="flex items-center gap-2 text-xs text-neutral-600">
+          {/* Global date selector is placed in TopNav; this area shows only profile details */}
         </div>
       </section>
 
