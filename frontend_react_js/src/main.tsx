@@ -7,6 +7,14 @@ import RootLayout from './routes/RootLayout';
 import DashboardPage from './pages/Dashboard/DashboardPage';
 import TimelinePage from './pages/Timeline/TimelinePage';
 import ReportsPage from './pages/Reports/ReportsPage';
+import ReportsBuilderPage from './pages/Reports/ReportsBuilderPage';
+import ReportsSavedPage from './pages/Reports/ReportsSavedPage';
+import ReportsScheduledPage from './pages/Reports/ReportsScheduledPage';
+import SettingsPage from './pages/Settings/SettingsPage';
+import ProfilePage from './pages/Profile/ProfilePage';
+import NotFoundPage from './pages/System/NotFoundPage';
+import ErrorPage from './pages/System/ErrorPage';
+import NetworkRetryPage from './pages/System/NetworkRetryPage';
 import { store } from './store';
 import './styles/globals.css';
 
@@ -30,7 +38,15 @@ const router = createBrowserRouter([
       { index: true, element: <Navigate to="/dashboard" replace /> },
       { path: '/dashboard', element: <DashboardPage /> },
       { path: '/timeline', element: <TimelinePage /> },
-      { path: '/reports', element: <ReportsPage /> }
+      { path: '/reports', element: <ReportsPage /> },
+      { path: '/reports/builder', element: <ReportsBuilderPage /> },
+      { path: '/reports/saved', element: <ReportsSavedPage /> },
+      { path: '/reports/scheduled', element: <ReportsScheduledPage /> },
+      { path: '/settings', element: <SettingsPage /> },
+      { path: '/profile', element: <ProfilePage /> },
+      { path: '/not-found', element: <NotFoundPage /> },
+      { path: '/error', element: <ErrorPage /> },
+      { path: '/network-retry', element: <NetworkRetryPage /> }
     ]
   }
 ]);

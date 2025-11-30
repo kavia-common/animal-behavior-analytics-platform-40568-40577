@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
+import { PlaceholderImage } from '@/components/ui/Placeholders';
 
 type Props = {
   item: {
@@ -21,7 +22,7 @@ export default function BehaviorCard({ item, onPreview }: Props) {
   /** Behavior card with preview button and metadata */
   return (
     <div className="card p-3 flex gap-3">
-      <img src={item.thumbnail} alt={`${item.type} thumbnail`} className="w-28 h-20 object-cover rounded" />
+      <PlaceholderImage label="Video" className="w-28 h-20" />
       <div className="flex-1">
         <div className="flex items-center gap-2">
           <div className="font-heading font-semibold">{item.type}</div>

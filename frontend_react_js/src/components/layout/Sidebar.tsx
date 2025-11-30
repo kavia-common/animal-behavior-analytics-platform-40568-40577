@@ -67,6 +67,15 @@ export default function Sidebar({ onNavigate }: Props) {
               <ChevronRight className="w-4 h-4 text-neutral-500" />
             </li>
           ))}
+          <li className="pt-2 mt-2 border-t">
+            <button className="text-neutral-900 hover:text-primary" onClick={() => onNavigate('/reports/saved')}>Saved Reports</button>
+          </li>
+          <li>
+            <button className="text-neutral-900 hover:text-primary" onClick={() => onNavigate('/reports/scheduled')}>Scheduled</button>
+          </li>
+          <li>
+            <button className="text-neutral-900 hover:text-primary" onClick={() => onNavigate('/settings')}>Settings</button>
+          </li>
         </ul>
       </div>
 

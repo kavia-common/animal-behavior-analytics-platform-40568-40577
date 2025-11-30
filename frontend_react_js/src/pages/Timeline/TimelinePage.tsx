@@ -9,6 +9,8 @@ import BehaviorGrid from '@/components/behavior/BehaviorGrid';
 import VideoModal from '@/components/video/VideoModal';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/api/queries';
+import { EmptyState } from '@/components/ui/Placeholders';
+import { BehaviorEventsTable } from '@/components/ui/Tables';
 
 export default function TimelinePage() {
   const { data: types } = useQuery<string[]>({ queryKey: ['behaviorTypes'], queryFn: api.getBehaviorTypes });
@@ -18,11 +20,16 @@ export default function TimelinePage() {
   const [range, setRange] = useState({ start: new Date().toISOString().slice(0, 10), end: new Date().toISOString().slice(0, 10) });
   const [zoom, setZoom] = useState<'1h' | '6h' | '12h' | '24h'>('6h');
   const [previewId, setPreviewId] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const pageSize = 4;
 
   const filtered = useMemo(
     () => (behaviors ?? []).filter((b: any) => selected.includes(b.type) && b.durationMin <= duration),
     [behaviors, selected, duration]
   );
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const pageItems = filtered.slice((page - 1) * pageSize, page * pageSize);
 
   return (
     <div className="space-y-4">
@@ -32,14 +39,14 @@ export default function TimelinePage() {
           <div className="grid md:grid-cols-4 gap-3">
             <div>
               <div className="text-xs text-neutral-600 mb-1">Behavior Types</div>
-              <MultiSelect options={(types ?? []).map((t: string) => ({ value: t, label: t }))} values={selected} onChange={setSelected} />
+              <MultiSelect options={(types ?? []).map((t: string) => ({ value: t, label: t }))} values={selected} onChange={v => { setSelected(v); setPage(1); }} />
             </div>
             <div>
-              <Slider min={0} max={120} value={duration} onChange={setDuration} label="Max Duration (mins)" />
+              <Slider min={0} max={120} value={duration} onChange={v => { setDuration(v); setPage(1); }} label="Max Duration (mins)" />
             </div>
             <div className="md:col-span-2">
               <div className="text-xs text-neutral-600 mb-1">Date Range</div>
-              <DateRangePicker value={range} onChange={setRange} />
+              <DateRangePicker value={range} onChange={v => { setRange(v); setPage(1); }} />
             </div>
           </div>
         </CardBody>
@@ -64,7 +71,26 @@ export default function TimelinePage() {
         </CardBody>
       </Card>
 
-      <BehaviorGrid items={filtered} onPreview={setPreviewId} />
+      {filtered.length === 0 ? (
+        <EmptyState title="No results found" description="Adjust filters to see behavior events." />
+      ) : (
+        <>
+          <BehaviorGrid items={pageItems} onPreview={setPreviewId} />
+          <div className="flex items-center justify-center gap-2">
+            <button className="px-2 py-1 rounded bg-neutral-100" disabled={page === 1} onClick={() => setPage(p => Math.max(1, p - 1))}>Prev</button>
+            <div className="text-sm">Page {page} of {totalPages}</div>
+            <button className="px-2 py-1 rounded bg-neutral-100" disabled={page === totalPages} onClick={() => setPage(p => Math.min(totalPages, p + 1))}>Next</button>
+          </div>
+        </>
+      )}
+
+      <div className="mt-4">
+        {/* Behavior Events Table */}
+        <div className="font-heading font-semibold mb-2">Behavior Events</div>
+        <div>
+          <BehaviorEventsTable items={filtered as any[]} />
+        </div>
+      </div>
 
       <VideoModal
         open={!!previewId}
