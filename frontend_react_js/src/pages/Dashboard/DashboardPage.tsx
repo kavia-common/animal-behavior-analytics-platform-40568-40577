@@ -2,7 +2,6 @@ import React, { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/api/queries';
 import { Card, CardBody, CardHeader } from '@/components/ui/Card';
-import { StatWidget } from '@/components/widgets';
 import BehaviorCountBarChart from '@/components/charts/BehaviorCountBarChart';
 import DurationPieChart from '@/components/charts/DurationPieChart';
 import DurationStackedBar from '@/components/charts/DurationStackedBar';
@@ -11,20 +10,22 @@ import { LineChart, Line, ResponsiveContainer } from 'recharts';
 import { PlaceholderImage, Skeleton, EmptyState } from '@/components/ui/Placeholders';
 import Button from '@/components/ui/Button';
 import DateRangePicker from '@/components/ui/DateRangePicker';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * PUBLIC_INTERFACE
  * DashboardPage shows KPIs and visualizations including:
- * - Profile card with placeholder image and status
+ * - Anteater Profile card (placeholder avatar, name, age, sex, enclosure, status badge, last-updated)
  * - Date range selector (Today/7/30/custom)
- * - Behavior count bar
- * - Duration stacked bar with pie toggle
+ * - Behavior count bar with click-to-drilldown
+ * - Duration stacked bar with pie toggle and stats
  * - 24h heatmap with hover titles
  * - Loading/empty/error states
  */
 export default function DashboardPage() {
   const [range, setRange] = useState({ start: new Date().toISOString().slice(0,10), end: new Date().toISOString().slice(0,10) });
   const [chartMode, setChartMode] = useState<'pie'|'stacked'>('pie');
+  const navigate = useNavigate();
 
   const animalQ = useQuery({ queryKey: ['selectedAnimal', range], queryFn: api.getSelectedAnimal });
   const countsQ = useQuery({ queryKey: ['behaviorCounts', range], queryFn: api.getBehaviorCounts });
@@ -55,20 +56,46 @@ export default function DashboardPage() {
 
   const durationKeys = useMemo(() => durationBreakdown.map((d: any) => d.label), [durationBreakdown]);
 
+  const totalMinutes = durationBreakdown.reduce((a: number, b: any) => a + (b.value || 0), 0);
+  const avgPerType = durationBreakdown.length ? (totalMinutes / durationBreakdown.length) : 0;
+  const pctOfDay = ((totalMinutes / (24 * 60)) * 100);
+
   const anyLoading = animalQ.isLoading || countsQ.isLoading || durationQ.isLoading || heatmapQ.isLoading;
   const anyError = animalQ.isError || countsQ.isError || durationQ.isError || heatmapQ.isError;
 
+  const onBarClick = (type: string) => {
+    // Navigate to timeline with a preset filter hint in query params
+    navigate(`/timeline?behavior=${encodeURIComponent(type)}`);
+  };
+
   return (
     <div className="space-y-4">
+      {/* Anteater Profile Card with date range selector on the right */}
       <section className="card p-4 flex items-center gap-4">
-        <PlaceholderImage label="Profile" className="w-16 h-16 rounded-full" />
+        <PlaceholderImage label="Anteater" className="w-16 h-16 rounded-full" />
         <div className="flex-1">
-          <div className="font-heading font-semibold">
+          <div className="font-heading font-semibold flex items-center gap-2">
             {animalQ.isLoading ? <Skeleton className="h-5 w-36" /> : (animalQ.data?.name ?? '—')}
-            <span className="ml-2 text-xs rounded-full px-2 py-0.5 bg-green-50 text-success border border-green-200">Online</span>
+            <span className="text-xs rounded-full px-2 py-0.5 bg-green-50 text-success border border-green-200">
+              {animalQ.data?.status ?? 'Online'}
+            </span>
           </div>
-          <div className="text-xs text-neutral-600">
-            {animalQ.isLoading ? <Skeleton className="h-3 w-64" /> : <>Tag {animalQ.data?.tag ?? '—'} • Last seen {animalQ.data?.lastSeen ?? '—'}</>}
+          <div className="text-xs text-neutral-600 flex flex-wrap gap-2">
+            {animalQ.isLoading ? (
+              <Skeleton className="h-3 w-64" />
+            ) : (
+              <>
+                <span>Tag {(animalQ.data as any)?.tag ?? '—'}</span>
+                <span>•</span>
+                <span>Age {(animalQ.data as any)?.age ?? '—'}</span>
+                <span>•</span>
+                <span>Sex {(animalQ.data as any)?.sex ?? '—'}</span>
+                <span>•</span>
+                <span>Enclosure {(animalQ.data as any)?.enclosure ?? '—'}</span>
+                <span>•</span>
+                <span>Last updated {(animalQ.data as any)?.updatedAt ?? (animalQ.data as any)?.lastSeen ?? '—'}</span>
+              </>
+            )}
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -107,17 +134,19 @@ export default function DashboardPage() {
           <div className="font-mono text-2xl">{mostFrequent}</div>
         </div>
         <div className="card p-4">
-          <div className="text-xs text-neutral-600">Total active duration</div>
+          <div className="text-xs text-neutral-600">Total duration</div>
           <div className="font-mono text-2xl">
-            {durationBreakdown.reduce((a: number, b: any) => a + (b.value || 0), 0)} mins
+            {totalMinutes} mins
           </div>
+          <div className="text-xs text-neutral-600 mt-1">Avg per type: {avgPerType.toFixed(1)} min</div>
+          <div className="text-xs text-neutral-600">~{pctOfDay.toFixed(1)}% of day</div>
         </div>
         <div className="card p-4">
           <div className="text-xs text-neutral-600">Rest-to-active ratio</div>
           <div className="font-mono text-2xl">
             {(() => {
-              const rest = durationBreakdown.find((d: any) => d.label === 'Resting')?.value ?? 0;
-              const active = Math.max(1, durationBreakdown.reduce((a: number, b: any) => a + (b.value || 0), 0) - rest);
+              const rest = durationBreakdown.find((d: any) => d.label === 'Resting or Sleeping')?.value ?? 0;
+              const active = Math.max(1, totalMinutes - rest);
               return `${(rest / active).toFixed(2)}`
             })()}
           </div>
@@ -131,7 +160,7 @@ export default function DashboardPage() {
             {behaviorCounts.length === 0 ? (
               <EmptyState title="No behavior data" description="Try expanding the date range." />
             ) : (
-              <BehaviorCountBarChart data={behaviorCounts as any[]} />
+              <BehaviorCountBarChart data={behaviorCounts as any[]} onBarClick={onBarClick} />
             )}
           </CardBody>
         </Card>

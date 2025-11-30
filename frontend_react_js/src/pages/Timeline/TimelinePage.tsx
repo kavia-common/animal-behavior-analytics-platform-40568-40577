@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Card, CardBody, CardHeader } from '@/components/ui/Card';
 import MultiSelect from '@/components/ui/MultiSelect';
 import Slider from '@/components/ui/Slider';
@@ -11,20 +11,34 @@ import { useQuery } from '@tanstack/react-query';
 import { api } from '@/api/queries';
 import { EmptyState } from '@/components/ui/Placeholders';
 import { BehaviorEventsTable } from '@/components/ui/Tables';
+import { useLocation } from 'react-router-dom';
 
 export default function TimelinePage() {
   const { data: types } = useQuery<string[]>({ queryKey: ['behaviorTypes'], queryFn: api.getBehaviorTypes });
   const { data: behaviors } = useQuery({ queryKey: ['behaviors'], queryFn: api.getBehaviors });
-  const [selected, setSelected] = useState<string[]>(['Foraging', 'Resting']);
-  const [duration, setDuration] = useState(60);
+  const [selected, setSelected] = useState<string[]>([]);
+  const [duration, setDuration] = useState(120);
   const [range, setRange] = useState({ start: new Date().toISOString().slice(0, 10), end: new Date().toISOString().slice(0, 10) });
   const [zoom, setZoom] = useState<'1h' | '6h' | '12h' | '24h'>('6h');
   const [previewId, setPreviewId] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const pageSize = 4;
 
+  const location = useLocation();
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const bh = params.get('behavior');
+    if (bh && (types ?? []).includes(bh)) {
+      setSelected([bh]);
+      setPage(1);
+    } else if (!bh && (types ?? []).length && selected.length === 0) {
+      // default to all when nothing is selected
+      setSelected(types as string[]);
+    }
+  }, [location.search, types]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const filtered = useMemo(
-    () => (behaviors ?? []).filter((b: any) => selected.includes(b.type) && b.durationMin <= duration),
+    () => (behaviors ?? []).filter((b: any) => (selected.length ? selected.includes(b.type) : true) && b.durationMin <= duration),
     [behaviors, selected, duration]
   );
 

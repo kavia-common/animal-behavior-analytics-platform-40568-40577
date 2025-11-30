@@ -1,18 +1,45 @@
 import animals from '@/data/mockAnimals.json';
-import behaviors from '@/data/mockBehaviors.json';
+import behaviorsRaw from '@/data/mockBehaviors.json';
 import reports from '@/data/mockReports.json';
+import { BEHAVIOR_TYPES } from '@/lib/constants';
+
+function normalizeBehaviorType(t: string): string {
+  // Map previous simple labels into the canonical taxonomy
+  const map: Record<string, string> = {
+    Foraging: 'Foraging',
+    Resting: 'Resting or Sleeping',
+    Grooming: 'Grooming',
+    Walking: 'Pacing or Movement',
+    Alert: 'Social Interaction'
+  };
+  return BEHAVIOR_TYPES.includes(t as any) ? t : (map[t] || 'Other');
+}
+
+const behaviors = (behaviorsRaw as any[]).map(b => ({ ...b, type: normalizeBehaviorType(b.type) }));
 
 export const mocks = {
   getSelectedAnimal: async () => {
-    return animals[0];
+    // Enrich with extra fields used in profile card
+    const a = animals[0] as any;
+    return {
+      ...a,
+      sex: 'Female',
+      age: 7,
+      enclosure: 'Enclosure C',
+      status: 'Healthy',
+      updatedAt: a.lastSeen
+    };
   },
   getBehaviorCounts: async () => {
     const byType: Record<string, number> = {};
+    // Ensure all taxonomy categories exist
+    BEHAVIOR_TYPES.forEach(t => { byType[t] = 0; });
     behaviors.forEach((b: any) => { byType[b.type] = (byType[b.type] || 0) + 1; });
     return Object.entries(byType).map(([type, count]) => ({ type, count }));
   },
   getDurationBreakdown: async () => {
     const byType: Record<string, number> = {};
+    BEHAVIOR_TYPES.forEach(t => { byType[t] = 0; });
     behaviors.forEach((b: any) => { byType[b.type] = (byType[b.type] || 0) + b.durationMin; });
     return Object.entries(byType).map(([label, value]) => ({ label, value }));
   },

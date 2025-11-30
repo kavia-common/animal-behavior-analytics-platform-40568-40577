@@ -14,13 +14,13 @@ export default function DateRangePicker({ value, onChange }: Props) {
 
   return (
     <div className="flex items-center gap-2">
-      <input type="date" className="border rounded-md px-2 py-1 text-sm" value={value.start} onChange={e => onChange({ ...value, start: e.target.value })} />
+      <input aria-label="Start date" type="date" className="border rounded-md px-2 py-1 text-sm" value={value.start} onChange={e => onChange({ ...value, start: e.target.value })} />
       <span className="text-sm">to</span>
-      <input type="date" className="border rounded-md px-2 py-1 text-sm" value={value.end} onChange={e => onChange({ ...value, end: e.target.value })} />
+      <input aria-label="End date" type="date" className="border rounded-md px-2 py-1 text-sm" value={value.end} onChange={e => onChange({ ...value, end: e.target.value })} />
       <div className="flex gap-1">
-        <Button variant="ghost" size="sm" onClick={() => onChange({ start: today, end: today })}>Today</Button>
-        <Button variant="ghost" size="sm" onClick={() => onChange({ start: daysAgo(7), end: today })}>7d</Button>
-        <Button variant="ghost" size="sm" onClick={() => onChange({ start: daysAgo(30), end: today })}>30d</Button>
+        <Button title="Set date range to Today" variant="ghost" size="sm" onClick={() => onChange({ start: today, end: today })}>Today</Button>
+        <Button title="Set date range to last 7 days" variant="ghost" size="sm" onClick={() => onChange({ start: daysAgo(7), end: today })}>7d</Button>
+        <Button title="Set date range to last 30 days" variant="ghost" size="sm" onClick={() => onChange({ start: daysAgo(30), end: today })}>30d</Button>
       </div>
     </div>
   );

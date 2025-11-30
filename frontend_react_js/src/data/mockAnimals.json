@@ -1,3 +1,13 @@
 [
-  { "id": "anteater-1", "name": "GA-Atlas", "tag": "A-101", "lastSeen": "2025-11-28 14:20" }
+  {
+    "id": "anteater-1",
+    "name": "GA-Atlas",
+    "tag": "A-101",
+    "lastSeen": "2025-11-28 14:20",
+    "sex": "Female",
+    "age": 7,
+    "enclosure": "Enclosure C",
+    "status": "Healthy",
+    "updatedAt": "2025-11-28 14:20"
+  }
 ]

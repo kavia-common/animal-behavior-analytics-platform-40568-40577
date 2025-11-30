@@ -17,7 +17,15 @@ export default function BehaviorCountBarChart({ data, onBarClick }: Props) {
           <XAxis dataKey="type" />
           <YAxis />
           <Tooltip />
-          <Bar dataKey="count" fill="#2C5F9A" onClick={d => onBarClick?.((d as any).type)} />
+          <Bar
+            dataKey="count"
+            name="Count"
+            fill="#2C5F9A"
+            onClick={(entry: any, index: number) => {
+              const t = data?.[index]?.type ?? entry?.type;
+              if (t) onBarClick?.(t);
+            }}
+          />
         </BarChart>
       </ResponsiveContainer>
     </div>
