@@ -1,0 +1,4 @@
+[
+  { "id": "r1", "type": "summary", "start": "2025-11-01", "end": "2025-11-07", "createdAt": "2025-11-07" },
+  { "id": "r2", "type": "detailed", "start": "2025-11-15", "end": "2025-11-20", "createdAt": "2025-11-20" }
+]

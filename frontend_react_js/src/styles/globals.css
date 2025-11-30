@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --header-height: 64px;
+  --sidebar-width: 280px;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+.app-shell {
+  display: grid;
+  grid-template-rows: var(--header-height) 1fr;
+  grid-template-columns: var(--sidebar-width) 1fr;
+  grid-template-areas:
+    "topnav topnav"
+    "sidebar main";
+  height: 100%;
+}
+
+.topnav {
+  grid-area: topnav;
+  backdrop-filter: saturate(1.2) blur(6px);
+}
+
+.sidebar {
+  grid-area: sidebar;
+}
+
+.main {
+  grid-area: main;
+}
+
+.card {
+  @apply bg-white rounded-lg shadow-card border border-gray-100;
+}

@@ -1,0 +1,25 @@
+import React from 'react';
+import Badge from '@/components/ui/Badge';
+
+type Props = {
+  label: string;
+  value: string | number;
+  delta?: string;
+  tone?: 'success' | 'warning' | 'error' | 'default';
+};
+
+// PUBLIC_INTERFACE
+export default function StatWidget({ label, value, delta, tone = 'default' }: Props) {
+  /** KPI stat with optional delta badge */
+  return (
+    <div className="card p-4">
+      <div className="text-xs text-neutral-600">{label}</div>
+      <div className="mt-1 font-mono text-2xl">{value}</div>
+      {delta && (
+        <div className="mt-2">
+          <Badge label={delta} tone={tone} />
+        </div>
+      )}
+    </div>
+  );
+}
