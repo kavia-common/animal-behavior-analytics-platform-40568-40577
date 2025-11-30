@@ -31,6 +31,8 @@ Vite + React + TypeScript + Tailwind CSS frontend for the VizAI Behavior Monitor
 - No Vite dev proxy is configured to avoid 502 Bad Gateway when backend is unavailable.
 - To connect a backend later, set REACT_APP_API_BASE or REACT_APP_BACKEND_URL in a .env file. The API layer can be switched accordingly.
 - Optional base path: set REACT_APP_BASE_PATH if serving under a subpath (e.g., /frontend/). Vite's base will use it.
+- If using nginx, proxy pass to http://127.0.0.1:3000; ensure websockets and static assets under the Vite base are allowed. A quick sanity page is available at /hello which renders without any data dependencies.
+- The app entry and mount are index.html with <div id="root"></div> and script type="module" src="/src/main.tsx".
 - WebSocket is simulated with setInterval in src/hooks/useSocket.ts
 - Video assets are placeholders at src/assets/video/*.mp4 – replace with actual files as needed
 - Design system colors defined in tailwind.config.cjs

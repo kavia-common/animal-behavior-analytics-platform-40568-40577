@@ -10,12 +10,16 @@ import path from 'node:path';
  * - strictPort to avoid auto-increment which can break nginx upstreams.
  * - base derived from env if provided, otherwise root.
  */
-export default defineConfig(({ mode }) => {
+export default defineConfig(() => {
   // Allow an optional base path via env, but default to '/'
   const base = process.env.REACT_APP_BASE_PATH || '/';
 
   // Hostnames that should be allowed by Vite dev server when behind proxies
-  const allowedHosts = ['vscode-internal-28620-beta.beta01.cloud.kavia.ai'];
+  const allowedHosts = [
+    'vscode-internal-28620-beta.beta01.cloud.kavia.ai',
+    'localhost',
+    '127.0.0.1'
+  ];
 
   return {
     base,
@@ -24,6 +28,14 @@ export default defineConfig(({ mode }) => {
       alias: {
         '@': path.resolve(__dirname, './src'),
       },
+    },
+    define: {
+      // Make selected env vars available in client without inlining arbitrary script tags
+      'import.meta.env.REACT_APP_API_BASE': JSON.stringify(process.env.REACT_APP_API_BASE || ''),
+      'import.meta.env.REACT_APP_BACKEND_URL': JSON.stringify(process.env.REACT_APP_BACKEND_URL || ''),
+      'import.meta.env.REACT_APP_FRONTEND_URL': JSON.stringify(process.env.REACT_APP_FRONTEND_URL || ''),
+      'import.meta.env.REACT_APP_WS_URL': JSON.stringify(process.env.REACT_APP_WS_URL || ''),
+      'import.meta.env.REACT_APP_BASE_PATH': JSON.stringify(process.env.REACT_APP_BASE_PATH || '/'),
     },
     server: {
       host: true,         // bind 0.0.0.0 so nginx can reach it

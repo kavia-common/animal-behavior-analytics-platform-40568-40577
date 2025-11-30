@@ -2,15 +2,30 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!-- Ensure proper scaling on mobile -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>VizAI – Giant Anteater Behavior Monitoring</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600;700&family=Poppins:wght@500;600;700&family=Roboto+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Optional base path; when serving under subpath, Vite base handles URLs -->
+    <!-- <base href="/" /> -->
+    <!-- Web fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600;700&family=Poppins:wght@500;600;700&family=Roboto+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <!-- No inline scripts/styles to avoid CSP issues -->
   </head>
   <body class="bg-neutral-50 text-neutral-900">
-    <noscript>This application requires JavaScript to run.</noscript>
-    <div id="root"></div>
+    <noscript>Enable JavaScript to run this app.</noscript>
+    <div id="root">
+      <!-- Fallback content in case the bundle fails to load -->
+      <div style="padding:16px; font-family: sans-serif; color:#444">
+        Loading VizAI…
+        <noscript>Enable JavaScript to run this app.</noscript>
+      </div>
+    </div>
+    <!-- Vite dev/prod entry; module type required -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
