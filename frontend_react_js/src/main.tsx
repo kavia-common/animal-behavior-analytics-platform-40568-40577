@@ -10,7 +10,19 @@ import ReportsPage from './pages/Reports/ReportsPage';
 import { store } from './store';
 import './styles/globals.css';
 
+// Lightweight hello component to isolate any rendering issues
+function Hello() {
+  return (
+    <div style={{ padding: 16 }}>
+      <h1 style={{ fontFamily: 'sans-serif' }}>Hello from VizAI Frontend</h1>
+      <p>If you can see this, Vite and React mounted successfully.</p>
+    </div>
+  );
+}
+
 const router = createBrowserRouter([
+  // Minimal route for sanity-check in preview environments
+  { path: '/hello', element: <Hello /> },
   {
     path: '/',
     element: <RootLayout />,

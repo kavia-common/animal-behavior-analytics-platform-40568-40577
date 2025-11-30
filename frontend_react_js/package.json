@@ -4,11 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite dev",
+    "dev": "vite dev --host --port 3000",
     "build": "tsc -b && vite build",
-    "preview": "vite preview",
+    "preview": "vite preview --host --port 3000",
     "lint": "eslint . --ext ts,tsx --max-warnings=0",
-    "start": "vite dev"
+    "start": "vite dev --host --port 3000"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.3",
