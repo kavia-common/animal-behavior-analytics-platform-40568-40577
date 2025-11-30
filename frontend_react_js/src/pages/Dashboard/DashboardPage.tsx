@@ -1,80 +1,75 @@
-import React, { useMemo, useState } from 'react';
-import { Card, CardBody, CardHeader } from '@/components/ui/Card';
-import DateRangePicker from '@/components/ui/DateRangePicker';
-import BehaviorCountBarChart from '@/components/charts/BehaviorCountBarChart';
-import DurationStackedBar from '@/components/charts/DurationStackedBar';
-import DurationPieChart from '@/components/charts/DurationPieChart';
-import DailyHeatmap from '@/components/charts/DailyHeatmap';
-import StatWidget from '@/components/widgets/StatWidget';
-import { useQuery } from '@tanstack/react-query';
-import { api } from '@/api/queries';
+import React from 'react';
+import { Card, CardBody } from '@/components/ui/Card';
+import Button from '@/components/ui/Button';
 import { useNavigate } from 'react-router-dom';
+import { Briefcase, FlaskConical, Search } from 'lucide-react';
 
+/**
+ * PUBLIC_INTERFACE
+ * Dashboard landing showing three perspectives with consistent minimalist icons
+ * and CTAs routing to their pages. Ocean Professional theme styling applied.
+ */
 export default function DashboardPage() {
   const navigate = useNavigate();
-  const [range, setRange] = useState({ start: new Date().toISOString().slice(0, 10), end: new Date().toISOString().slice(0, 10) });
-  const { data: animal } = useQuery({ queryKey: ['animal'], queryFn: api.getSelectedAnimal });
-  const { data: behaviorCounts } = useQuery({ queryKey: ['behaviorCounts'], queryFn: api.getBehaviorCounts });
-  const { data: durationBreakdown } = useQuery({ queryKey: ['durationBreakdown'], queryFn: api.getDurationBreakdown });
-  const { data: heatmap } = useQuery({ queryKey: ['heatmap'], queryFn: api.getDailyHeatmap });
 
-  const stackedData = useMemo(() => [
-    { name: 'Durations', ...(durationBreakdown?.reduce((acc: any, cur: any) => (acc[cur.label] = cur.value, acc), {}) ?? {}) }
-  ], [durationBreakdown]);
+  const cards = [
+    {
+      id: 'stakeholder',
+      title: 'Stakeholder',
+      desc: 'High-level insights, KPIs, and summaries tailored for conservation leaders and decision makers.',
+      icon: Briefcase,
+      to: '/stakeholder',
+      cta: 'Open Stakeholder View',
+    },
+    {
+      id: 'researcher',
+      title: 'Researcher',
+      desc: 'Deep-dive analysis, timelines, and behavior filters designed for field researchers.',
+      icon: FlaskConical,
+      to: '/researcher',
+      cta: 'Open Researcher View',
+    },
+    {
+      id: 'similar',
+      title: 'Similar Results',
+      desc: 'Explore behavior segments similar to a selected pattern across times and cameras.',
+      icon: Search,
+      to: '/similar-results',
+      cta: 'Explore Similar Results',
+    },
+  ];
 
   return (
-    <div className="space-y-4">
-      <div className="grid md:grid-cols-4 gap-3">
-        <Card className="md:col-span-2">
-          <CardHeader title="Profile" subtitle="Giant Anteater" />
-          <CardBody>
-            <div className="flex items-center gap-4">
-              <img src="https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?q=80&w=400&auto=format&fit=crop" alt="Anteater" className="w-24 h-24 object-cover rounded" />
-              <div className="space-y-1">
-                <div className="font-heading font-semibold text-lg">{animal?.name}</div>
-                <div className="text-sm text-neutral-600">Status: Healthy • Age: 6 yrs • Tag: {animal?.tag}</div>
-                <div className="text-sm">Last seen: {animal?.lastSeen}</div>
+    <div className="space-y-6">
+      <header className="flex items-end justify-between">
+        <div>
+          <h1 className="font-heading text-2xl font-semibold text-neutral-900">Choose a Perspective</h1>
+          <p className="text-sm text-neutral-600">
+            Navigate by role to keep focus and clarity. You can switch perspectives anytime.
+          </p>
+        </div>
+      </header>
+
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {cards.map(({ id, title, desc, icon: Icon, to, cta }) => (
+          <Card key={id} className="overflow-hidden transition-shadow hover:shadow-lg">
+            <CardBody className="p-5">
+              <div className="flex items-start gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-md border border-blue-900/20 bg-gradient-to-br from-blue-900/10 to-amber-600/10">
+                  <Icon className="h-5 w-5 text-primary" aria-hidden />
+                </div>
+                <div>
+                  <h3 className="font-heading text-lg font-semibold text-neutral-900">{title}</h3>
+                  <p className="mt-1 text-sm leading-5 text-neutral-600">{desc}</p>
+                </div>
               </div>
-            </div>
-          </CardBody>
-        </Card>
-        <Card>
-          <CardHeader title="Date Range" />
-          <CardBody>
-            <DateRangePicker value={range} onChange={setRange} />
-          </CardBody>
-        </Card>
-        <StatWidget label="Total Behaviors" value={behaviorCounts?.reduce((s: number, b: any) => s + b.count, 0) ?? 0} delta="+8% this week" tone="success" />
-      </div>
-
-      <Card>
-        <CardHeader title="Behavior Counts" subtitle="Click bars to drill down to timeline" />
-        <CardBody>
-          <BehaviorCountBarChart data={behaviorCounts ?? []} onBarClick={() => navigate('/timeline')} />
-        </CardBody>
-      </Card>
-
-      <div className="grid md:grid-cols-2 gap-3">
-        <Card>
-          <CardHeader title="Duration Analysis (Stacked)" />
-          <CardBody>
-            <DurationStackedBar data={stackedData} keys={(durationBreakdown ?? []).map((d: any) => d.label)} />
-          </CardBody>
-        </Card>
-        <Card>
-          <CardHeader title="Duration Breakdown (Pie)" />
-          <CardBody>
-            <DurationPieChart data={durationBreakdown ?? []} />
-          </CardBody>
-        </Card>
-      </div>
-
-      <Card>
-        <CardHeader title="Daily Heatmap" subtitle="24-hour activity pattern" />
-        <CardBody>
-          <DailyHeatmap data={heatmap ?? Array(24).fill(0)} />
-        </CardBody>
-      </Card>
+              <div className="mt-4">
+                <Button onClick={() => navigate(to)}>{cta}</Button>
+              </div>
+            </CardBody>
+          </Card>
+        ))}
+      </section>
     </div>
   );
 }
