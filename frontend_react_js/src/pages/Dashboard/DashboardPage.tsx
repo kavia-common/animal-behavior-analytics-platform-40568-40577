@@ -1,74 +1,54 @@
 import React from 'react';
-import { Card, CardBody } from '@/components/ui/Card';
-import Button from '@/components/ui/Button';
-import { useNavigate } from 'react-router-dom';
-import { Briefcase, FlaskConical, Search } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '@/api/queries';
+import { Card, CardBody, CardHeader } from '@/components/ui/Card';
+import { StatWidget } from '@/components/widgets';
+import BehaviorCountBarChart from '@/components/charts/BehaviorCountBarChart';
+import DurationPieChart from '@/components/charts/DurationPieChart';
+import DailyHeatmap from '@/components/charts/DailyHeatmap';
 
 /**
  * PUBLIC_INTERFACE
- * Dashboard landing showing three perspectives with consistent minimalist icons
- * and CTAs routing to their pages. Ocean Professional theme styling applied.
+ * DashboardPage shows high-level KPIs and visualizations for recent behavior activity.
+ * This is the original dashboard view prior to the 3-card perspective update.
  */
 export default function DashboardPage() {
-  const navigate = useNavigate();
-
-  const cards = [
-    {
-      id: 'stakeholder',
-      title: 'Stakeholder',
-      desc: 'High-level insights, KPIs, and summaries tailored for conservation leaders and decision makers.',
-      icon: Briefcase,
-      to: '/stakeholder',
-      cta: 'Open Stakeholder View',
-    },
-    {
-      id: 'researcher',
-      title: 'Researcher',
-      desc: 'Deep-dive analysis, timelines, and behavior filters designed for field researchers.',
-      icon: FlaskConical,
-      to: '/researcher',
-      cta: 'Open Researcher View',
-    },
-    {
-      id: 'similar',
-      title: 'Similar Results',
-      desc: 'Explore behavior segments similar to a selected pattern across times and cameras.',
-      icon: Search,
-      to: '/similar-results',
-      cta: 'Explore Similar Results',
-    },
-  ];
+  const { data: selectedAnimal } = useQuery({ queryKey: ['selectedAnimal'], queryFn: api.getSelectedAnimal });
+  const { data: behaviorCounts } = useQuery({ queryKey: ['behaviorCounts'], queryFn: api.getBehaviorCounts });
+  const { data: durationBreakdown } = useQuery({ queryKey: ['durationBreakdown'], queryFn: api.getDurationBreakdown });
+  const { data: dailyHeatmap } = useQuery({ queryKey: ['dailyHeatmap'], queryFn: api.getDailyHeatmap });
 
   return (
-    <div className="space-y-6">
-      <header className="flex items-end justify-between">
-        <div>
-          <h1 className="font-heading text-2xl font-semibold text-neutral-900">Choose a Perspective</h1>
-          <p className="text-sm text-neutral-600">
-            Navigate by role to keep focus and clarity. You can switch perspectives anytime.
-          </p>
-        </div>
-      </header>
+    <div className="space-y-4">
+      <section className="grid gap-3 md:grid-cols-3">
+        <StatWidget label="Monitored Animal" value={selectedAnimal?.name ?? '—'} />
+        <StatWidget label="Detected Behaviors (24h)" value={(behaviorCounts ?? []).reduce((a, b: any) => a + (b.count || 0), 0)} delta="+3% vs prev" tone="success" />
+        <StatWidget label="Active Cameras" value={12} delta="+1 today" />
+      </section>
 
-      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {cards.map(({ id, title, desc, icon: Icon, to, cta }) => (
-          <Card key={id} className="overflow-hidden transition-shadow hover:shadow-lg">
-            <CardBody className="p-5">
-              <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-md border border-blue-900/20 bg-gradient-to-br from-blue-900/10 to-amber-600/10">
-                  <Icon className="h-5 w-5 text-primary" aria-hidden />
-                </div>
-                <div>
-                  <h3 className="font-heading text-lg font-semibold text-neutral-900">{title}</h3>
-                  <p className="mt-1 text-sm leading-5 text-neutral-600">{desc}</p>
-                </div>
-              </div>
-              <div className="mt-4">
-                <Button onClick={() => navigate(to)}>{cta}</Button>
-              </div>
-            </CardBody>
-          </Card>
-        ))}
+      <section className="grid gap-3 lg:grid-cols-3">
+        <Card className="lg:col-span-2">
+          <CardHeader title="Behavior Counts" subtitle="Distribution by type (last 24h)" />
+          <CardBody>
+            <BehaviorCountBarChart data={(behaviorCounts as any[]) ?? []} />
+          </CardBody>
+        </Card>
+
+        <Card>
+          <CardHeader title="Duration Breakdown" subtitle="Total minutes by behavior" />
+          <CardBody>
+            <DurationPieChart data={(durationBreakdown as any[]) ?? []} />
+          </CardBody>
+        </Card>
+      </section>
+
+      <section>
+        <Card>
+          <CardHeader title="Daily Activity Heatmap" subtitle="Events by hour (0–23)" />
+          <CardBody>
+            <DailyHeatmap data={(dailyHeatmap as number[]) ?? Array(24).fill(0)} />
+          </CardBody>
+        </Card>
       </section>
     </div>
   );

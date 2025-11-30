@@ -7,9 +7,6 @@ import RootLayout from './routes/RootLayout';
 import DashboardPage from './pages/Dashboard/DashboardPage';
 import TimelinePage from './pages/Timeline/TimelinePage';
 import ReportsPage from './pages/Reports/ReportsPage';
-import StakeholderPage from './pages/Stakeholder/StakeholderPage';
-import ResearcherPage from './pages/Researcher/ResearcherPage';
-import SimilarResultsPage from './pages/SimilarResults/SimilarResultsPage';
 import { store } from './store';
 import './styles/globals.css';
 
@@ -33,10 +30,7 @@ const router = createBrowserRouter([
       { index: true, element: <Navigate to="/dashboard" replace /> },
       { path: '/dashboard', element: <DashboardPage /> },
       { path: '/timeline', element: <TimelinePage /> },
-      { path: '/reports', element: <ReportsPage /> },
-      { path: '/stakeholder', element: <StakeholderPage /> },
-      { path: '/researcher', element: <ResearcherPage /> },
-      { path: '/similar-results', element: <SimilarResultsPage /> }
+      { path: '/reports', element: <ReportsPage /> }
     ]
   }
 ]);
