@@ -26,7 +26,9 @@ Vite + React + TypeScript + Tailwind CSS frontend for the VizAI Behavior Monitor
 3. Open http://localhost:3000 – default route redirects to /dashboard
 
 ## Notes
-- All data is mocked under src/data and api/mockHandlers.ts
+- All data is mocked under src/data and api/mockHandlers.ts. The app renders fully without any backend.
+- No Vite dev proxy is configured to avoid 502 Bad Gateway when backend is unavailable.
+- To connect a backend later, set REACT_APP_API_BASE or REACT_APP_BACKEND_URL in a .env file. The API layer can be switched accordingly.
 - WebSocket is simulated with setInterval in src/hooks/useSocket.ts
 - Video assets are placeholders at src/assets/video/*.mp4 – replace with actual files as needed
 - Design system colors defined in tailwind.config.cjs
