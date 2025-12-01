@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/api/queries';
 import { Card, CardBody, CardHeader } from '@/components/ui/Card';
 import BehaviorCountBarChart from '@/components/charts/BehaviorCountBarChart';
@@ -12,16 +12,11 @@ import Button from '@/components/ui/Button';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import type { RootState } from '@/store';
+import { useSocket } from '@/hooks/useSocket';
 
 /**
  * PUBLIC_INTERFACE
- * DashboardPage shows KPIs and visualizations including:
- * - Anteater Profile card (placeholder avatar, name, age, sex, enclosure, status badge, last-updated)
- * - Global Date range selector (Today/7/30/custom) located in TopNav; this page reacts to global state
- * - Behavior count bar with legend toggles and click-to-drilldown
- * - Duration stacked bar with pie toggle and stats
- * - 24h heatmap with hover titles and confidence
- * - Loading/empty/error states
+ * DashboardPage shows KPIs and visualizations and reacts to WebSocket events for live updates.
  */
 export default function DashboardPage() {
   const [chartMode, setChartMode] = useState<'pie'|'stacked'>('pie');
@@ -34,6 +29,12 @@ export default function DashboardPage() {
   const countsQ = useQuery({ queryKey: ['behaviorCounts', range], queryFn: api.getBehaviorCounts });
   const durationQ = useQuery({ queryKey: ['durationBreakdown', range], queryFn: api.getDurationBreakdown });
   const heatmapQ = useQuery({ queryKey: ['dailyHeatmap', range], queryFn: api.getDailyHeatmap });
+
+  const qc = useQueryClient();
+  useSocket(() => {
+    // additional flush if needed; per-hook invalidations already happen in useSocket
+    qc.invalidateQueries({ queryKey: ['behaviorCounts'] });
+  });
 
   const behaviorCounts = countsQ.data ?? [];
   const durationBreakdown = durationQ.data ?? [];
