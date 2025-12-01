@@ -15,6 +15,7 @@ export default defineConfig(function () {
     // Hostnames that should be allowed by Vite dev server when behind proxies
     var allowedHosts = [
         'vscode-internal-28620-beta.beta01.cloud.kavia.ai',
+        'vscode-internal-12784-beta.beta01.cloud.kavia.ai',
         'localhost',
         '127.0.0.1'
     ];

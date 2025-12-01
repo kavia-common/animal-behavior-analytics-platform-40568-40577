@@ -15,7 +15,7 @@ function normalizeBehaviorType(t: string): string {
   return BEHAVIOR_TYPES.includes(t as any) ? t : (map[t] || 'Other');
 }
 
-const behaviors = (behaviorsRaw as any[]).map(b => ({ ...b, type: normalizeBehaviorType(b.type) }));
+const behaviors = (behaviorsRaw as any[]).map((b: any) => ({ ...b, type: normalizeBehaviorType(b.type) }));
 
 export const mocks = {
   getSelectedAnimal: async () => {
