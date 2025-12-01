@@ -9,7 +9,6 @@ export default function TopNav({ children }: { children?: React.ReactNode }) {
       <div className="flex items-center gap-2">
         <PawPrint className="text-primary" aria-hidden />
         <div className="font-heading font-semibold text-primary">VizAI</div>
-        <div className="text-sm text-neutral-900/60">Giant Anteater Monitoring</div>
       </div>
       <div className="flex-1 flex justify-center">{children}</div>
       <div className="flex items-center gap-3">
