@@ -33,14 +33,14 @@ export const mocks = {
   getBehaviorCounts: async () => {
     const byType: Record<string, number> = {};
     // Ensure all taxonomy categories exist
-    BEHAVIOR_TYPES.forEach(t => { byType[t] = 0; });
-    behaviors.forEach((b: any) => { byType[b.type] = (byType[b.type] || 0) + 1; });
+    BEHAVIOR_TYPES.forEach((t: any) => { byType[t as string] = 0; });
+    behaviors.forEach((b: any) => { byType[b.type as string] = (byType[b.type as string] || 0) + 1; });
     return Object.entries(byType).map(([type, count]) => ({ type, count }));
   },
   getDurationBreakdown: async () => {
     const byType: Record<string, number> = {};
-    BEHAVIOR_TYPES.forEach(t => { byType[t] = 0; });
-    behaviors.forEach((b: any) => { byType[b.type] = (byType[b.type] || 0) + b.durationMin; });
+    BEHAVIOR_TYPES.forEach((t: any) => { byType[t as string] = 0; });
+    behaviors.forEach((b: any) => { byType[b.type as string] = (byType[b.type as string] || 0) + (b.durationMin as number); });
     return Object.entries(byType).map(([label, value]) => ({ label, value }));
   },
   getDailyHeatmap: async () => {

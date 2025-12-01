@@ -17,7 +17,8 @@ export default defineConfig(function () {
         'vscode-internal-28620-beta.beta01.cloud.kavia.ai',
         'vscode-internal-12784-beta.beta01.cloud.kavia.ai',
         'localhost',
-        '127.0.0.1'
+        '127.0.0.1',
+        'vscode-internal-25220-beta.beta01.cloud.kavia.ai'
     ];
     return {
         base: base,
