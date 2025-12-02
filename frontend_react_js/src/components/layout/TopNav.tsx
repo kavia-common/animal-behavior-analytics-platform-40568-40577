@@ -12,7 +12,7 @@ export default function TopNav({ children }: { children?: React.ReactNode }) {
         <img
           src={vizaiLogo}
           alt="VizAI"
-          className="h-7 w-auto object-contain select-none"
+          className="h-8 w-auto object-contain select-none"
           style={{ paddingTop: 2, paddingBottom: 2 }}
         />
       </div>
