@@ -16,11 +16,11 @@
   --color-surface: #FFFFFF;           /* Surface */
   --color-background: #F5F5F5;        /* Neutral Light background */
   --color-text: #333333;              /* Neutral Dark text */
-  --color-border: #E0E0E0;            /* Neutral border derived */
+  --color-border: #E5E7EB;            /* Neutral border derived */
 
   /* Shadows consistent with reference */
-  --elevation-1: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.03);
-  --elevation-2: 0 3px 6px rgba(0,0,0,0.08), 0 3px 3px rgba(0,0,0,0.04);
+  --elevation-1: 0 1px 2px rgba(0,0,0,0.06);
+  --elevation-2: 0 4px 6px rgba(0,0,0,0.1);
 
   /* Card treatments used across UI */
   --card-bg: var(--color-surface);
@@ -29,7 +29,7 @@
   --card-shadow: var(--elevation-1);
 
   /* Gradient utility to match palette */
-  --brand-gradient: linear-gradient(135deg, rgba(30,58,138,0.06), rgba(245,158,11,0.06));
+  --brand-gradient: linear-gradient(135deg, rgba(44,95,154,0.06), rgba(32,178,170,0.06));
 }
 
 html, body, #root {
