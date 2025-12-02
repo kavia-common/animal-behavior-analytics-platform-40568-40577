@@ -4,7 +4,7 @@ import Button from '@/components/ui/Button';
 // PUBLIC_INTERFACE
 export default function TemplateCustomizer() {
   /** Template customization UI placeholders */
-  const [color, setColor] = useState('#2C5F9A');
+  const [color, setColor] = useState(getComputedStyle(document.documentElement).getPropertyValue('--color-primary')?.trim() || '#2C5F9A');
   const [header, setHeader] = useState('VizAI – Behavior Report');
   const [footer, setFooter] = useState('Confidential – For research use only');
 

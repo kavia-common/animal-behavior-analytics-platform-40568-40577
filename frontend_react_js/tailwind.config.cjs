@@ -3,23 +3,28 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // VizAI application palette (single source of truth) - UPDATED
-        primary: '#1E3A8A',      // Deep blue
-        secondary: '#F59E0B',    // Amber
-        success: '#059669',      // Emerald
-        error: '#DC2626',        // Red
-        background: '#F3F4F6',   // Gray-100
-        surface: '#FFFFFF',      // White
-        text: '#111827',         // Gray-900
-        border: '#E5E7EB',       // Gray-200
+        // VizAI application palette (single source of truth) - STRICT
+        // Primary #2C5F9A, Secondary #20B2AA, Accent #FF6B35,
+        // Neutral Light #F5F5F5, Neutral Dark #333333,
+        // Success #4CAF50, Warning #FFC107, Error #F44336
+        primary: '#2C5F9A',
+        secondary: '#20B2AA',
+        accent: '#FF6B35',
+        success: '#4CAF50',
+        warning: '#FFC107',
+        error: '#F44336',
+        background: '#F5F5F5',  // Neutral Light
+        surface: '#FFFFFF',
+        text: '#333333',        // Neutral Dark
+        border: '#E0E0E0',      // Derived neutral border to match Neutral Light
         neutral: {
-          50: '#F9FAFB',
-          100: '#F3F4F6',
-          200: '#E5E7EB',
-          300: '#D1D5DB',
-          500: '#6B7280',
-          700: '#374151',
-          900: '#111827',
+          50: '#FAFAFA',
+          100: '#F5F5F5',
+          200: '#E0E0E0',
+          300: '#CCCCCC',
+          500: '#777777',
+          700: '#4D4D4D',
+          900: '#333333',
         },
       },
       fontFamily: {

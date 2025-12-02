@@ -4,7 +4,7 @@ import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianG
 type Props = { data: any[]; xKey: string; yKey: string; color?: string };
 
 // PUBLIC_INTERFACE
-export default function TrendLineChart({ data, xKey, yKey, color = '#2C5F9A' }: Props) {
+export default function TrendLineChart({ data, xKey, yKey, color = 'var(--color-primary)' }: Props) {
   /** Simple line chart */
   return (
     <div className="w-full h-64">

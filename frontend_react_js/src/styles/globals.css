@@ -6,15 +6,17 @@
   --header-height: 64px;
   --sidebar-width: 280px;
 
-  /* VizAI brand color variables - updated */
-  --color-primary: #1E3A8A;         /* deep blue */
-  --color-secondary: #F59E0B;       /* amber */
-  --color-success: #059669;         /* emerald */
-  --color-error: #DC2626;           /* red */
-  --color-surface: #FFFFFF;         /* white surface */
-  --color-background: #F3F4F6;      /* gray-100 background */
-  --color-text: #111827;            /* gray-900 text */
-  --color-border: #E5E7EB;          /* gray-200 border */
+  /* VizAI brand color variables - STRICT */
+  --color-primary: #2C5F9A;           /* Primary */
+  --color-secondary: #20B2AA;         /* Secondary */
+  --color-accent: #FF6B35;            /* Accent */
+  --color-success: #4CAF50;           /* Success */
+  --color-warning: #FFC107;           /* Warning */
+  --color-error: #F44336;             /* Error */
+  --color-surface: #FFFFFF;           /* Surface */
+  --color-background: #F5F5F5;        /* Neutral Light background */
+  --color-text: #333333;              /* Neutral Dark text */
+  --color-border: #E0E0E0;            /* Neutral border derived */
 
   /* Shadows consistent with reference */
   --elevation-1: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.03);

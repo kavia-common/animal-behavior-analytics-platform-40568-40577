@@ -33,9 +33,8 @@ export default function BehaviorCountBarChart({ data, onBarClick }: Props) {
             <button
               key={d.type}
               onClick={() => toggleType(d.type)}
-              className={`px-2 py-1 rounded-full text-xs border flex items-center gap-1 ${isHidden ? 'opacity-50' : ''}`}
+              className={`px-2 py-1 rounded-full text-xs border border-border flex items-center gap-1 ${isHidden ? 'opacity-50' : ''}`}
               title={`${isHidden ? 'Show' : 'Hide'} ${d.type}`}
-              style={{ borderColor: '#e5e7eb' }}
             >
               <span
                 aria-hidden
@@ -47,7 +46,7 @@ export default function BehaviorCountBarChart({ data, onBarClick }: Props) {
           );
         })}
       </div>
-      <ResponsiveContainer>
+      <ResponsiveContainer className="text-primary">
         <BarChart data={visibleData} margin={{ top: 8, right: 12, left: 0, bottom: 8 }}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="type" />
@@ -56,7 +55,7 @@ export default function BehaviorCountBarChart({ data, onBarClick }: Props) {
           <Bar
             dataKey="count"
             name="Count"
-            fill="#2C5F9A"
+            fill="currentColor"
             onClick={(entry: any, index: number) => {
               const t = data?.[index]?.type ?? entry?.type;
               if (t) onBarClick?.(t);
