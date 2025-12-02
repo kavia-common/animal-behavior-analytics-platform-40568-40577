@@ -43,8 +43,25 @@ export default function Sidebar({ onNavigate }: Props) {
           })}
         </div>
         <div className="mt-4 flex gap-2">
-          <button className="px-3 py-1.5 text-xs rounded-md bg-neutral-100 hover:bg-neutral-200" onClick={() => dispatch(clearAll())}>
+          <button
+            className="px-3 py-1.5 text-xs rounded-md bg-neutral-100 hover:bg-neutral-200"
+            onClick={() => dispatch(clearAll())}
+          >
             Clear all
+          </button>
+          <button
+            className="px-3 py-1.5 text-xs rounded-md bg-neutral-100 hover:bg-neutral-200"
+            onClick={() => dispatch(setDateRangePreset('7d'))}
+            title="Apply last 7 days"
+          >
+            Last 7 days
+          </button>
+          <button
+            className="px-3 py-1.5 text-xs rounded-md bg-neutral-100 hover:bg-neutral-200"
+            onClick={() => dispatch(setDateRangePreset('30d'))}
+            title="Apply last 30 days"
+          >
+            Last 30 days
           </button>
         </div>
       </div>

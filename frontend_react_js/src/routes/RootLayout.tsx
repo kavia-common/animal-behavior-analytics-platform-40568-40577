@@ -3,10 +3,9 @@ import { Outlet, NavLink, useLocation, useNavigate, Link } from 'react-router-do
 import TopNav from '@/components/layout/TopNav';
 import Sidebar from '@/components/layout/Sidebar';
 import DateRangePicker from '@/components/ui/DateRangePicker';
-import Button from '@/components/ui/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store';
-import { setDateRange, setDateRangePreset, clearAll } from '@/store/slices/filterSlice';
+import { setDateRange } from '@/store/slices/filterSlice';
 
 const tabs = [
   { to: '/dashboard', label: 'Dashboard' },
@@ -24,33 +23,6 @@ function GlobalDateSelector() {
         onChange={(v) => dispatch(setDateRange(v))}
         hideExtendedPresets
       />
-      <div className="flex items-center gap-1">
-        <Button
-          variant="ghost"
-          size="sm"
-          title="Clear all filters"
-          onClick={() => dispatch(clearAll())}
-        >
-          Clear All
-        </Button>
-        {/* Quick presets moved adjacent to Clear All only, not in top-row date picker */}
-        <Button
-          variant="ghost"
-          size="sm"
-          title="Last 7 days"
-          onClick={() => dispatch(setDateRangePreset('7d'))}
-        >
-          7d
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          title="Last 30 days"
-          onClick={() => dispatch(setDateRangePreset('30d'))}
-        >
-          30d
-        </Button>
-      </div>
     </div>
   );
 }
