@@ -12,7 +12,7 @@ export default function TopNav({ children }: { children?: React.ReactNode }) {
         <img
           src={vizaiLogo}
           alt="VizAI"
-          className="h-8 w-auto object-contain select-none"
+          className="h-9 w-auto object-contain select-none"
           style={{ paddingTop: 2, paddingBottom: 2 }}
         />
       </div>
@@ -27,7 +27,7 @@ export default function TopNav({ children }: { children?: React.ReactNode }) {
         </button>
         <button aria-label="Profile menu" className="flex items-center gap-2 p-2 rounded-md hover:bg-neutral-100">
           <UserCircle2 className="w-6 h-6" aria-hidden />
-          <span className="hidden md:block text-sm">Researcher</span>
+          <span className="hidden md:block text-base">Researcher</span>
         </button>
       </div>
     </div>
