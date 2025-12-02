@@ -21,6 +21,7 @@ function GlobalDateSelector() {
       <DateRangePicker
         value={dateRange}
         onChange={(v) => dispatch(setDateRange(v))}
+        hideExtendedPresets
       />
     </div>
   );
