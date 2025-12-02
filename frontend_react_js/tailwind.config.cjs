@@ -3,16 +3,17 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#2C5F9A',
-        secondary: '#20B2AA',
-        accent: '#FF6B35',
+        // Application palette
+        primary: '#2C5F9A',     // main highlights, key interface elements
+        secondary: '#20B2AA',   // supportive/nature accents
+        accent: '#FF6B35',      // alerts, highlights, important actions
         neutral: {
-          50: '#F5F5F5',
-          900: '#333333'
+          50: '#F5F5F5',        // Neutral Light (backgrounds)
+          900: '#333333'        // Neutral Dark (text/dividers)
         },
         success: '#4CAF50',
         warning: '#FFC107',
-        error: '#F44336'
+        error: '#F44336',
       },
       fontFamily: {
         sans: ['Inter', 'Open Sans', 'system-ui', 'sans-serif'],

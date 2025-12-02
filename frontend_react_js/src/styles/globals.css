@@ -5,6 +5,16 @@
 :root {
   --header-height: 64px;
   --sidebar-width: 280px;
+
+  /* Central color palette variables */
+  --color-primary: #2C5F9A;
+  --color-secondary: #20B2AA;
+  --color-accent: #FF6B35;
+  --color-neutral-light: #F5F5F5;
+  --color-neutral-dark: #333333;
+  --color-success: #4CAF50;
+  --color-warning: #FFC107;
+  --color-error: #F44336;
 }
 
 html, body, #root {
