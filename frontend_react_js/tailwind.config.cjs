@@ -3,13 +3,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Application palette
-        primary: '#2C5F9A',     // main highlights, key interface elements
-        secondary: '#20B2AA',   // supportive/nature accents
-        accent: '#FF6B35',      // alerts, highlights, important actions
+        // VizAI application palette (single source of truth)
+        primary: '#2C5F9A',
+        secondary: '#20B2AA',
+        accent: '#FF6B35',
         neutral: {
-          50: '#F5F5F5',        // Neutral Light (backgrounds)
-          900: '#333333'        // Neutral Dark (text/dividers)
+          50: '#F5F5F5',
+          900: '#333333',
         },
         success: '#4CAF50',
         warning: '#FFC107',
@@ -18,13 +18,13 @@ module.exports = {
       fontFamily: {
         sans: ['Inter', 'Open Sans', 'system-ui', 'sans-serif'],
         heading: ['Poppins', 'Inter', 'system-ui', 'sans-serif'],
-        mono: ['Roboto Mono', 'ui-monospace', 'SFMono-Regular', 'monospace']
+        mono: ['Roboto Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
       },
       boxShadow: {
         card: '0 2px 8px rgba(0,0,0,0.06)',
-        soft: '0 1px 4px rgba(0,0,0,0.08)'
-      }
-    }
+        soft: '0 1px 4px rgba(0,0,0,0.08)',
+      },
+    },
   },
-  plugins: []
+  plugins: [],
 };

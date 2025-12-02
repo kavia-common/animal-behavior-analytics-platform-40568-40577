@@ -1,14 +1,19 @@
 import React from 'react';
-import { PawPrint, Bell, UserCircle2 } from 'lucide-react';
+import { Bell, UserCircle2 } from 'lucide-react';
+import vizaiLogo from '../../assets/vizai-logo.png';
 
 // PUBLIC_INTERFACE
 export default function TopNav({ children }: { children?: React.ReactNode }) {
   /** Top navigation with brand, tabs and actions. */
   return (
     <div className="flex items-center justify-between h-[var(--header-height)] px-4 md:px-6">
-      <div className="flex items-center gap-2">
-        <PawPrint className="text-primary" aria-hidden />
-        <div className="font-heading font-semibold text-primary">VizAI</div>
+      <div className="flex items-center gap-3">
+        <img
+          src={vizaiLogo}
+          alt="VizAI"
+          className="h-7 w-auto object-contain select-none"
+          style={{ paddingTop: 2, paddingBottom: 2 }}
+        />
       </div>
       <div className="flex-1 flex justify-center">{children}</div>
       <div className="flex items-center gap-3">
