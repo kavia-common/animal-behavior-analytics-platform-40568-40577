@@ -23,11 +23,11 @@ export default function TopNav({ children }: { children?: React.ReactNode }) {
       {/* Actions */}
       <div className="flex items-center gap-3">
         <button aria-label="Notifications" className="p-2 rounded-md hover:bg-neutral-100">
-          <Bell className="w-5 h-5" aria-hidden />
+          <Bell className="w-5 h-5 text-sidebarIcon" aria-hidden />
         </button>
         <button aria-label="Profile menu" className="flex items-center gap-2 p-2 rounded-md hover:bg-neutral-100">
-          <UserCircle2 className="w-6 h-6" aria-hidden />
-          <span className="hidden md:block text-base">Researcher</span>
+          <UserCircle2 className="w-6 h-6 text-sidebarIcon" aria-hidden />
+          <span className="hidden md:block text-base text-secondaryText">Researcher</span>
         </button>
       </div>
     </div>

@@ -6,43 +6,66 @@
   --header-height: 64px;
   --sidebar-width: 280px;
 
-  /* VizAI brand color variables - STRICT */
-  --color-primary: #2C5F9A;           /* Primary */
-  --color-primary-600: #1F4A75;       /* Primary-600 */
-  --color-secondary: #20B2AA;         /* Secondary */
-  --color-accent: #FF6B35;            /* Accent */
-  --color-error: #F44336;             /* Error */
+  /* Centralized color tokens */
+  --color-primary: #0E5D61;
+  --color-primary-hover: #0B4B4E;
+  --color-primary-light: #CCF3EE;
 
-  /* Background and surfaces */
-  --color-bg: #F5F5F5;                /* Background (alias for bg) */
-  --color-background: #F5F5F5;        /* Keep existing token */
-  --color-surface: #FFFFFF;           /* Surface */
+  --color-secondary: #0D253F;
+  --color-secondary-text: #1C2D3A;
 
-  /* Text and muted */
-  --color-text: #333333;              /* Text */
-  --color-muted: #6B7280;             /* Muted */
+  --color-accent: #20B2AA;
 
-  /* Borders */
-  --color-border: #E5E7EB;            /* Border */
+  --color-success: #4CAF50;
+  --color-warning: #FFC107;
+  --color-error: #F44336;
 
-  /* Shadow tokens using requested rgba values */
+  --color-neutral-dark: #333333;
+  --color-neutral-mid: #6B7280;
+  --color-neutral-border: #E5E7EB;
+  --color-neutral-light-bg: #F8FAFC;
+
+  --color-surface-bg: #FFFFFF;
+  --color-sidebar-active-bg: #E6F5F0;
+  --color-sidebar-icon: #0E5D61;
+
+  --color-card-bg: #FFFFFF;
+  --color-card-shadow-rgba: rgba(0, 0, 0, 0.08);
+
+  --color-progress-bar: #0EAD9C;
+  --color-highlight-mint: #BDF2E6;
+
+  --color-table-header-bg: #F1F5F9;
+  --color-table-row-hover: #EEF7F4;
+
+  /* Backwards-compatible aliases used in components */
+  --color-background: var(--color-neutral-light-bg);
+  --color-bg: var(--color-neutral-light-bg);
+  --color-surface: var(--color-surface-bg);
+  --color-text: var(--color-secondary-text);
+  --color-muted: var(--color-neutral-mid);
+  --color-border: var(--color-neutral-border);
+
+  /* Elevation tokens */
   --shadow-soft: rgba(0,0,0,0.06);
   --shadow-strong: rgba(0,0,0,0.1);
-  --elevation-1: 0 1px 2px var(--shadow-soft);
-  --elevation-2: 0 4px 6px var(--shadow-strong);
+  --elevation-1: 0 1px 2px var(--color-card-shadow-rgba);
+  --elevation-2: 0 4px 8px var(--shadow-strong);
 
-  /* Card treatments used across UI (unchanged semantics) */
-  --card-bg: var(--color-surface);
+  /* Card treatments */
+  --card-bg: var(--color-card-bg);
   --card-text: var(--color-text);
-  --card-border: var(--color-border);
+  --card-border: var(--color-neutral-border);
   --card-shadow: var(--elevation-1);
 
-  /* Gradient utility to match palette (kept minimal and consistent) */
-  --brand-gradient: linear-gradient(135deg, rgba(44,95,154,0.06), rgba(32,178,170,0.06));
+  /* Gentle brand gradient */
+  --brand-gradient: linear-gradient(135deg, rgba(14,93,97,0.06), rgba(32,178,170,0.06));
 }
 
 html, body, #root {
   height: 100%;
+  background: var(--color-background);
+  color: var(--color-text);
 }
 
 .app-shell {
@@ -67,10 +90,14 @@ html, body, #root {
 .topnav {
   grid-area: topnav;
   backdrop-filter: saturate(1.2) blur(6px);
+  background-color: color-mix(in oklab, var(--color-surface-bg) 80%, transparent);
+  border-bottom: 1px solid var(--color-neutral-border);
 }
 
 .sidebar {
   grid-area: sidebar;
+  background-color: var(--color-surface-bg);
+  border-right: 1px solid var(--color-neutral-border);
 }
 
 .main {
@@ -78,7 +105,20 @@ html, body, #root {
 }
 
 .card {
-  @apply bg-surface rounded-lg shadow-card border border-border;
+  background: var(--card-bg);
+  border-radius: 0.5rem;
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--card-border);
+}
+
+.badge-success {
+  color: var(--color-success);
+}
+.badge-warning {
+  color: var(--color-warning);
+}
+.badge-error {
+  color: var(--color-error);
 }
 
 /* Helpers for 24 columns */

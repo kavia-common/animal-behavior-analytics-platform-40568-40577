@@ -9,8 +9,8 @@ export default function App() {
   /** Simple fallback content in case this component is mounted directly. */
   return (
     <div className="p-6">
-      <h1 className="text-xl font-semibold">VizAI – Giant Anteater Behavior Monitoring</h1>
-      <p className="text-sm text-neutral-600">App initialized. Use configured routes from main.tsx.</p>
+      <h1 className="text-xl font-semibold text-secondaryText">VizAI – Giant Anteater Behavior Monitoring</h1>
+      <p className="text-sm text-neutralMid">App initialized. Use configured routes from main.tsx.</p>
     </div>
   );
 }

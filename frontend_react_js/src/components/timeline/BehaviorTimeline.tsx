@@ -41,8 +41,8 @@ export default function BehaviorTimeline({ segments, onSelect, zoomScale = 'day'
         <div className="space-y-2">
           {rows.map(([camera, segs]) => (
             <div key={camera}>
-              <div className="text-xs mb-1">Camera 1</div>
-              <div className="relative h-8 bg-neutral-100 rounded">
+              <div className="text-xs mb-1 text-secondaryText">Camera 1</div>
+              <div className="relative h-8 rounded" style={{ backgroundColor: 'var(--color-primary-light)' }}>
                 {segs.map(s => {
                   const leftPct = (s.start / scaleDenominator) * 100;
                   const widthPct = ((s.end - s.start) / scaleDenominator) * 100;
@@ -62,8 +62,14 @@ export default function BehaviorTimeline({ segments, onSelect, zoomScale = 'day'
                     <button
                       key={s.id}
                       title={tooltip}
-                      className="absolute top-1 bottom-1 rounded shadow-soft hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-primary/50"
-                      style={{ left: `${leftPct}%`, width: `${Math.max(0.4, widthPct)}%`, backgroundColor: getBehaviorColor(s.type) }}
+                      className="absolute top-1 bottom-1 rounded shadow-soft hover:opacity-90 focus:outline-none focus:ring-2"
+                      style={{
+                        left: `${leftPct}%`,
+                        width: `${Math.max(0.4, widthPct)}%`,
+                        backgroundColor: getBehaviorColor(s.type),
+                        boxShadow: '0 1px 2px var(--color-card-shadow-rgba)',
+                        outlineColor: 'var(--color-primary)',
+                      }}
                       onClick={() => onSelect(s.id)}
                       aria-label={`${s.type} from ${startTime} to ${endTime} on ${s.camera}`}
                     />

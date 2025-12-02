@@ -10,10 +10,10 @@ export function Card({ children, className = '' }: { children: React.ReactNode; 
 export function CardHeader({ title, subtitle, actions }: { title: string; subtitle?: string; actions?: React.ReactNode }) {
   /** Card header with title/subtitle */
   return (
-    <div className="px-4 pt-4 pb-2 border-b border-gray-100 flex items-center justify-between">
+    <div className="px-4 pt-4 pb-2 border-b border-neutralBorder flex items-center justify-between">
       <div>
-        <h3 className="font-heading font-semibold">{title}</h3>
-        {subtitle && <p className="text-xs text-neutral-600">{subtitle}</p>}
+        <h3 className="font-heading font-semibold text-secondaryText">{title}</h3>
+        {subtitle && <p className="text-xs text-neutralMid">{subtitle}</p>}
       </div>
       {actions}
     </div>

@@ -24,8 +24,8 @@ export default function Sidebar({ onNavigate }: Props) {
     <div className="h-full p-4 md:p-5 space-y-6">
       <div className="card p-4">
         <div className="flex items-center gap-2 mb-3">
-          <Filter className="w-4 h-4 text-primary" />
-          <h3 className="font-heading text-sm font-semibold">Quick Filters</h3>
+          <Filter className="w-4 h-4 text-sidebarIcon" />
+          <h3 className="font-heading text-sm font-semibold text-secondaryText">Quick Filters</h3>
         </div>
         <div className="flex flex-wrap gap-2">
           {quickTypes.map(t => {
@@ -34,7 +34,11 @@ export default function Sidebar({ onNavigate }: Props) {
               <button
                 key={t}
                 onClick={() => toggleType(t)}
-                className={`px-2.5 py-1 rounded-full text-xs border ${active ? 'bg-primary text-white border-primary' : 'border-border hover:bg-neutral-50'}`}
+                className={`px-2.5 py-1 rounded-full text-xs border ${
+                  active
+                    ? 'bg-sidebarActiveBg text-primary border-primary'
+                    : 'border-neutralBorder text-secondaryText hover:bg-neutralLightBg'
+                }`}
                 aria-pressed={active}
               >
                 {t}
@@ -44,20 +48,20 @@ export default function Sidebar({ onNavigate }: Props) {
         </div>
         <div className="mt-4 flex gap-2">
           <button
-            className="px-3 py-1.5 text-xs rounded-md bg-neutral-100 hover:bg-neutral-200"
+            className="px-3 py-1.5 text-xs rounded-md bg-neutralLightBg text-secondaryText hover:bg-sidebarActiveBg border border-neutralBorder"
             onClick={() => dispatch(clearAll())}
           >
             Clear all
           </button>
           <button
-            className="px-3 py-1.5 text-xs rounded-md bg-neutral-100 hover:bg-neutral-200"
+            className="px-3 py-1.5 text-xs rounded-md bg-neutralLightBg text-secondaryText hover:bg-sidebarActiveBg border border-neutralBorder"
             onClick={() => dispatch(setDateRangePreset('7d'))}
             title="Apply last 7 days"
           >
             Last 7 days
           </button>
           <button
-            className="px-3 py-1.5 text-xs rounded-md bg-neutral-100 hover:bg-neutral-200"
+            className="px-3 py-1.5 text-xs rounded-md bg-neutralLightBg text-secondaryText hover:bg-sidebarActiveBg border border-neutralBorder"
             onClick={() => dispatch(setDateRangePreset('30d'))}
             title="Apply last 30 days"
           >
@@ -68,34 +72,34 @@ export default function Sidebar({ onNavigate }: Props) {
 
       <div className="card p-4">
         <div className="flex items-center gap-2 mb-3">
-          <Bookmark className="w-4 h-4 text-primary" />
-          <h3 className="font-heading text-sm font-semibold">Saved Views</h3>
+          <Bookmark className="w-4 h-4 text-sidebarIcon" />
+          <h3 className="font-heading text-sm font-semibold text-secondaryText">Saved Views</h3>
         </div>
         <ul className="space-y-2 text-sm">
           {['Morning Foraging', 'High Confidence', 'Camera A'].map(n => (
             <li key={n} className="flex items-center justify-between">
-              <button className="text-text hover:text-primary" onClick={() => onNavigate('/timeline')}>{n}</button>
-              <ChevronRight className="w-4 h-4 text-neutral-500" />
+              <button className="text-secondaryText hover:text-primary" onClick={() => onNavigate('/timeline')}>{n}</button>
+              <ChevronRight className="w-4 h-4 text-neutralMid" />
             </li>
           ))}
-          <li className="pt-2 mt-2 border-t border-border">
-            <button className="text-neutral-900 hover:text-primary" onClick={() => onNavigate('/reports/saved')}>Saved Reports</button>
+          <li className="pt-2 mt-2 border-t border-neutralBorder">
+            <button className="text-secondaryText hover:text-primary" onClick={() => onNavigate('/reports/saved')}>Saved Reports</button>
           </li>
           <li>
-            <button className="text-neutral-900 hover:text-primary" onClick={() => onNavigate('/reports/scheduled')}>Scheduled</button>
+            <button className="text-secondaryText hover:text-primary" onClick={() => onNavigate('/reports/scheduled')}>Scheduled</button>
           </li>
           <li>
-            <button className="text-neutral-900 hover:text-primary" onClick={() => onNavigate('/settings')}>Settings</button>
+            <button className="text-secondaryText hover:text-primary" onClick={() => onNavigate('/settings')}>Settings</button>
           </li>
         </ul>
       </div>
 
       <div className="card p-4">
         <div className="flex items-center gap-2 mb-3">
-          <History className="w-4 h-4 text-primary" />
-          <h3 className="font-heading text-sm font-semibold">Recent Activities</h3>
+          <History className="w-4 h-4 text-sidebarIcon" />
+          <h3 className="font-heading text-sm font-semibold text-secondaryText">Recent Activities</h3>
         </div>
-        <ul className="space-y-2 text-xs text-neutral-700">
+        <ul className="space-y-2 text-xs text-neutralMid">
           <li>Viewed video sample1.mp4 - 2m ago</li>
           <li>Exported Behavior Summary - 1h ago</li>
           <li>Updated Filter Preset "Morning Foraging" - yesterday</li>

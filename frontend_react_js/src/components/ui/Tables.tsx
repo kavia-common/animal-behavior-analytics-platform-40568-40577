@@ -17,33 +17,33 @@ export function BehaviorEventsTable({ items }: { items: any[] }) {
   return (
     <div className="card p-3 overflow-x-auto">
       <div className="flex items-center gap-2 mb-2">
-        <input className="border rounded px-2 py-1 text-sm" placeholder="Search behaviors" value={q} onChange={e => setQ(e.target.value)} />
-        <select className="border rounded px-2 py-1 text-sm" value={sort} onChange={e => setSort(e.target.value as any)}>
+        <input className="border border-neutralBorder bg-surface rounded px-2 py-1 text-sm text-secondaryText placeholder-neutralMid" placeholder="Search behaviors" value={q} onChange={e => setQ(e.target.value)} />
+        <select className="border border-neutralBorder bg-surface rounded px-2 py-1 text-sm text-secondaryText" value={sort} onChange={e => setSort(e.target.value as any)}>
           <option value="start">Start</option>
           <option value="type">Type</option>
           <option value="durationMin">Duration</option>
         </select>
       </div>
       <table className="min-w-full text-sm">
-        <thead>
-          <tr className="border-b">
-            <th className="text-left p-2">Type</th>
-            <th className="text-left p-2">Start</th>
-            <th className="text-left p-2">End</th>
-            <th className="text-left p-2">Duration (min)</th>
-            <th className="text-left p-2">Confidence</th>
-            <th className="text-left p-2">Camera</th>
+        <thead className="bg-tableHeaderBg">
+          <tr className="border-b border-neutralBorder">
+            <th className="text-left p-2 text-secondaryText">Type</th>
+            <th className="text-left p-2 text-secondaryText">Start</th>
+            <th className="text-left p-2 text-secondaryText">End</th>
+            <th className="text-left p-2 text-secondaryText">Duration (min)</th>
+            <th className="text-left p-2 text-secondaryText">Confidence</th>
+            <th className="text-left p-2 text-secondaryText">Camera</th>
           </tr>
         </thead>
         <tbody>
           {filtered.map((b: any) => (
-            <tr key={b.id} className="border-b hover:bg-neutral-50">
-              <td className="p-2">{b.type}</td>
-              <td className="p-2">{b.start}</td>
-              <td className="p-2">{b.end}</td>
-              <td className="p-2">{b.durationMin}</td>
-              <td className="p-2">{b.confidence}%</td>
-              <td className="p-2">{b.camera}</td>
+            <tr key={b.id} className="border-b border-neutralBorder hover:bg-tableRowHover">
+              <td className="p-2 text-secondaryText">{b.type}</td>
+              <td className="p-2 text-secondaryText">{b.start}</td>
+              <td className="p-2 text-secondaryText">{b.end}</td>
+              <td className="p-2 text-secondaryText">{b.durationMin}</td>
+              <td className="p-2 text-secondaryText">{b.confidence}%</td>
+              <td className="p-2 text-secondaryText">{b.camera}</td>
             </tr>
           ))}
         </tbody>
@@ -61,26 +61,26 @@ export function ReportLogsTable({ items }: { items: any[] }) {
   return (
     <div className="card p-3 overflow-x-auto">
       <div className="flex items-center gap-2 mb-2">
-        <input className="border rounded px-2 py-1 text-sm" placeholder="Search logs" value={q} onChange={e => setQ(e.target.value)} />
+        <input className="border border-neutralBorder bg-surface rounded px-2 py-1 text-sm text-secondaryText placeholder-neutralMid" placeholder="Search logs" value={q} onChange={e => setQ(e.target.value)} />
       </div>
       <table className="min-w-full text-sm">
-        <thead>
-          <tr className="border-b">
-            <th className="text-left p-2">ID</th>
-            <th className="text-left p-2">Type</th>
-            <th className="text-left p-2">Start</th>
-            <th className="text-left p-2">End</th>
-            <th className="text-left p-2">Created</th>
+        <thead className="bg-tableHeaderBg">
+          <tr className="border-b border-neutralBorder">
+            <th className="text-left p-2 text-secondaryText">ID</th>
+            <th className="text-left p-2 text-secondaryText">Type</th>
+            <th className="text-left p-2 text-secondaryText">Start</th>
+            <th className="text-left p-2 text-secondaryText">End</th>
+            <th className="text-left p-2 text-secondaryText">Created</th>
           </tr>
         </thead>
         <tbody>
           {logs.map((r: any) => (
-            <tr key={r.id} className="border-b hover:bg-neutral-50">
-              <td className="p-2">{r.id}</td>
-              <td className="p-2">{r.type}</td>
-              <td className="p-2">{r.start}</td>
-              <td className="p-2">{r.end}</td>
-              <td className="p-2">{r.createdAt}</td>
+            <tr key={r.id} className="border-b border-neutralBorder hover:bg-tableRowHover">
+              <td className="p-2 text-secondaryText">{r.id}</td>
+              <td className="p-2 text-secondaryText">{r.type}</td>
+              <td className="p-2 text-secondaryText">{r.start}</td>
+              <td className="p-2 text-secondaryText">{r.end}</td>
+              <td className="p-2 text-secondaryText">{r.createdAt}</td>
             </tr>
           ))}
         </tbody>

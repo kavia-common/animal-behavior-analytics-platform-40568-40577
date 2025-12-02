@@ -34,10 +34,10 @@ export default function RootLayout() {
 
   return (
     <div className="app-shell">
-      <header className="topnav sticky top-0 z-40 bg-white/80 border-b border-gray-200">
+      <header className="topnav sticky top-0 z-40">
         <TopNav>
           <div className="flex items-center gap-3">
-            <button className="md:hidden px-2 py-1 rounded hover:bg-neutral-100" onClick={() => setSidebarOpen(s => !s)} aria-label="Toggle menu">☰</button>
+            <button className="md:hidden px-2 py-1 rounded hover:bg-neutralLightBg" onClick={() => setSidebarOpen(s => !s)} aria-label="Toggle menu">☰</button>
             <nav aria-label="Primary" className="hidden md:flex gap-2">
               {tabs.map(t => (
                 <NavLink
@@ -45,7 +45,7 @@ export default function RootLayout() {
                   to={t.to}
                   className={({ isActive }) =>
                     `px-3 py-2 rounded-md text-sm font-medium ${
-                      isActive ? 'bg-primary text-white' : 'text-neutral-900 hover:bg-neutral-50'
+                      isActive ? 'bg-primary text-white' : 'text-secondaryText hover:bg-neutralLightBg'
                     }`
                   }
                   aria-current={location.pathname === t.to ? 'page' : undefined}
@@ -57,18 +57,18 @@ export default function RootLayout() {
             <div className="flex-1" />
             <GlobalDateSelector />
             <div className="hidden md:flex items-center gap-2">
-              <button className="px-2 py-1.5 text-sm rounded hover:bg-neutral-100" onClick={() => alert('Logged out (stub).')}>Logout</button>
+              <button className="px-2 py-1.5 text-sm rounded hover:bg-neutralLightBg text-secondaryText" onClick={() => alert('Logged out (stub).')}>Logout</button>
             </div>
           </div>
         </TopNav>
       </header>
-      <aside className={`sidebar ${sidebarOpen ? 'block' : 'hidden'} md:block bg-white border-r border-gray-200`}>
+      <aside className={`sidebar ${sidebarOpen ? 'block' : 'hidden'} md:block`}>
         <Sidebar onNavigate={navigate} />
       </aside>
       <main className="main p-4 md:p-6 overflow-auto">
         <div className="md:hidden mb-3">
           <div className="mt-2 flex gap-2">
-            <button className="px-2 py-1.5 text-sm rounded bg-neutral-100" onClick={() => alert('Logged out (stub).')}>Logout</button>
+            <button className="px-2 py-1.5 text-sm rounded bg-neutralLightBg text-secondaryText" onClick={() => alert('Logged out (stub).')}>Logout</button>
           </div>
         </div>
         <Outlet />

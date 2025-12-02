@@ -17,9 +17,9 @@ export default function Button({ variant = 'primary', size = 'md', className, ..
         size === 'sm' && 'px-2.5 py-1.5 text-xs',
         size === 'md' && 'px-3 py-2 text-sm',
         size === 'lg' && 'px-4 py-2.5',
-        variant === 'primary' && 'bg-primary text-white hover:opacity-90',
-        variant === 'secondary' && 'bg-secondary text-white hover:opacity-90',
-        variant === 'ghost' && 'bg-transparent hover:bg-neutral-100 text-text',
+        variant === 'primary' && 'bg-primary hover:bg-primaryHover text-white',
+        variant === 'secondary' && 'border border-neutralBorder text-secondaryText hover:bg-neutralLightBg',
+        variant === 'ghost' && 'bg-transparent hover:bg-neutralLightBg text-secondaryText',
         className
       )}
     />
