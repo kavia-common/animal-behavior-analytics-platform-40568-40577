@@ -8,27 +8,27 @@
 
   /* VizAI brand color variables - STRICT */
   --color-primary: #2C5F9A;           /* Primary */
+  --color-primary-600: #1F4A75;       /* Primary-600 */
   --color-secondary: #20B2AA;         /* Secondary */
   --color-accent: #FF6B35;            /* Accent */
-  --color-success: #4CAF50;           /* Success */
-  --color-warning: #FFC107;           /* Warning */
   --color-error: #F44336;             /* Error */
+  --color-background: #F5F5F5;        /* Background */
   --color-surface: #FFFFFF;           /* Surface */
-  --color-background: #F5F5F5;        /* Neutral Light background */
-  --color-text: #333333;              /* Neutral Dark text */
-  --color-border: #E5E7EB;            /* Neutral border derived */
+  --color-text: #333333;              /* Text */
+  --color-muted: #6B7280;             /* Muted */
+  --color-border: #E5E7EB;            /* Border */
 
-  /* Shadows consistent with reference */
+  /* Shadow tokens using requested rgba values */
   --elevation-1: 0 1px 2px rgba(0,0,0,0.06);
   --elevation-2: 0 4px 6px rgba(0,0,0,0.1);
 
-  /* Card treatments used across UI */
+  /* Card treatments used across UI (unchanged semantics) */
   --card-bg: var(--color-surface);
   --card-text: var(--color-text);
   --card-border: var(--color-border);
   --card-shadow: var(--elevation-1);
 
-  /* Gradient utility to match palette */
+  /* Gradient utility to match palette (kept minimal and consistent) */
   --brand-gradient: linear-gradient(135deg, rgba(44,95,154,0.06), rgba(32,178,170,0.06));
 }
 
