@@ -19,8 +19,6 @@ export default function DateRangePicker({ value, onChange }: Props) {
       <input aria-label="End date" type="date" className="border rounded-md px-2 py-1 text-sm" value={value.end} onChange={e => onChange({ ...value, end: e.target.value })} />
       <div className="flex gap-1">
         <Button title="Set date range to Today" variant="ghost" size="sm" onClick={() => onChange({ start: today, end: today })}>Today</Button>
-        <Button title="Set date range to last 7 days" variant="ghost" size="sm" onClick={() => onChange({ start: daysAgo(7), end: today })}>7d</Button>
-        <Button title="Set date range to last 30 days" variant="ghost" size="sm" onClick={() => onChange({ start: daysAgo(30), end: today })}>30d</Button>
       </div>
     </div>
   );

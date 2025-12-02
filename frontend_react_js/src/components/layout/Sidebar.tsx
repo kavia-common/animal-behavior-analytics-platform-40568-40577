@@ -46,12 +46,6 @@ export default function Sidebar({ onNavigate }: Props) {
           <button className="px-3 py-1.5 text-xs rounded-md bg-neutral-100 hover:bg-neutral-200" onClick={() => dispatch(clearAll())}>
             Clear all
           </button>
-          <button className="px-3 py-1.5 text-xs rounded-md bg-secondary text-white hover:opacity-90" onClick={() => dispatch(setDateRangePreset('7d'))}>
-            Last 7 days
-          </button>
-          <button className="px-3 py-1.5 text-xs rounded-md bg-secondary text-white hover:opacity-90" onClick={() => dispatch(setDateRangePreset('30d'))}>
-            Last 30 days
-          </button>
         </div>
       </div>
 

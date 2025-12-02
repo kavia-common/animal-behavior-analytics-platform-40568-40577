@@ -56,8 +56,6 @@ export default function RootLayout() {
             <div className="flex-1" />
             <GlobalDateSelector />
             <div className="hidden md:flex items-center gap-2">
-              <Link to="/settings" className="px-2 py-1.5 text-sm rounded hover:bg-neutral-100">Settings</Link>
-              <a className="px-2 py-1.5 text-sm rounded hover:bg-neutral-100" href="https://example.com/help" target="_blank" rel="noreferrer">Help</a>
               <button className="px-2 py-1.5 text-sm rounded hover:bg-neutral-100" onClick={() => alert('Logged out (stub).')}>Logout</button>
             </div>
           </div>
@@ -69,7 +67,6 @@ export default function RootLayout() {
       <main className="main p-4 md:p-6 overflow-auto">
         <div className="md:hidden mb-3">
           <div className="mt-2 flex gap-2">
-            <Link to="/settings" className="px-2 py-1.5 text-sm rounded bg-neutral-100">Settings</Link>
             <button className="px-2 py-1.5 text-sm rounded bg-neutral-100" onClick={() => alert('Logged out (stub).')}>Logout</button>
           </div>
         </div>

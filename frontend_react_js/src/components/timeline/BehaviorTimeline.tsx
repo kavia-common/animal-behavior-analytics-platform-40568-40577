@@ -23,14 +23,9 @@ type Props = {
  * detailed hover tooltips, and basic zoom scaling support.
  */
 export default function BehaviorTimeline({ segments, onSelect, zoomScale = 'day' }: Props) {
-  /** Group segments by camera row */
+  /** Single consolidated row per requirements: show all segments under 'Camera 1' */
   const rows = useMemo(() => {
-    const byCam: Record<string, Segment[]> = {};
-    segments.forEach(s => {
-      byCam[s.camera] = byCam[s.camera] || [];
-      byCam[s.camera].push(s);
-    });
-    return Object.entries(byCam);
+    return [['Camera 1', segments] as [string, Segment[]]];
   }, [segments]);
 
   // width denominator for x-scaling; day => 1440 mins, hour => 60 mins, week => 10080 mins
@@ -46,7 +41,7 @@ export default function BehaviorTimeline({ segments, onSelect, zoomScale = 'day'
         <div className="space-y-2">
           {rows.map(([camera, segs]) => (
             <div key={camera}>
-              <div className="text-xs mb-1">{camera}</div>
+              <div className="text-xs mb-1">Camera 1</div>
               <div className="relative h-8 bg-neutral-100 rounded">
                 {segs.map(s => {
                   const leftPct = (s.start / scaleDenominator) * 100;
