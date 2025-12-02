@@ -12,15 +12,24 @@
   --color-secondary: #20B2AA;         /* Secondary */
   --color-accent: #FF6B35;            /* Accent */
   --color-error: #F44336;             /* Error */
-  --color-background: #F5F5F5;        /* Background */
+
+  /* Background and surfaces */
+  --color-bg: #F5F5F5;                /* Background (alias for bg) */
+  --color-background: #F5F5F5;        /* Keep existing token */
   --color-surface: #FFFFFF;           /* Surface */
+
+  /* Text and muted */
   --color-text: #333333;              /* Text */
   --color-muted: #6B7280;             /* Muted */
+
+  /* Borders */
   --color-border: #E5E7EB;            /* Border */
 
   /* Shadow tokens using requested rgba values */
-  --elevation-1: 0 1px 2px rgba(0,0,0,0.06);
-  --elevation-2: 0 4px 6px rgba(0,0,0,0.1);
+  --shadow-soft: rgba(0,0,0,0.06);
+  --shadow-strong: rgba(0,0,0,0.1);
+  --elevation-1: 0 1px 2px var(--shadow-soft);
+  --elevation-2: 0 4px 6px var(--shadow-strong);
 
   /* Card treatments used across UI (unchanged semantics) */
   --card-bg: var(--color-surface);
