@@ -19,7 +19,7 @@ export default function Button({ variant = 'primary', size = 'md', className, ..
         size === 'lg' && 'px-4 py-2.5',
         variant === 'primary' && 'bg-primary text-white hover:opacity-90',
         variant === 'secondary' && 'bg-secondary text-white hover:opacity-90',
-        variant === 'ghost' && 'bg-transparent hover:bg-neutral-100',
+        variant === 'ghost' && 'bg-transparent hover:bg-neutral-100 text-text',
         className
       )}
     />

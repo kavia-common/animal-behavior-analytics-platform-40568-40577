@@ -34,7 +34,7 @@ export default function Sidebar({ onNavigate }: Props) {
               <button
                 key={t}
                 onClick={() => toggleType(t)}
-                className={`px-2.5 py-1 rounded-full text-xs border ${active ? 'bg-primary text-white border-primary' : 'border-gray-200 hover:bg-neutral-50'}`}
+                className={`px-2.5 py-1 rounded-full text-xs border ${active ? 'bg-primary text-white border-primary' : 'border-border hover:bg-neutral-50'}`}
                 aria-pressed={active}
               >
                 {t}
@@ -74,11 +74,11 @@ export default function Sidebar({ onNavigate }: Props) {
         <ul className="space-y-2 text-sm">
           {['Morning Foraging', 'High Confidence', 'Camera A'].map(n => (
             <li key={n} className="flex items-center justify-between">
-              <button className="text-neutral-900 hover:text-primary" onClick={() => onNavigate('/timeline')}>{n}</button>
+              <button className="text-text hover:text-primary" onClick={() => onNavigate('/timeline')}>{n}</button>
               <ChevronRight className="w-4 h-4 text-neutral-500" />
             </li>
           ))}
-          <li className="pt-2 mt-2 border-t">
+          <li className="pt-2 mt-2 border-t border-border">
             <button className="text-neutral-900 hover:text-primary" onClick={() => onNavigate('/reports/saved')}>Saved Reports</button>
           </li>
           <li>

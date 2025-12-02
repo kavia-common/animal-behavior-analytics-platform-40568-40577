@@ -15,13 +15,6 @@ export default function TopNav({ children }: { children?: React.ReactNode }) {
           className="h-7 w-auto object-contain select-none"
           style={{ paddingTop: 2, paddingBottom: 2 }}
         />
-        <span
-          className="text-sm md:text-base font-semibold tracking-tight select-none"
-          style={{ color: 'var(--color-primary)' }}
-          aria-label="vizai brand"
-        >
-          vizai
-        </span>
       </div>
 
       {/* Center content (tabs/search/date etc.) */}
