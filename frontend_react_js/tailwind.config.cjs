@@ -4,16 +4,16 @@ module.exports = {
     extend: {
       colors: {
         // VizAI application palette (single source of truth)
-        primary: '#2C5F9A',
-        secondary: '#20B2AA',
-        accent: '#FF6B35',
+        primary: '#2C5F9A',      // Primary
+        secondary: '#20B2AA',    // Secondary
+        accent: '#FF6B35',       // Accent
         neutral: {
-          50: '#F5F5F5',
-          900: '#333333',
+          50: '#F5F5F5',         // Neutral Light
+          900: '#333333',        // Neutral Dark
         },
-        success: '#4CAF50',
-        warning: '#FFC107',
-        error: '#F44336',
+        success: '#4CAF50',      // Success
+        warning: '#FFC107',      // Warning
+        error: '#F44336',        // Error
       },
       fontFamily: {
         sans: ['Inter', 'Open Sans', 'system-ui', 'sans-serif'],
