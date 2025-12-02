@@ -33,6 +33,7 @@ function GlobalDateSelector() {
         >
           Clear All
         </Button>
+        {/* Quick presets moved adjacent to Clear All only, not in top-row date picker */}
         <Button
           variant="ghost"
           size="sm"
