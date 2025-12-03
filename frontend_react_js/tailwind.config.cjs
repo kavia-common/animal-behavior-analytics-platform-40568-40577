@@ -18,6 +18,11 @@ module.exports = {
         logoutHoverBg: 'var(--color-logout-hover-bg)',
         logoutText: 'var(--color-logout-text)',
         exportGreen: 'var(--color-export-green)',
+
+        /* Additional semantic aliases to ease component mapping without structural changes */
+        info: 'var(--color-primary)',
+        warning: 'var(--color-secondary)',
+        success: 'var(--color-export-green)',
       },
       boxShadow: {
         soft: 'var(--shadow-soft)',

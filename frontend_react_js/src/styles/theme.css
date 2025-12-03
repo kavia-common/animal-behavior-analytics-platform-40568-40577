@@ -1,35 +1,51 @@
 :root {
-  /* STRICT GLOBAL THEME TOKENS */
-  --color-primary: #0F766E;
-  --color-primary-600: #0E8780;
-  --color-secondary: #F59E0B;
-  --color-error: #DC2626;
-  --color-bg: #F8FAFC;
-  --color-surface: #FFFFFF;
-  --color-text: #111827;
-  --color-text-muted: #6B7280;
-  --color-border: #E5E7EB;
-  --color-sidebar-active-bg: #E6F5F0;
-  --color-table-header-bg: #F1F5F9;
-  --color-table-row-hover: #EEF7F4;
-  --color-logout-hover-bg: #FFE8E8;
-  --color-logout-text: #B91C1C;
-  --shadow-soft: 0px 1px 2px rgba(0,0,0,0.06);
+  /* STRICT GLOBAL THEME TOKENS (updated to match screenshot palette) */
+  /* Primary aqua/teal for accents, numbers on widgets, icons */
+  --color-primary: #00A6B8;            /* aqua accent seen on counts and icons */
+  --color-primary-600: #008EA0;        /* darker hover/focus state */
 
-  /* Derived helpers (no new brand colors introduced) */
-  --color-primary-light: rgba(15, 118, 110, 0.08);
-  --color-card-shadow-rgba: rgba(0, 0, 0, 0.06);
+  /* Secondary warm amber used in “Behaviors Detected” card and small icons */
+  --color-secondary: #F5B74D;          /* soft amber */
+  /* Danger/error remains similar but tuned slightly deeper for contrast */
+  --color-error: #D12A2A;
+
+  /* Background/surfaces: very light cool gray canvas, white cards */
+  --color-bg: #F5F7F9;                 /* page background */
+  --color-surface: #FFFFFF;            /* cards, header, sidebar panes */
+
+  /* Text and border neutrals */
+  --color-text: #0F172A;               /* near-slate for strong contrast */
+  --color-text-muted: #6B7280;         /* muted labels */
+  --color-border: #E6E8ED;             /* subtle cool gray borders */
+
+  /* Sidebar and subtle selection states */
+  --color-sidebar-active-bg: #F0FAFB;  /* faint aqua-tinted selection */
+
+  /* Tables */
+  --color-table-header-bg: #F3F6FA;    /* very light blue-gray */
+  --color-table-row-hover: #F0FAFB;    /* match sidebar active tint */
+
+  /* Logout hover/alerts align with danger scale */
+  --color-logout-hover-bg: #FDECEC;
+  --color-logout-text: #B42318;
+
+  /* Shadow remains soft and subtle */
+  --shadow-soft: 0px 1px 2px rgba(16, 24, 40, 0.06);
+
+  /* Derived helpers */
+  --color-primary-light: rgba(0, 166, 184, 0.10);
+  --color-card-shadow-rgba: rgba(16, 24, 40, 0.06);
 
   /* Additional tokens used by components (mapped to the strict tokens above) */
   --shadow-card: var(--shadow-soft);
 
-  /* Do not change spacing or radius; keep existing 12–16px range for cards */
+  /* Keep radii unchanged per requirement */
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
 
-  /* Optional export green for Analytics */
-  --color-export-green: #22C55E;
+  /* Success used by green “Logout” button and positive badges in screenshot */
+  --color-export-green: #16A34A; /* tailwind green-600 like */
 }
 
 /* Global surface and text defaults */
@@ -84,6 +100,6 @@ a:hover { color: var(--color-primary-600); }
 /* Accessible focus ring using soft shadow */
 :where(button, a, input, select, [role="button"], [tabindex]:not([tabindex="-1"])):focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.25);
+  box-shadow: 0 0 0 3px rgba(0, 166, 184, 0.28);
   border-radius: var(--radius-sm);
 }

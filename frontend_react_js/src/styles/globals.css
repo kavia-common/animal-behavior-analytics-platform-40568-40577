@@ -17,7 +17,11 @@ html, body, #root {
 }
 
 body {
-  @apply bg-gray-100 text-gray-900 antialiased;
+  /* Use theme variables for body instead of Tailwind fixed grays to reflect new palette */
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
@@ -218,6 +222,11 @@ html, body, #root {
 /* Table header/row hover */
 .bg-tableHeaderBg { background: var(--color-table-header-bg); }
 .hover\:bg-tableRowHover:hover { background: var(--color-table-row-hover); }
+
+/* Accent text classes used in widgets and charts (maps to aqua/amber/green) */
+.text-accent { color: var(--color-primary); }
+.text-accent-secondary { color: var(--color-secondary); }
+.text-success { color: var(--color-export-green); }
 
 /* Token shims to match class usage in components (maps to CSS variables) */
 .text-secondaryText { color: var(--color-text); }
