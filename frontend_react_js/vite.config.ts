@@ -24,6 +24,8 @@ export default defineConfig(() => {
     'vscode-internal-40254-beta.beta01.cloud.kavia.ai',
     'vscode-internal-16907-beta.beta01.cloud.kavia.ai',
     'vscode-internal-39760-beta.beta01.cloud.kavia.ai',
+    // Allow preview host
+    'vscode-internal-21973-beta.beta01.cloud.kavia.ai',
   ];
 
   return {
