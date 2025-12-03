@@ -64,7 +64,10 @@ export default function TimelinePage() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="stack-lg">
+      <div className="page-header">
+        <h1 className="text-xl font-semibold text-gray-900">Timeline</h1>
+      </div>
       <Card>
         <CardHeader title="Filters" />
         <CardBody>
@@ -87,7 +90,9 @@ export default function TimelinePage() {
       <Card>
         <CardHeader title="Behavior Timeline" />
         <CardBody>
-          <TimelineControls zoom={zoom} onZoomChange={setZoom} onScrollLeft={() => {}} onScrollRight={() => {}} />
+          <div className="inline-controls">
+            <TimelineControls zoom={zoom} onZoomChange={setZoom} onScrollLeft={() => {}} onScrollRight={() => {}} />
+          </div>
           <div className="mt-3 overflow-x-auto">
             <div className="min-w-[640px]">
               <BehaviorTimeline

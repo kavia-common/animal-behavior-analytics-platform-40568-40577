@@ -8,12 +8,16 @@ import { VideoLibraryTable } from "@/components/ui/Tables";
  */
 export default function VideoLibraryPage() {
   return (
-    <div className="space-y-4">
-      <Card className="p-4">
-        <div className="font-heading font-semibold text-[var(--color-text)]">Video Library</div>
-        <p className="text-sm text-[var(--color-text-muted)]">Manage uploaded videos and tracking status.</p>
-      </Card>
-      <VideoLibraryTable />
+    <div className="stack-lg">
+      <div className="page-header">
+        <div>
+          <div className="font-heading font-semibold text-[var(--color-text)]">Video Library</div>
+          <p className="text-sm text-[var(--color-text-muted)]">Manage uploaded videos and tracking status.</p>
+        </div>
+      </div>
+      <div className="media-frame">
+        <VideoLibraryTable />
+      </div>
       <div className="text-xs text-[var(--color-text-muted)]">
         Actions: View (teal/blue), Download (green), Delete (red).
       </div>

@@ -1,0 +1,264 @@
+:root {
+  /* Baseline grid and spacing scale */
+  --baseline: 4px;
+  --gutter-xs: calc(var(--baseline) * 2);   /* 8  */
+  --gutter-sm: calc(var(--baseline) * 3);   /* 12 */
+  --gutter-md: calc(var(--baseline) * 4);   /* 16 */
+  --gutter-lg: calc(var(--baseline) * 6);   /* 24 */
+  --gutter-xl: calc(var(--baseline) * 8);   /* 32 */
+
+  /* Content max widths for readability */
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+
+  /* Form specifics */
+  --label-width: 200px;
+  --control-min-height: 40px;
+
+  /* Border radii and shadows to match theme.css intent */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* Responsive containers */
+.container,
+.container-md,
+.container-lg,
+.container-xl {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--gutter-lg);
+  padding-right: var(--gutter-lg);
+}
+
+.container { max-width: var(--container-lg); }
+.container-md { max-width: var(--container-md); }
+.container-lg { max-width: var(--container-xl); }
+.container-xl { max-width: calc(var(--container-xl) + 160px); }
+
+/* Baseline vertical rhythm */
+.stack-xs > * + * { margin-top: var(--gutter-xs); }
+.stack-sm > * + * { margin-top: var(--gutter-sm); }
+.stack-md > * + * { margin-top: var(--gutter-md); }
+.stack-lg > * + * { margin-top: var(--gutter-lg); }
+.stack-xl > * + * { margin-top: var(--gutter-xl); }
+
+/* Grid utilities */
+.grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-gap: var(--gutter-lg);
+}
+.grid-gap-sm { grid-gap: var(--gutter-sm); }
+.grid-gap-md { grid-gap: var(--gutter-md); }
+.grid-gap-lg { grid-gap: var(--gutter-lg); }
+
+@media (max-width: 1024px) {
+  .grid-12 { grid-gap: var(--gutter-md); }
+}
+@media (max-width: 768px) {
+  .grid-12 { grid-template-columns: repeat(6, 1fr); grid-gap: var(--gutter-md); }
+}
+@media (max-width: 560px) {
+  .grid-12 { grid-template-columns: repeat(4, 1fr); grid-gap: var(--gutter-sm); }
+}
+
+/* Uniform form layout */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gutter-md);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: var(--label-width) 1fr;
+  align-items: center;
+  gap: var(--gutter-md);
+}
+
+.form-row-start {
+  display: grid;
+  grid-template-columns: var(--label-width) 1fr;
+  align-items: start;
+  gap: var(--gutter-md);
+}
+
+.form-label {
+  font-weight: 600;
+  color: var(--color-text-600, #374151);
+  text-align: right;
+  padding-right: var(--gutter-md);
+  line-height: 1.2;
+}
+
+.form-control {
+  display: flex;
+  align-items: center;
+  min-height: var(--control-min-height);
+}
+
+.form-control input,
+.form-control select,
+.form-control textarea {
+  width: 100%;
+  min-height: var(--control-min-height);
+  padding: 10px 12px;
+  border: 1px solid var(--color-border-200, #E5E7EB);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface, #FFFFFF);
+  outline: none;
+}
+
+.form-help {
+  grid-column: 2 / -1;
+  font-size: 12px;
+  color: var(--color-text-500, #6B7280);
+  margin-top: -8px;
+}
+
+/* Mobile form adjustments */
+@media (max-width: 768px) {
+  .form-row,
+  .form-row-start {
+    grid-template-columns: 1fr;
+  }
+  .form-label {
+    text-align: left;
+    padding-right: 0;
+  }
+  .form-help {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Button groups with consistent spacing */
+.btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gutter-sm);
+}
+.btn-group-right { justify-content: flex-end; }
+.btn-group-center { justify-content: center; }
+.btn-group .btn + .btn { margin-left: 0; }
+
+/* Card gutters and consistent padding */
+.card-section {
+  padding: var(--gutter-lg);
+}
+.card-section-tight {
+  padding: var(--gutter-md);
+}
+
+/* Tables alignment */
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.table th,
+.table td {
+  padding: 12px 16px;
+  vertical-align: middle;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border-100, #F3F4F6);
+}
+.table th {
+  font-weight: 600;
+  color: var(--color-text-600, #374151);
+  background: var(--color-surface-alt, #F9FAFB);
+}
+.table td.numeric,
+.table th.numeric {
+  text-align: right;
+}
+.table .cell-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--gutter-xs);
+}
+
+/* Compact table variant for dense data */
+.table-compact th,
+.table-compact td {
+  padding: 8px 12px;
+}
+
+/* Modal layout */
+.modal-body-stack > * + * {
+  margin-top: var(--gutter-md);
+}
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--gutter-sm);
+  padding-top: var(--gutter-md);
+  border-top: 1px solid var(--color-border-100, #F3F4F6);
+}
+
+/* Top/bottom sections spacing to align with baseline grid */
+.section {
+  margin-top: var(--gutter-xl);
+  margin-bottom: var(--gutter-xl);
+}
+
+/* Utility alignments */
+.align-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.items-end { align-items: flex-end; }
+.items-start { align-items: flex-start; }
+
+.row {
+  display: flex;
+  gap: var(--gutter-lg);
+}
+
+.row-center {
+  display: flex;
+  align-items: center;
+  gap: var(--gutter-md);
+}
+
+/* Page header alignment */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gutter-md);
+  margin-bottom: var(--gutter-lg);
+}
+
+/* Sticky grid gutters for top-level page content */
+.page-container {
+  padding: var(--gutter-xl) var(--gutter-lg);
+}
+
+/* Ensure videos and charts align on grid */
+.media-frame,
+.chart-frame {
+  padding: var(--gutter-md);
+  background: var(--color-surface, #FFF);
+  border: 1px solid var(--color-border-100, #F3F4F6);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Fix inputs inside inline toolbars (e.g., timeline controls) */
+.inline-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--gutter-sm);
+}
+
+/* Ensure consistent gap in tab headers, filters, etc. */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--gutter-md);
+}

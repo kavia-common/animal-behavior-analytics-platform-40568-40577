@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import './layout.css';
+
 /* Layout helpers for responsive alignment without changing theme tokens */
 /* Keep sticky top nav height consistent across app */
 :root {

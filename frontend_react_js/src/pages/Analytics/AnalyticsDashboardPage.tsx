@@ -22,7 +22,14 @@ export default function AnalyticsDashboardPage() {
   ];
 
   return (
-    <div className="space-y-4">
+    <div className="stack-lg">
+      <div className="page-header">
+        <h1 className="text-xl font-semibold text-gray-900">Analytics</h1>
+        <div className="toolbar">
+          <Button variant="secondary" onClick={()=>setFilters({start:"",end:"",label:"",behavior:"",source:""})}>Clear All</Button>
+          <Button>Refresh</Button>
+        </div>
+      </div>
       <Card>
         <CardHeader title="Smart Filters" />
         <CardBody>
@@ -59,7 +66,7 @@ export default function AnalyticsDashboardPage() {
       <Card>
         <CardHeader title="Analytics" />
         <CardBody>
-          <div className="overflow-x-auto">
+          <div className="media-frame overflow-x-auto">
             <table className="min-w-[640px] w-full text-sm">
               <thead style={{ background: "var(--color-table-header-bg)", color: "var(--color-text)" }}>
                 <tr className="border-b" style={{ borderColor: "var(--color-border)" }}>
