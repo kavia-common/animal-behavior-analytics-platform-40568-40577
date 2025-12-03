@@ -52,7 +52,7 @@ export default function TopNav({ onMenuClick }: TopNavProps) {
   };
 
   return (
-    <div className="w-full h-16 px-4 lg:px-6 flex items-center justify-between bg-white">
+    <div className="w-full h-16 px-4 lg:px-6 flex items-center bg-white" style={{ justifyContent: 'space-between' }}>
       <div className="flex items-center gap-3">
         {/* Mobile hamburger */}
         <button

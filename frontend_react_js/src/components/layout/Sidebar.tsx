@@ -19,7 +19,7 @@ export default function Sidebar({ onNavigate }: { onNavigate?: (path?: string) =
   };
 
   return (
-    <div className="h-full p-4 space-y-2">
+    <div className="h-full p-4 pr-3 space-y-2">
       <NavLink to="/dashboard" className={linkCls} onClick={(e) => { e.preventDefault(); go("/dashboard"); }}>
         <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg" style={iconStyle}>🏠</span>
         <span style={baseText}>Home</span>

@@ -97,9 +97,9 @@ export default function RootLayout() {
           </div>
         </aside>
 
-        {/* Main content area with gutters and max width */}
+        {/* Main content area with gutters */}
         <main className="app-content py-4 lg:py-6 page-container">
-          <div className="container">
+          <div>
             <Outlet />
           </div>
         </main>

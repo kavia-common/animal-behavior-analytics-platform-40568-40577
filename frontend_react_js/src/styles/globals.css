@@ -47,10 +47,10 @@ body {
   }
 }
 
-/* Constrain main content width and provide consistent gutters */
+/* Constrain main content with gutters without forced centering */
 .app-content {
-  @apply mx-auto w-full;
-  max-width: 80rem; /* ~ max-w-7xl */
+  width: 100%;
+  max-width: none;
   padding-left: 1rem;
   padding-right: 1rem;
 }
@@ -165,40 +165,7 @@ html, body, #root {
   color: var(--color-text);
 }
 
-.app-shell {
-  display: grid;
-  grid-template-rows: 64px 1fr;
-  grid-template-columns: 240px 1fr;
-  grid-template-areas:
-    "topnav topnav"
-    "sidebar main";
-  height: 100%;
-}
-
-@media (max-width: 1023px) {
-  .app-shell {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "topnav"
-      "main";
-  }
-}
-
-.topnav {
-  grid-area: topnav;
-  background-color: var(--color-surface);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.sidebar {
-  grid-area: sidebar;
-  background-color: var(--color-surface);
-  border-right: 1px solid var(--color-border);
-}
-
-.main {
-  grid-area: main;
-}
+/* Removed grid-area overrides to restore original app-shell behavior defined earlier */
 
 /* Card and badge helpers */
 .card {
