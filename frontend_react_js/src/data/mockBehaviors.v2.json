@@ -1,0 +1,7 @@
+[
+  { "id": "e1", "type": "Pacing", "start": "06:10", "end": "06:35", "startMin": 370, "endMin": 395, "durationMin": 25, "confidence": 92, "camera": "Cam A", "color": "var(--color-primary)" },
+  { "id": "e2", "type": "Recumbent", "start": "08:05", "end": "08:50", "startMin": 485, "endMin": 530, "durationMin": 45, "confidence": 78, "camera": "Cam B", "color": "#3B82F6" },
+  { "id": "e3", "type": "Scratching", "start": "10:20", "end": "10:35", "startMin": 620, "endMin": 635, "durationMin": 15, "confidence": 88, "camera": "Cam A", "color": "var(--color-secondary)" },
+  { "id": "e4", "type": "Self-directed", "start": "12:10", "end": "12:25", "startMin": 730, "endMin": 745, "durationMin": 15, "confidence": 81, "camera": "Cam B", "color": "#10B981" },
+  { "id": "e5", "type": "Foraging", "start": "16:40", "end": "17:05", "startMin": 1000, "endMin": 1025, "durationMin": 25, "confidence": 95, "camera": "Cam A", "color": "#A78BFA" }
+]
