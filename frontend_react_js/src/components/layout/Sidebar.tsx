@@ -10,7 +10,7 @@ const Sidebar: React.FC = () => {
   ];
 
   return (
-    <aside className="w-60 bg-white border-r min-h-screen p-4" style={{ borderColor: 'var(--color-border)' }}>
+    <aside className="w-60 bg-white border-r min-h-screen p-4" style={{ borderColor: 'var(--color-border)', background: 'var(--color-surface)' }}>
       <nav className="space-y-1">
         {links.map((l) => {
           const active = location.pathname === l.to || (l.to === '/' && location.pathname === '/dashboard');

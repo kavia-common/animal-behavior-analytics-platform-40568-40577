@@ -23,8 +23,8 @@ const TopNav: React.FC = () => {
         <button
           className="pill"
           style={{
-            background: 'var(--color-accent)',
-            color: '#fff',
+            background: 'var(--color-surface)',
+            color: 'var(--color-text)',
             borderColor: 'var(--color-primary)',
           }}
         >

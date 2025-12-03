@@ -33,7 +33,7 @@ const BehaviorCountBarChart: React.FC<Props> = ({ behaviors }) => {
           plugins: { legend: { display: false } },
           scales: {
             x: { grid: { display: false } },
-            y: { grid: { color: '#E5E7EB' }, ticks: { callback: (v) => `${v}` as any } },
+            y: { grid: { color: 'var(--color-border)' as any }, ticks: { callback: (v) => `${v}` as any } },
           },
           responsive: true,
           maintainAspectRatio: false,

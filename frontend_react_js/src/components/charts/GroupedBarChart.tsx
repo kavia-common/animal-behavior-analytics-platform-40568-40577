@@ -6,7 +6,7 @@ type Props = { data: any[]; keys: string[]; xKey: string };
 // PUBLIC_INTERFACE
 export default function GroupedBarChart({ data, keys, xKey }: Props) {
   /** Grouped bars */
-  const colors = ['var(--color-primary)', 'var(--color-secondary)', 'var(--color-accent)', 'var(--color-success)', 'var(--color-warning)'];
+  const colors = ['var(--color-primary)', 'var(--color-secondary)', 'var(--color-accent)', 'var(--color-primary-dark)', 'var(--color-border)'];
   return (
     <div className="w-full h-72">
       <ResponsiveContainer>

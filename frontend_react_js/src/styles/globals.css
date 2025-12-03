@@ -5,30 +5,31 @@
 /* VizAI Global Design Tokens */
 :root {
   /* Brand Colors */
-  --color-primary: #0F766E;
-  --color-primary-dark: #0E8780;
-  --color-accent: #10B981;
-  --color-secondary: #F59E0B;
-  --color-error: #DC2626;
+  /* Updated brand to match screenshots (teal/aqua + warm amber) */
+  --color-primary: #00A6B8;
+  --color-primary-dark: #008EA0;
+  --color-accent: #00A6B8; /* keep accent equal to primary for consistent pills */
+  --color-secondary: #F5B74D;
+  --color-error: #D12A2A;
 
   /* Text */
-  --color-text: #111827;
+  --color-text: #0F172A;
   --color-text-muted: #6B7280;
 
   /* Surfaces */
-  --color-border: #E5E7EB;
-  --color-bg: #F8FAFC;
+  --color-border: #E6E8ED;
+  --color-bg: #F5F7F9;
   --color-surface: #FFFFFF;
 
   /* UI Specific */
-  --color-sidebar-active-bg: #E6F5F0;
-  --color-table-header-bg: #F1F5F9;
-  --color-table-row-hover: #EEF7F4;
-  --color-logout-hover-bg: #FFE8E8;
-  --color-logout-text: #B91C1C;
+  --color-sidebar-active-bg: #F0FAFB; /* faint aqua-tinted selection */
+  --color-table-header-bg: #F3F6FA;
+  --color-table-row-hover: #F0FAFB;
+  --color-logout-hover-bg: #FDECEC;
+  --color-logout-text: #B42318;
 
   /* Shadow and Radii */
-  --shadow-elevation: 0px 1px 2px rgba(0,0,0,0.06);
+  --shadow-elevation: 0px 1px 2px rgba(16,24,40,0.06);
   --radius-card: 16px;
   --radius-input: 10px;
   --radius-button: 10px;
@@ -41,6 +42,9 @@
   /* Legacy shim tokens used by existing components */
   --color-grey-border: var(--color-border);
   --shadow-soft: var(--shadow-elevation);
+
+  /* Additional semantic token used by buttons/badges */
+  --color-export-green: #16A34A;
 }
 
 /* Base */
