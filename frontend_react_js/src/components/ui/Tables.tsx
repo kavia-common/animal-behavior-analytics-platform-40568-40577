@@ -10,28 +10,28 @@ export function VideoLibraryTable() {
   ];
   return (
     <div className="card p-5">
-      <div className="font-semibold mb-3" style={{ color: "var(--color-teal-dark-text)" }}>Video Library</div>
+      <div className="font-semibold mb-3 text-[var(--color-text)]">Video Library</div>
       <table className="w-full text-sm">
-        <thead>
-          <tr style={{ color: "var(--color-faint-text)" }}>
-            <th className="text-left py-2">Video Name</th>
-            <th className="text-left py-2">Date & Time</th>
-            <th className="text-left py-2">Upload Progress</th>
-            <th className="text-left py-2">Detecting Behaviors</th>
-            <th className="text-left py-2">Actions</th>
+        <thead style={{ background: "var(--color-table-header-bg)" }}>
+          <tr style={{ color: "var(--color-text-muted)" }}>
+            <th className="text-left py-2 px-2">Video Name</th>
+            <th className="text-left py-2 px-2">Date & Time</th>
+            <th className="text-left py-2 px-2">Upload Progress</th>
+            <th className="text-left py-2 px-2">Detecting Behaviors</th>
+            <th className="text-left py-2 px-2">Actions</th>
           </tr>
         </thead>
         <tbody>
           {rows.map((r) => (
-            <tr key={r.name} className="border-t" style={{ borderColor: "var(--color-grey-border)" }}>
-              <td className="py-2">{r.name}</td>
-              <td className="py-2">{r.dt}</td>
-              <td className="py-2">
-                <div className="h-2 rounded" style={{ background: "#F1F1F1" }}>
-                  <div className="h-full rounded" style={{ width: `${r.progress}%`, background: "var(--color-teal-primary)" }} />
+            <tr key={r.name} className="border-t hover:bg-[var(--color-table-row-hover)]" style={{ borderColor: "var(--color-border)" }}>
+              <td className="py-2 px-2">{r.name}</td>
+              <td className="py-2 px-2">{r.dt}</td>
+              <td className="py-2 px-2">
+                <div className="h-2 rounded" style={{ background: "#F1F5F9" }}>
+                  <div className="h-full rounded" style={{ width: `${r.progress}%`, background: "var(--color-primary)" }} />
                 </div>
               </td>
-              <td className="py-2">
+              <td className="py-2 px-2">
                 {r.status === "Completed" ? (
                   <Badge tone="completed">Completed</Badge>
                 ) : r.status === "Processing" ? (
@@ -40,11 +40,11 @@ export function VideoLibraryTable() {
                   <Badge tone="pending">Pending</Badge>
                 )}
               </td>
-              <td className="py-2">
+              <td className="py-2 px-2">
                 <div className="flex gap-2">
-                  <button className="px-2 py-1 rounded" style={{ background: "var(--color-teal-primary)", color: "#fff" }}>View</button>
-                  <button className="px-2 py-1 rounded" style={{ background: "var(--color-green-completed)", color: "#14532d" }}>Download</button>
-                  <button className="px-2 py-1 rounded" style={{ background: "var(--color-red-delete)", color: "#fff" }}>Delete</button>
+                  <button className="px-2 py-1 rounded text-white" style={{ background: "var(--color-primary)" }} title="View">👁</button>
+                  <button className="px-2 py-1 rounded text-white" style={{ background: "#16A34A" }} title="Download">⬇</button>
+                  <button className="px-2 py-1 rounded text-white" style={{ background: "#E8504B" }} title="Delete">🗑</button>
                 </div>
               </td>
             </tr>

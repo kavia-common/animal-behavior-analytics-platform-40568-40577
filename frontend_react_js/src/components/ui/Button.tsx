@@ -12,14 +12,14 @@ export default function Button({ variant = "primary", size = "md", className = "
 
   let merged: React.CSSProperties = {};
   if (variant === "primary") {
-    merged = { background: "var(--color-teal-primary)", color: "#fff" };
+    merged = { background: "var(--color-primary)", color: "#fff" };
   } else if (variant === "danger") {
-    merged = { background: "var(--color-red-delete)", color: "#fff" };
+    merged = { background: "var(--color-error)", color: "#fff" };
   } else if (variant === "secondary") {
-    merged = { border: "1px solid var(--color-grey-border)", color: "var(--color-teal-dark-text)", background: "#fff" };
+    merged = { border: "1px solid var(--color-border)", color: "var(--color-text)", background: "var(--color-surface)" };
   } else {
     // ghost
-    merged = { background: "transparent", color: "var(--color-teal-dark-text)" };
+    merged = { background: "transparent", color: "var(--color-text)" };
   }
   return <button className={`${base} ${sizeCls} ${className}`} style={{ ...merged, ...style }} {...rest} />;
 }

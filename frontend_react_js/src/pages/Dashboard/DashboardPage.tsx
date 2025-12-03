@@ -121,7 +121,7 @@ export default function DashboardPage() {
 
       <section className="grid gap-3 md:grid-cols-4">
         <div className="card p-4">
-          <div className="text-xs text-neutral-600">Total behaviors in range</div>
+          <div className="text-xs" style={{ color: "var(--color-text-muted)" }}>Total behaviors in range</div>
           <div className="flex items-end justify-between">
             <div className="font-mono text-2xl">{totalBehaviors}</div>
             <div className="w-24 h-10">

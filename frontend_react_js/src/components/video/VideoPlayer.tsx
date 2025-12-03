@@ -44,7 +44,7 @@ export default function VideoPlayer({ src, poster, onReady }: Props) {
     <div className="relative">
       <video ref={videoRef as any} className="video-js vjs-default-skin rounded" />
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute rounded" style={{ left: '30%', top: '35%', width: '25%', height: '20%', border: '2px solid var(--color-accent)' }} />
+        <div className="absolute rounded" style={{ left: '30%', top: '35%', width: '25%', height: '20%', border: '2px solid var(--color-primary)' }} />
       </div>
     </div>
   );

@@ -23,8 +23,8 @@ export default function Modal({ open, onClose, title, children, wide }: Props) {
     <div className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label={title || 'Modal'}>
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
       <div className="absolute inset-0 flex items-center justify-center p-4">
-        <div className={`bg-white rounded-lg shadow-soft border border-gray-200 w-full ${wide ? 'max-w-6xl' : 'max-w-3xl'}`}>
-          <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
+        <div className={`bg-[var(--color-surface)] rounded-lg shadow-soft border w-full ${wide ? 'max-w-6xl' : 'max-w-3xl'}`} style={{ borderColor: "var(--color-border)" }}>
+          <div className="px-4 py-3 border-b flex items-center justify-between" style={{ borderColor: "var(--color-border)" }}>
             <h3 className="font-heading font-semibold">{title}</h3>
             <button aria-label="Close" onClick={onClose} className="px-2 py-1 rounded hover:bg-neutral-100">✕</button>
           </div>

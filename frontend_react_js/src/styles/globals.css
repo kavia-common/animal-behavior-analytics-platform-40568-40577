@@ -5,7 +5,7 @@
 html, body, #root {
   height: 100%;
   background: var(--color-bg);
-  color: var(--color-teal-dark-text);
+  color: var(--color-text);
 }
 
 .app-shell {
@@ -29,14 +29,14 @@ html, body, #root {
 
 .topnav {
   grid-area: topnav;
-  background-color: var(--color-bg);
-  border-bottom: 1px solid var(--color-grey-border);
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .sidebar {
   grid-area: sidebar;
-  background-color: var(--color-bg);
-  border-right: 1px solid var(--color-grey-border);
+  background-color: var(--color-surface);
+  border-right: 1px solid var(--color-border);
 }
 
 .main {
@@ -45,35 +45,35 @@ html, body, #root {
 
 /* Card and badge helpers */
 .card {
-  background: var(--color-bg);
+  background: var(--color-surface);
   border-radius: 0.75rem;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-  border: 1px solid var(--color-grey-border);
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--color-border);
 }
 
 .badge { border-radius: 9999px; padding: 0.125rem 0.5rem; font-weight: 600; font-size: 0.75rem; }
-.badge--completed { background: color-mix(in srgb, var(--color-green-completed) 20%, white); color: #2d6a1f; border: 1px solid var(--color-green-completed); }
-.badge--processing { background: color-mix(in srgb, var(--color-teal-primary) 12%, white); color: var(--color-teal-dark-text); border: 1px solid var(--color-teal-primary); }
-.badge--pending { background: #F7F7F7; color: var(--color-faint-text); border: 1px solid var(--color-grey-border); }
+.badge--completed { background: rgba(34,197,94,0.12); color: #065F46; border: 1px solid rgba(34,197,94,0.35); }
+.badge--processing { background: rgba(15,118,110,0.12); color: var(--color-text); border: 1px solid rgba(15,118,110,0.35); }
+.badge--pending { background: #F7F7F7; color: var(--color-text-muted); border: 1px solid var(--color-border); }
 
 /* Sidebar active background per requirement */
-.sidebar-active { background: var(--color-teal-light); color: var(--color-teal-dark-text); }
+.sidebar-active { background: var(--color-sidebar-active-bg); color: var(--color-text); }
 
 /* Tab underline */
-.tab-active { border-bottom: 2px solid var(--color-teal-primary); color: var(--color-teal-dark-text); }
+.tab-active { border-bottom: 2px solid var(--color-primary); color: var(--color-text); }
 
 /* Table header/row hover */
-.bg-tableHeaderBg { background: #F9FAFA; }
-.hover\:bg-tableRowHover:hover { background: #F5FCFB; }
+.bg-tableHeaderBg { background: var(--color-table-header-bg); }
+.hover\:bg-tableRowHover:hover { background: var(--color-table-row-hover); }
 
 /* Token shims to match class usage in components (maps to CSS variables) */
-.text-secondaryText { color: var(--color-teal-dark-text); }
-.text-neutralMid { color: var(--color-faint-text); }
+.text-secondaryText { color: var(--color-text); }
+.text-neutralMid { color: var(--color-text-muted); }
 .bg-neutralLightBg { background: var(--color-bg); }
-.bg-surface { background: var(--color-bg); }
-.border-neutralBorder { border-color: var(--color-grey-border); }
-.bg-primary { background: var(--color-teal-primary); }
-.bg-primaryHover { background: #006967; }
-.text-success { color: var(--color-green-completed); }
-.bg-sidebarActiveBg { background: var(--color-teal-light); }
-.text-sidebarIcon { color: var(--color-teal-dark-text); }
+.bg-surface { background: var(--color-surface); }
+.border-neutralBorder { border-color: var(--color-border); }
+.bg-primary { background: var(--color-primary); }
+.bg-primaryHover { background: var(--color-primary-600); }
+.text-success { color: #16A34A; }
+.bg-sidebarActiveBg { background: var(--color-sidebar-active-bg); }
+.text-sidebarIcon { color: var(--color-text); }

@@ -9,3 +9,5 @@ export { default as ProfilePage } from './Profile/ProfilePage';
 export { default as NotFoundPage } from './System/NotFoundPage';
 export { default as ErrorPage } from './System/ErrorPage';
 export { default as NetworkRetryPage } from './System/NetworkRetryPage';
+export { default as VideoLibraryPage } from './VideoLibrary/VideoLibraryPage';
+export { default as AnalyticsDashboardPage } from './Analytics/AnalyticsDashboardPage';

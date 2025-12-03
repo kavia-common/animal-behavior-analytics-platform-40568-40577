@@ -22,9 +22,11 @@ export default function RootLayout() {
         {!pathname.startsWith("/animals") && (
           <div className="px-6 border-t" style={{ borderColor: "var(--color-grey-border)" }}>
             <nav className="flex gap-6 h-11 items-center text-sm">
-              <Link to="/dashboard" className={`h-full inline-flex items-center ${pathname.startsWith("/dashboard") || pathname === "/" ? "tab-active" : ""}`} style={{ color: pathname.startsWith("/dashboard") || pathname === "/" ? "var(--color-teal-dark-text)" : "var(--color-faint-text)" }}>Dashboard</Link>
-              <Link to="/timeline" className={`h-full inline-flex items-center ${pathname.startsWith("/timeline") ? "tab-active" : ""}`} style={{ color: pathname.startsWith("/timeline") ? "var(--color-teal-dark-text)" : "var(--color-faint-text)" }}>Timeline</Link>
-              <Link to="/reports" className={`h-full inline-flex items-center ${pathname.startsWith("/reports") ? "tab-active" : ""}`} style={{ color: pathname.startsWith("/reports") ? "var(--color-teal-dark-text)" : "var(--color-faint-text)" }}>Reports</Link>
+              <Link to="/dashboard" className={`h-full inline-flex items-center ${pathname.startsWith("/dashboard") || pathname === "/" ? "tab-active" : ""}`} style={{ color: pathname.startsWith("/dashboard") || pathname === "/" ? "var(--color-text)" : "var(--color-text-muted)" }}>Dashboard</Link>
+              <Link to="/timeline" className={`h-full inline-flex items-center ${pathname.startsWith("/timeline") ? "tab-active" : ""}`} style={{ color: pathname.startsWith("/timeline") ? "var(--color-text)" : "var(--color-text-muted)" }}>Timeline</Link>
+              <Link to="/reports" className={`h-full inline-flex items-center ${pathname.startsWith("/reports") ? "tab-active" : ""}`} style={{ color: pathname.startsWith("/reports") ? "var(--color-text)" : "var(--color-text-muted)" }}>Reports</Link>
+              <Link to="/library" className={`h-full inline-flex items-center ${pathname.startsWith("/library") ? "tab-active" : ""}`} style={{ color: pathname.startsWith("/library") ? "var(--color-text)" : "var(--color-text-muted)" }}>Video Library</Link>
+              <Link to="/analytics" className={`h-full inline-flex items-center ${pathname.startsWith("/analytics") ? "tab-active" : ""}`} style={{ color: pathname.startsWith("/analytics") ? "var(--color-text)" : "var(--color-text-muted)" }}>Analytics</Link>
             </nav>
           </div>
         )}
