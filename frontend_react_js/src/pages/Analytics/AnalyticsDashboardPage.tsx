@@ -58,7 +58,7 @@ export default function AnalyticsDashboardPage() {
                 style={{ borderColor: "var(--color-border)", color: "var(--color-text)", background: "var(--color-surface)" }}
               >
                 <option value="">Any</option>
-                {behaviorOptions.map((o) => (
+                {behaviorOptions.map((o: { value: string; label: string }) => (
                   <option key={o.value} value={o.value}>{o.label}</option>
                 ))}
               </select>

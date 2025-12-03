@@ -27,11 +27,11 @@ export default function BehaviorCountBarChart({ data, onBarClick }: Props) {
   const normalized = useMemo(() => {
     const map = new Map<string, number>();
     (data ?? []).forEach((d) => {
-      if ((EXACT_BEHAVIORS as string[]).includes(d.type)) {
+      if ((EXACT_BEHAVIORS as readonly string[]).includes(d.type)) {
         map.set(d.type, (map.get(d.type) || 0) + (d.count || 0));
       }
     });
-    return (EXACT_BEHAVIORS as BehaviorId[]).map((b) => ({ type: b, count: map.get(b) || 0 }));
+    return (EXACT_BEHAVIORS as readonly BehaviorId[]).map((b) => ({ type: b, count: map.get(b) || 0 }));
   }, [data]);
 
   const visibleData = useMemo(() => {
@@ -46,7 +46,7 @@ export default function BehaviorCountBarChart({ data, onBarClick }: Props) {
   return (
     <div className="w-full h-72">
       <div className="flex flex-wrap gap-2 mb-2">
-        {(EXACT_BEHAVIORS as BehaviorId[]).map((b) => {
+        {(EXACT_BEHAVIORS as readonly BehaviorId[]).map((b) => {
           const isHidden = !!hidden[b];
           return (
             <button

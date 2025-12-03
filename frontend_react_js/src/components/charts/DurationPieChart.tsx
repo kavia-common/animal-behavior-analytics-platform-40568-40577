@@ -21,16 +21,17 @@ export default function DurationPieChart({ data }: Props) {
     return m;
   }, [data]);
 
-  const labels = (EXACT_BEHAVIORS as BehaviorId[]);
-  const values = labels.map((l) => byLabel.get(l) || 0);
-  const colors = labels.map((l) => getBehaviorColor(l));
+  const labels = (EXACT_BEHAVIORS as readonly BehaviorId[]);
+  const values = [...labels].map((l) => byLabel.get(l) || 0);
+  const colors = [...labels].map((l) => getBehaviorColor(l));
 
   const chartData = {
-    labels,
+    // Chart.js expects a mutable array type for labels; spread to create one
+    labels: [...labels],
     datasets: [
       {
-        data: values,
-        backgroundColor: colors,
+        data: [...values],
+        backgroundColor: [...colors],
       },
     ],
   };

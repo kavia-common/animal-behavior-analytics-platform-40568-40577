@@ -21,7 +21,7 @@ import { EXACT_BEHAVIORS } from '@/lib/behaviors';
 export default function TimelinePage() {
   const { data: behaviors } = useQuery({ queryKey: ['behaviors'], queryFn: api.getBehaviors });
   const behaviorOptions = getAllBehaviorOptions();
-  const [selected, setSelected] = useState<string[]>(EXACT_BEHAVIORS);
+  const [selected, setSelected] = useState<string[]>([...(EXACT_BEHAVIORS as readonly string[])]);
   const [duration, setDuration] = useState(120);
   const uiRange = useSelector((s: RootState) => s.ui.globalDateRange);
   const [range, setRange] = useState({ start: uiRange.start, end: uiRange.end });
@@ -41,7 +41,7 @@ export default function TimelinePage() {
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const bh = params.get('behavior');
-    if (bh && (EXACT_BEHAVIORS as string[]).includes(bh)) {
+    if (bh && (EXACT_BEHAVIORS as readonly string[]).includes(bh)) {
       setSelected([bh]);
       setPage(1);
     }
@@ -52,7 +52,7 @@ export default function TimelinePage() {
       (behaviors ?? []).filter(
         (b: any) =>
           (selected.length ? selected.includes(b.type) : true) &&
-          (EXACT_BEHAVIORS as string[]).includes(b.type) &&
+          (EXACT_BEHAVIORS as readonly string[]).includes(b.type) &&
           b.durationMin <= duration
       ),
     [behaviors, selected, duration]
@@ -109,7 +109,7 @@ export default function TimelinePage() {
             <div className="min-w-[640px]">
               <BehaviorTimeline
                 segments={(behaviors ?? [])
-                  .filter((b: any) => (EXACT_BEHAVIORS as string[]).includes(b.type))
+                  .filter((b: any) => (EXACT_BEHAVIORS as readonly string[]).includes(b.type))
                   .map((b: any) => ({
                     id: b.id,
                     type: b.type,

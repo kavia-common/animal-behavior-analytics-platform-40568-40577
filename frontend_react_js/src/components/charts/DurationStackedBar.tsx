@@ -15,7 +15,7 @@ type Props = {
  */
 export default function DurationStackedBar({ data, keys }: Props) {
   const orderedKeys = useMemo(
-    () => (EXACT_BEHAVIORS as BehaviorId[]).filter((k) => keys.includes(k)),
+    () => ([...(EXACT_BEHAVIORS as readonly BehaviorId[])]).filter((k) => keys.includes(k)),
     [keys]
   );
 
