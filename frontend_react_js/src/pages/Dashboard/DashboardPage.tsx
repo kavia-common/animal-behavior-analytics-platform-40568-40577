@@ -161,11 +161,15 @@ export default function DashboardPage() {
         <Card className="lg:col-span-2">
           <CardHeader title="Behavior Counts" subtitle="Distribution by type (selected range)" />
           <CardBody>
-            {behaviorCounts.length === 0 ? (
-              <EmptyState title="No behavior data" description="Try expanding the date range." />
-            ) : (
-              <BehaviorCountBarChart data={behaviorCounts as any[]} onBarClick={onBarClick} />
-            )}
+            <div className="overflow-x-auto">
+              <div className="min-w-[640px]">
+                {behaviorCounts.length === 0 ? (
+                  <EmptyState title="No behavior data" description="Try expanding the date range." />
+                ) : (
+                  <BehaviorCountBarChart data={behaviorCounts as any[]} onBarClick={onBarClick} />
+                )}
+              </div>
+            </div>
           </CardBody>
         </Card>
 
@@ -181,13 +185,17 @@ export default function DashboardPage() {
             }
           />
           <CardBody>
-            {durationBreakdown.length === 0 ? (
-              <EmptyState title="No duration data" description="Adjust filters or time range." />
-            ) : chartMode === 'pie' ? (
-              <DurationPieChart data={durationBreakdown as any[]} />
-            ) : (
-              <DurationStackedBar data={durationStackData} keys={durationKeys} />
-            )}
+            <div className="overflow-x-auto">
+              <div className="min-w-[640px]">
+                {durationBreakdown.length === 0 ? (
+                  <EmptyState title="No duration data" description="Adjust filters or time range." />
+                ) : chartMode === 'pie' ? (
+                  <DurationPieChart data={durationBreakdown as any[]} />
+                ) : (
+                  <DurationStackedBar data={durationStackData} keys={durationKeys} />
+                )}
+              </div>
+            </div>
           </CardBody>
         </Card>
       </section>
@@ -196,11 +204,15 @@ export default function DashboardPage() {
         <Card>
           <CardHeader title="Daily Activity Heatmap" subtitle="Events by hour (0–23)" />
           <CardBody>
-            {dailyHeatmap.length === 0 ? (
-              <EmptyState title="No heatmap data" description="Adjust time range." />
-            ) : (
-              <DailyHeatmap data={dailyHeatmap as number[]} />
-            )}
+            <div className="overflow-x-auto">
+              <div className="min-w-[640px]">
+                {dailyHeatmap.length === 0 ? (
+                  <EmptyState title="No heatmap data" description="Adjust time range." />
+                ) : (
+                  <DailyHeatmap data={dailyHeatmap as number[]} />
+                )}
+              </div>
+            </div>
           </CardBody>
         </Card>
       </section>

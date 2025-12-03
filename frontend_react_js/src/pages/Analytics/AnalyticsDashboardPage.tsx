@@ -5,6 +5,7 @@ import Button from "@/components/ui/Button";
 /**
  * PUBLIC_INTERFACE
  * AnalyticsDashboardPage provides smart filters, actions, and an analytics table.
+ * Adds horizontal scrolling for the table on narrow screens.
  */
 export default function AnalyticsDashboardPage() {
   const [filters, setFilters] = useState({
@@ -59,7 +60,7 @@ export default function AnalyticsDashboardPage() {
         <CardHeader title="Analytics" />
         <CardBody>
           <div className="overflow-x-auto">
-            <table className="min-w-full text-sm">
+            <table className="min-w-[640px] w-full text-sm">
               <thead style={{ background: "var(--color-table-header-bg)", color: "var(--color-text)" }}>
                 <tr className="border-b" style={{ borderColor: "var(--color-border)" }}>
                   <th className="text-left p-2">Frame time (s)</th>

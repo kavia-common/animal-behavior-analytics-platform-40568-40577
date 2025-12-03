@@ -88,19 +88,21 @@ export default function TimelinePage() {
         <CardHeader title="Behavior Timeline" />
         <CardBody>
           <TimelineControls zoom={zoom} onZoomChange={setZoom} onScrollLeft={() => {}} onScrollRight={() => {}} />
-          <div className="mt-3">
-            <BehaviorTimeline
-              segments={(behaviors ?? []).map((b: any) => ({
-                id: b.id,
-                type: b.type,
-                start: b.startMin,
-                end: b.endMin,
-                camera: b.camera,
-                confidence: b.confidence,
-              }))}
-              onSelect={(id: string) => setPreviewId(id)}
-              zoomScale={zoomToScale(zoom)}
-            />
+          <div className="mt-3 overflow-x-auto">
+            <div className="min-w-[640px]">
+              <BehaviorTimeline
+                segments={(behaviors ?? []).map((b: any) => ({
+                  id: b.id,
+                  type: b.type,
+                  start: b.startMin,
+                  end: b.endMin,
+                  camera: b.camera,
+                  confidence: b.confidence,
+                }))}
+                onSelect={(id: string) => setPreviewId(id)}
+                zoomScale={zoomToScale(zoom)}
+              />
+            </div>
           </div>
         </CardBody>
       </Card>
@@ -121,8 +123,10 @@ export default function TimelinePage() {
       <div className="mt-4">
         {/* Behavior Events Table */}
         <div className="font-heading font-semibold mb-2">Behavior Events</div>
-        <div>
-          <BehaviorEventsTable items={filtered as any[]} />
+        <div className="overflow-x-auto">
+          <div className="min-w-[640px]">
+            <BehaviorEventsTable items={filtered as any[]} />
+          </div>
         </div>
       </div>
 

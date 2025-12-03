@@ -2,6 +2,157 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Layout helpers for responsive alignment without changing theme tokens */
+/* Keep sticky top nav height consistent across app */
+:root {
+  --topnav-height: 64px; /* matches h-16 */
+  --sidebar-width: 256px; /* matches w-64 */
+}
+
+/* Ensure body background adheres to theme and prevents horizontal overflow */
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  @apply bg-gray-100 text-gray-900 antialiased;
+  overflow-x: hidden;
+}
+
+/* Sticky header utility */
+.sticky-topnav {
+  position: sticky;
+  top: 0;
+  z-index: 40; /* above content, below modals */
+  height: var(--topnav-height);
+}
+
+/* App shell responsive layout */
+.app-shell {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 1fr;
+  min-height: 100vh;
+}
+
+@media (max-width: 1024px) {
+  /* Tablet and below: collapse sidebar column to 0, sidebar becomes overlay/drawer */
+  .app-shell {
+    grid-template-columns: 0 1fr;
+  }
+}
+
+/* Constrain main content width and provide consistent gutters */
+.app-content {
+  @apply mx-auto w-full;
+  max-width: 80rem; /* ~ max-w-7xl */
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .app-content {
+    padding-left: 1rem; /* sm:px-4 */
+    padding-right: 1rem;
+  }
+}
+@media (min-width: 1024px) {
+  .app-content {
+    padding-left: 1.5rem; /* lg:px-6 */
+    padding-right: 1.5rem;
+  }
+}
+
+/* Cards grid responsiveness */
+.cards-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem; /* consistent spacing */
+}
+@media (min-width: 640px) {
+  .cards-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+}
+@media (min-width: 1024px) {
+  .cards-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+}
+
+/* Horizontal scroll containers for tables and charts on narrow viewports */
+.horizontal-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.horizontal-scroll > * {
+  min-width: 640px; /* prevents squish on mobile */
+}
+
+/* Filters responsive stacking */
+.filters-row {
+  @apply flex flex-wrap items-center gap-3;
+}
+@media (max-width: 640px) {
+  .filters-row {
+    @apply flex-col items-stretch;
+  }
+}
+
+/* Modal responsive width constraints without changing theme tokens */
+.modal-container {
+  @apply w-full max-w-3xl;
+  max-height: calc(100vh - 2rem);
+}
+
+/* Utility to ensure timeline/charts keep aspect and scroll on mobile */
+.responsive-chart {
+  @apply horizontal-scroll;
+}
+.responsive-chart canvas,
+.responsive-chart svg,
+.responsive-chart > div {
+  min-width: 640px;
+}
+
+/* Table wrapper */
+.table-responsive {
+  @apply horizontal-scroll;
+}
+
+/* Sidebar overlay mode for tablet/mobile */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: none;
+}
+.sidebar-overlay.active {
+  display: block;
+  background-color: rgba(0,0,0,0.3);
+}
+
+/* Sidebar panel when in overlay mode */
+.sidebar-panel {
+  position: fixed;
+  left: 0;
+  top: var(--topnav-height);
+  bottom: 0;
+  width: var(--sidebar-width);
+  z-index: 60;
+  transform: translateX(-100%);
+  transition: transform 200ms ease;
+}
+.sidebar-panel.open {
+  transform: translateX(0);
+}
+
+/* Keep section spacing consistent */
+.section-spacing {
+  @apply space-y-4;
+}
+
 html, body, #root {
   height: 100%;
   background: var(--color-bg);
