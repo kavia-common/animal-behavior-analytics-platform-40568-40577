@@ -15,11 +15,13 @@ import { useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '@/store';
 import { setLastActiveTab } from '@/store/slices/uiSlice';
+import { getAllBehaviorOptions } from '@/lib/behaviorPalette';
+import { EXACT_BEHAVIORS } from '@/lib/behaviors';
 
 export default function TimelinePage() {
-  const { data: types } = useQuery<string[]>({ queryKey: ['behaviorTypes'], queryFn: api.getBehaviorTypes });
   const { data: behaviors } = useQuery({ queryKey: ['behaviors'], queryFn: api.getBehaviors });
-  const [selected, setSelected] = useState<string[]>([]);
+  const behaviorOptions = getAllBehaviorOptions();
+  const [selected, setSelected] = useState<string[]>(EXACT_BEHAVIORS);
   const [duration, setDuration] = useState(120);
   const uiRange = useSelector((s: RootState) => s.ui.globalDateRange);
   const [range, setRange] = useState({ start: uiRange.start, end: uiRange.end });
@@ -35,20 +37,24 @@ export default function TimelinePage() {
     dispatch(setLastActiveTab('timeline'));
   }, [dispatch]);
 
+  // Read query param and clamp to allowed behaviors
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const bh = params.get('behavior');
-    if (bh && (types ?? []).includes(bh)) {
+    if (bh && (EXACT_BEHAVIORS as string[]).includes(bh)) {
       setSelected([bh]);
       setPage(1);
-    } else if (!bh && (types ?? []).length && selected.length === 0) {
-      // default to all when nothing is selected
-      setSelected(types as string[]);
     }
-  }, [location.search, types]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [location.search]);
 
   const filtered = useMemo(
-    () => (behaviors ?? []).filter((b: any) => (selected.length ? selected.includes(b.type) : true) && b.durationMin <= duration),
+    () =>
+      (behaviors ?? []).filter(
+        (b: any) =>
+          (selected.length ? selected.includes(b.type) : true) &&
+          (EXACT_BEHAVIORS as string[]).includes(b.type) &&
+          b.durationMin <= duration
+      ),
     [behaviors, selected, duration]
   );
 
@@ -60,28 +66,34 @@ export default function TimelinePage() {
     if (z === '1h') return 'hour';
     if (z === 'week') return 'week';
     return 'day';
-    // 6h/12h/24h map to 'day' scale for simplicity in this mock implementation
   };
 
   return (
     <div className="stack-lg">
       <div className="page-header">
-        <h1 className="text-xl font-semibold text-gray-900">Timeline</h1>
+        <h1 className="text-xl font-semibold" style={{ color: 'var(--color-text)' }}>Timeline</h1>
       </div>
       <Card>
         <CardHeader title="Filters" />
         <CardBody>
           <div className="grid md:grid-cols-4 gap-3">
             <div>
-              <div className="text-xs text-neutral-600 mb-1">Behavior Types</div>
-              <MultiSelect options={(types ?? []).map((t: string) => ({ value: t, label: t }))} values={selected} onChange={v => { setSelected(v); setPage(1); }} />
+              <div className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Behavior Types</div>
+              <MultiSelect
+                options={behaviorOptions}
+                values={selected}
+                onChange={(v) => {
+                  setSelected(v);
+                  setPage(1);
+                }}
+              />
             </div>
             <div>
-              <Slider min={0} max={120} value={duration} onChange={v => { setDuration(v); setPage(1); }} label="Max Duration (mins)" />
+              <Slider min={0} max={120} value={duration} onChange={(v) => { setDuration(v); setPage(1); }} label="Max Duration (mins)" />
             </div>
             <div className="md:col-span-2">
-              <div className="text-xs text-neutral-600 mb-1">Date Range</div>
-              <DateRangePicker value={range} onChange={v => { setRange(v); setPage(1); }} />
+              <div className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Date Range</div>
+              <DateRangePicker value={range} onChange={(v) => { setRange(v); setPage(1); }} />
             </div>
           </div>
         </CardBody>
@@ -96,14 +108,16 @@ export default function TimelinePage() {
           <div className="mt-3 overflow-x-auto">
             <div className="min-w-[640px]">
               <BehaviorTimeline
-                segments={(behaviors ?? []).map((b: any) => ({
-                  id: b.id,
-                  type: b.type,
-                  start: b.startMin,
-                  end: b.endMin,
-                  camera: b.camera,
-                  confidence: b.confidence,
-                }))}
+                segments={(behaviors ?? [])
+                  .filter((b: any) => (EXACT_BEHAVIORS as string[]).includes(b.type))
+                  .map((b: any) => ({
+                    id: b.id,
+                    type: b.type,
+                    start: b.startMin,
+                    end: b.endMin,
+                    camera: b.camera,
+                    confidence: b.confidence,
+                  }))}
                 onSelect={(id: string) => setPreviewId(id)}
                 zoomScale={zoomToScale(zoom)}
               />
@@ -118,16 +132,24 @@ export default function TimelinePage() {
         <>
           <BehaviorGrid items={pageItems} onPreview={setPreviewId} />
           <div className="flex items-center justify-center gap-2">
-            <button className="px-2 py-1 rounded bg-neutral-100" disabled={page === 1} onClick={() => setPage(p => Math.max(1, p - 1))}>Prev</button>
-            <div className="text-sm">Page {page} of {totalPages}</div>
-            <button className="px-2 py-1 rounded bg-neutral-100" disabled={page === totalPages} onClick={() => setPage(p => Math.min(totalPages, p + 1))}>Next</button>
+            <button className="px-2 py-1 rounded" style={{ background: 'var(--color-table-header-bg)' }} disabled={page === 1} onClick={() => setPage((p) => Math.max(1, p - 1))}>
+              Prev
+            </button>
+            <div className="text-sm" style={{ color: 'var(--color-text)' }}>
+              Page {page} of {totalPages}
+            </div>
+            <button className="px-2 py-1 rounded" style={{ background: 'var(--color-table-header-bg)' }} disabled={page === totalPages} onClick={() => setPage((p) => Math.min(totalPages, p + 1))}>
+              Next
+            </button>
           </div>
         </>
       )}
 
       <div className="mt-4">
         {/* Behavior Events Table */}
-        <div className="font-heading font-semibold mb-2">Behavior Events</div>
+        <div className="font-heading font-semibold mb-2" style={{ color: 'var(--color-text)' }}>
+          Behavior Events
+        </div>
         <div className="overflow-x-auto">
           <div className="min-w-[640px]">
             <BehaviorEventsTable items={filtered as any[]} />
@@ -135,11 +157,7 @@ export default function TimelinePage() {
         </div>
       </div>
 
-      <VideoModal
-        open={!!previewId}
-        onClose={() => setPreviewId(null)}
-        src="/src/assets/video/sample2.mp4"
-      />
+      <VideoModal open={!!previewId} onClose={() => setPreviewId(null)} src="/src/assets/video/sample2.mp4" />
     </div>
   );
 }

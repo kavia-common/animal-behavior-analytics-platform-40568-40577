@@ -126,7 +126,19 @@ export default function TopNav({ onMenuClick }: TopNavProps) {
             >
               <button className="w-full text-left px-3 py-2 hover:bg-[var(--color-sidebar-active-bg)]">Profile</button>
               <button className="w-full text-left px-3 py-2 hover:bg-[var(--color-sidebar-active-bg)]">Settings</button>
-              <button className="w-full text-left px-3 py-2" onClick={() => { setOpen(false); nav("/login"); }}>
+              <button
+                className="w-full text-left px-3 py-2"
+                onClick={() => { setOpen(false); nav("/login"); }}
+                style={{}}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'var(--color-logout-hover-bg)';
+                  e.currentTarget.style.color = 'var(--color-logout-text)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'transparent';
+                  e.currentTarget.style.color = 'var(--color-text)';
+                }}
+              >
                 Logout
               </button>
             </div>

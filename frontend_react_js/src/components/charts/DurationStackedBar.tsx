@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { getBehaviorColor } from '@/lib/behaviorPalette';
+import { EXACT_BEHAVIORS, type BehaviorId } from '@/lib/behaviors';
 
 type Props = {
   data: any[];
@@ -10,9 +11,14 @@ type Props = {
 /**
  * PUBLIC_INTERFACE
  * DurationStackedBar renders a horizontal stacked bar using behavior palette colors.
+ * Only the five allowed behavior keys are rendered, in strict order.
  */
 export default function DurationStackedBar({ data, keys }: Props) {
-  /** Horizontal stacked bar by behavior durations */
+  const orderedKeys = useMemo(
+    () => (EXACT_BEHAVIORS as BehaviorId[]).filter((k) => keys.includes(k)),
+    [keys]
+  );
+
   return (
     <div className="w-full h-72">
       <ResponsiveContainer>
@@ -21,7 +27,7 @@ export default function DurationStackedBar({ data, keys }: Props) {
           <YAxis dataKey="name" type="category" width={100} />
           <Tooltip />
           <Legend />
-          {keys.map((k) => (
+          {orderedKeys.map((k) => (
             <Bar key={k} dataKey={k} stackId="a" fill={getBehaviorColor(k)} />
           ))}
         </BarChart>

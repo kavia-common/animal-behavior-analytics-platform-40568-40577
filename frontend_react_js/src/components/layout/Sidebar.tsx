@@ -25,20 +25,16 @@ export default function Sidebar({ onNavigate }: { onNavigate?: (path?: string) =
         <span style={baseText}>Home</span>
       </NavLink>
       <NavLink to="/timeline" className={linkCls} onClick={(e) => { e.preventDefault(); go("/timeline"); }}>
-        <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg" style={iconStyle}>🎞️</span>
+        <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg" style={iconStyle}>🎬</span>
         <span style={baseText}>Video</span>
+      </NavLink>
+      <NavLink to="/analytics" className={linkCls} onClick={(e) => { e.preventDefault(); go("/analytics"); }}>
+        <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg" style={iconStyle}>📈</span>
+        <span style={baseText}>Graph</span>
       </NavLink>
       <NavLink to="/reports" className={linkCls} onClick={(e) => { e.preventDefault(); go("/reports"); }}>
         <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg" style={iconStyle}>📄</span>
         <span style={baseText}>Reports</span>
-      </NavLink>
-      <NavLink to="/library" className={linkCls} onClick={(e) => { e.preventDefault(); go("/library"); }}>
-        <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg" style={iconStyle}>📚</span>
-        <span style={baseText}>Video Library</span>
-      </NavLink>
-      <NavLink to="/analytics" className={linkCls} onClick={(e) => { e.preventDefault(); go("/analytics"); }}>
-        <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg" style={iconStyle}>📊</span>
-        <span style={baseText}>Analytics</span>
       </NavLink>
     </div>
   );

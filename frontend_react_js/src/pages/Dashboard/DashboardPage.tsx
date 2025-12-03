@@ -149,7 +149,7 @@ export default function DashboardPage() {
           <div className="text-xs text-neutral-600">Rest-to-active ratio</div>
           <div className="font-mono text-2xl">
             {(() => {
-              const rest = durationBreakdown.find((d: any) => d.label === 'Resting or Sleeping')?.value ?? 0;
+              const rest = durationBreakdown.find((d: any) => d.label === 'Recumbent')?.value ?? 0;
               const active = Math.max(1, totalMinutes - rest);
               return `${(rest / active).toFixed(2)}`
             })()}
