@@ -3,7 +3,6 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Centralized palette mapped to CSS variables
         primary: 'var(--color-primary)',
         primaryHover: 'var(--color-primary-hover)',
         primaryLight: 'var(--color-primary-light)',
@@ -17,18 +16,14 @@ module.exports = {
         neutralMid: 'var(--color-neutral-mid)',
         neutralBorder: 'var(--color-neutral-border)',
         neutralLightBg: 'var(--color-neutral-light-bg)',
-        surface: 'var(--color-surface-bg)',
-        background: 'var(--color-background)',
-        text: 'var(--color-text)',
-        border: 'var(--color-border)',
+        surface: 'var(--color-surface)',
         sidebarActiveBg: 'var(--color-sidebar-active-bg)',
         sidebarIcon: 'var(--color-sidebar-icon)',
         cardBg: 'var(--color-card-bg)',
-        progressBar: 'var(--color-progress-bar)',
+        progress: 'var(--color-progress)',
         highlightMint: 'var(--color-highlight-mint)',
         tableHeaderBg: 'var(--color-table-header-bg)',
         tableRowHover: 'var(--color-table-row-hover)',
-        // keep neutral scale for existing utility usage
         neutral: {
           50: '#F8FAFC',
           100: '#F1F5F9',
@@ -40,13 +35,12 @@ module.exports = {
         },
       },
       boxShadow: {
-        card: 'var(--elevation-1)',
-        soft: 'var(--elevation-2)',
+        card: 'var(--shadow-card)',
       },
-      fontFamily: {
-        sans: ['Inter', 'Open Sans', 'system-ui', 'sans-serif'],
-        heading: ['Poppins', 'Inter', 'system-ui', 'sans-serif'],
-        mono: ['Roboto Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+      borderRadius: {
+        sm: 'var(--radius-sm)',
+        md: 'var(--radius-md)',
+        lg: 'var(--radius-lg)',
       },
     },
   },

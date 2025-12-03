@@ -17,6 +17,7 @@ import ErrorPage from './pages/System/ErrorPage';
 import NetworkRetryPage from './pages/System/NetworkRetryPage';
 import { store } from './store';
 import './styles/globals.css';
+import './styles/theme.css';
 
 // Lightweight hello component to isolate any rendering issues
 function Hello() {
