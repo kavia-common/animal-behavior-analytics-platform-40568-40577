@@ -1,34 +1,43 @@
-import React from 'react';
-import { Bell, UserCircle2 } from 'lucide-react';
-import vizaiLogo from '../../assets/vizai-logo.png';
+import React, { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import logo from "../../assets/vizai-logo.png";
 
-// PUBLIC_INTERFACE
-export default function TopNav({ children }: { children?: React.ReactNode }) {
-  /** Top navigation with brand, tabs and actions. */
+/**
+ * Top navigation with logo -> /animals, clock timestamp, and simple user menu.
+ */
+export default function TopNav() {
+  const nav = useNavigate();
+  const { pathname } = useLocation();
+  const [open, setOpen] = useState(false);
+
+  const goAnimals = (e: React.MouseEvent) => {
+    e.preventDefault();
+    nav("/animals");
+  };
+
   return (
-    <div className="flex items-center justify-between h-[var(--header-height)] px-4 md:px-6">
-      {/* Brand: VizAI logo + wordmark label kept compact; does not alter surrounding layout */}
-      <div className="flex items-center gap-2 min-w-0">
-        <img
-          src={vizaiLogo}
-          alt="VizAI"
-          className="h-9 w-auto object-contain select-none"
-          style={{ paddingTop: 2, paddingBottom: 2 }}
-        />
-      </div>
+    <div className="flex items-center justify-between h-16 px-6">
+      <a href="/animals" onClick={goAnimals} className="inline-flex items-center gap-3">
+        <img src={logo} className="h-8" alt="VizAI" />
+        <span className="font-semibold" style={{ color: "var(--color-teal-dark-text)" }}>VizAI</span>
+      </a>
 
-      {/* Center content (tabs/search/date etc.) */}
-      <div className="flex-1 flex justify-center">{children}</div>
+      <div className="flex-1" />
 
-      {/* Actions */}
-      <div className="flex items-center gap-3">
-        <button aria-label="Notifications" className="p-2 rounded-md hover:bg-neutral-100">
-          <Bell className="w-5 h-5 text-sidebarIcon" aria-hidden />
-        </button>
-        <button aria-label="Profile menu" className="flex items-center gap-2 p-2 rounded-md hover:bg-neutral-100">
-          <UserCircle2 className="w-6 h-6 text-sidebarIcon" aria-hidden />
-          <span className="hidden md:block text-base text-secondaryText">Researcher</span>
-        </button>
+      <div className="flex items-center gap-6 text-sm" style={{ color: "var(--color-teal-dark-text)" }}>
+        <span className="hidden md:block">{new Date().toLocaleString()}</span>
+        <div className="relative">
+          <button className="px-3 py-1.5 rounded-lg border" style={{ borderColor: "var(--color-grey-border)" }} onClick={() => setOpen(v=>!v)}>
+            User
+          </button>
+          {open && (
+            <div className="absolute right-0 mt-2 w-40 bg-white rounded-lg border shadow-md" style={{ borderColor: "var(--color-grey-border)" }}>
+              <button className="w-full text-left px-3 py-2 hover:bg-[var(--color-teal-light)]">Profile</button>
+              <button className="w-full text-left px-3 py-2 hover:bg-[var(--color-teal-light)]">Settings</button>
+              <button className="w-full text-left px-3 py-2 hover:bg-[var(--color-teal-light)]" onClick={()=>nav("/login")}>Logout</button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

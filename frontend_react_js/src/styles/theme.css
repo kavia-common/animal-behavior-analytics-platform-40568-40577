@@ -1,202 +1,103 @@
 :root {
-  /* Core brand */
-  --color-primary: #0E5D61;
-  --color-primary-hover: #0B4B4E;
-  --color-primary-light: #CCF3EE;
+  /* VizAI exact palette */
+  --color-teal-primary: #007F7C;
+  --color-teal-dark-text: #004D4B;
+  --color-teal-light: #E0F7F5;
+  --color-green-completed: #98E57D;
+  --color-grey-border: #D5D5D5;
+  --color-faint-text: #8A8A8A;
+  --color-bg: #FFFFFF;
+  --color-red-delete: #E8504B;
 
-  --color-secondary: #0D253F;
-  --color-secondary-text: #1C2D3A;
-  --color-accent: #20B2AA;
+  /* Backwards-compatible aliases used by existing components */
+  --color-primary: var(--color-teal-primary);
+  --color-primaryHover: #006967;
+  --color-primary-light: var(--color-teal-light);
+  --color-secondary: var(--color-teal-dark-text);
+  --color-secondary-text: var(--color-teal-dark-text);
+  --color-accent: var(--color-teal-primary);
 
   /* Status */
-  --color-success: #4CAF50;
+  --color-success: var(--color-green-completed);
   --color-warning: #FFC107;
-  --color-error: #F44336;
+  --color-error: var(--color-red-delete);
 
-  /* Neutral scale */
-  --color-neutral-dark: #333333;
-  --color-neutral-mid: #6B7280;
-  --color-neutral-border: #E5E7EB;
-  --color-neutral-light-bg: #F8FAFC;
-  --color-surface: #FFFFFF;
+  /* Neutral scale mapped to required greys */
+  --color-neutral-dark: var(--color-teal-dark-text);
+  --color-neutral-mid: var(--color-faint-text);
+  --color-neutral-border: var(--color-grey-border);
+  --color-neutral-light-bg: #FFFFFF;
+  --color-surface: var(--color-bg);
 
   /* Sidebar */
-  --color-sidebar-active-bg: #E6F5F0;
-  --color-sidebar-icon: #0E5D61;
+  --color-sidebar-active-bg: var(--color-teal-light);
+  --color-sidebar-icon: var(--color-teal-dark-text);
 
   /* Cards */
   --color-card-bg: #FFFFFF;
-  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-card: 0 4px 10px rgba(0, 0, 0, 0.08);
 
   /* Progress */
-  --color-progress: #0EAD9C;
-  --color-highlight-mint: #BDF2E6;
+  --color-progress: var(--color-teal-primary);
+  --color-highlight-mint: var(--color-teal-light);
 
   /* Tables */
-  --color-table-header-bg: #F1F5F9;
-  --color-table-row-hover: #EEF7F4;
+  --color-table-header-bg: #F9FAFA;
+  --color-table-row-hover: #F5FCFB;
 
   /* Generic UI helpers */
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
 
-  --focus-ring: 0 0 0 3px rgba(14, 93, 97, 0.25);
+  --focus-ring: 0 0 0 3px rgba(0, 127, 124, 0.25);
 }
 
 /* Global surface and text defaults */
 html, body, #root {
-  background-color: var(--color-neutral-light-bg);
-  color: var(--color-neutral-dark);
+  background-color: var(--color-bg);
+  color: var(--color-teal-dark-text);
 }
 
 /* Links and interactive */
-a {
-  color: var(--color-primary);
-}
-a:hover {
-  color: var(--color-primary-hover);
-}
+a { color: var(--color-teal-primary); }
+a:hover { color: var(--color-primaryHover); }
 
-/* Generic button base reset using tokens when used with .btn class (optional helper) */
-.btn {
-  border: 1px solid var(--color-neutral-border);
-  background: var(--color-surface);
-  color: var(--color-neutral-dark);
-  border-radius: var(--radius-sm);
-  box-shadow: none;
-}
-.btn-primary {
-  background: var(--color-primary);
-  color: #fff;
-  border-color: var(--color-primary);
-}
-.btn-primary:hover {
-  background: var(--color-primary-hover);
-  border-color: var(--color-primary-hover);
-}
-.btn-secondary {
-  background: var(--color-secondary);
-  color: #fff;
-  border-color: var(--color-secondary);
-}
-.btn-accent {
-  background: var(--color-accent);
-  color: #083b3a;
-  border-color: var(--color-accent);
-}
-
-/* Badges */
-.badge {
-  border-radius: 9999px;
-  padding: 0.125rem 0.5rem;
-  font-weight: 600;
-  font-size: 0.75rem;
-}
-.badge-success {
-  background: color-mix(in oklab, var(--color-success) 18%, white);
-  color: #0f4d10;
-  border: 1px solid var(--color-success);
-}
-.badge-warning {
-  background: color-mix(in oklab, var(--color-warning) 25%, white);
-  color: #614a00;
-  border: 1px solid var(--color-warning);
-}
-.badge-error {
-  background: color-mix(in oklab, var(--color-error) 18%, white);
-  color: #5f1111;
-  border: 1px solid var(--color-error);
-}
+/* Badge tones using exact palette */
+.badge { border-radius: 9999px; padding: 0.125rem 0.5rem; font-weight: 600; font-size: 0.75rem; border: 1px solid transparent; }
+.badge--completed { background: color-mix(in srgb, var(--color-green-completed) 20%, white); color: #2d6a1f; border-color: var(--color-green-completed); }
+.badge--processing { background: color-mix(in srgb, var(--color-teal-primary) 12%, white); color: var(--color-teal-dark-text); border-color: var(--color-teal-primary); }
+.badge--pending { background: #F7F7F7; color: var(--color-faint-text); border-color: var(--color-grey-border); }
 
 /* Cards */
-.card {
-  background: var(--color-card-bg);
-  border: 1px solid var(--color-neutral-border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-card);
-}
+.card { background: var(--color-card-bg); border: 1px solid var(--color-neutral-border); border-radius: var(--radius-md); box-shadow: var(--shadow-card); }
 
 /* Dividers */
-.divider,
-hr {
-  border-color: var(--color-neutral-border);
-}
+.divider, hr { border-color: var(--color-neutral-border); }
 
 /* Tables */
-.table thead th {
-  background: var(--color-table-header-bg);
-  color: var(--color-neutral-dark);
-}
-.table tr:hover td {
-  background: var(--color-table-row-hover);
-}
-.table td, .table th {
-  border-color: var(--color-neutral-border);
-}
+.table thead th { background: var(--color-table-header-bg); color: var(--color-teal-dark-text); }
+.table tr:hover td { background: var(--color-table-row-hover); }
+.table td, .table th { border-color: var(--color-neutral-border); }
 
 /* Progress bar */
-.progress-track {
-  background: var(--color-highlight-mint);
-  border-radius: 9999px;
-}
-.progress-fill {
-  background: var(--color-progress);
-  border-radius: 9999px;
-}
-
-/* Sidebar + header helpers (hooked by components via classNames) */
-.app-header {
-  background: var(--color-surface);
-  color: var(--color-secondary-text);
-  border-bottom: 1px solid var(--color-neutral-border);
-}
-.app-header .accent {
-  color: var(--color-primary);
-}
-.app-sidebar {
-  background: var(--color-neutral-light-bg);
-  border-right: 1px solid var(--color-neutral-border);
-}
-.app-sidebar .icon {
-  color: var(--color-sidebar-icon);
-}
-.app-sidebar .item-active {
-  background: var(--color-sidebar-active-bg);
-  color: var(--color-secondary-text);
-}
+.progress-track { background: #F1F1F1; border-radius: 9999px; }
+.progress-fill { background: var(--color-teal-primary); border-radius: 9999px; }
 
 /* Layout shell helpers used by RootLayout */
-.app-shell {
-  display: grid;
-  grid-template-columns: 16rem 1fr;
-  grid-template-rows: auto 1fr;
-  height: 100vh;
-  background: var(--color-neutral-light-bg);
-}
-.topnav {
-  grid-column: 1 / -1;
-  background: var(--color-surface);
-  border-bottom: 1px solid var(--color-neutral-border);
-  color: var(--color-secondary-text);
-}
-.sidebar {
-  background: var(--color-neutral-light-bg);
-  border-right: 1px solid var(--color-neutral-border);
-}
-.main {
-  background: var(--color-neutral-light-bg);
-  color: var(--color-neutral-dark);
-}
+.app-shell { display: grid; grid-template-columns: 15rem 1fr; grid-template-rows: auto 1fr; height: 100vh; background: var(--color-bg); }
+.topnav { grid-column: 1 / -1; background: var(--color-surface); border-bottom: 1px solid var(--color-neutral-border); color: var(--color-teal-dark-text); }
+.sidebar { background: var(--color-surface); border-right: 1px solid var(--color-neutral-border); }
+.main { background: var(--color-bg); color: var(--color-teal-dark-text); }
 
-/* Video list rows */
-.video-list-item {
-  background: var(--color-surface);
-  border: 1px solid var(--color-neutral-border);
-}
-.video-list-item:hover {
-  background: var(--color-table-row-hover);
-}
+/* Sidebar + header helpers */
+.app-header { background: var(--color-surface); color: var(--color-teal-dark-text); border-bottom: 1px solid var(--color-neutral-border); }
+.app-sidebar { background: var(--color-surface); border-right: 1px solid var(--color-neutral-border); }
+.app-sidebar .icon { color: var(--color-teal-dark-text); }
+.app-sidebar .item-active { background: var(--color-teal-light); color: var(--color-teal-dark-text); }
+
+/* Tabs underline (teal) */
+.tab-active { border-bottom: 2px solid var(--color-teal-primary); color: var(--color-teal-dark-text); }
 
 /* Focus ring for accessible outline */
 :where(button, a, input, select, [role="button"], [tabindex]:not([tabindex="-1"])):focus-visible {

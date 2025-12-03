@@ -1,110 +1,33 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/store';
-import { setBehaviorTypes, clearAll, setDateRangePreset } from '@/store/slices/filterSlice';
-import { ChevronRight, Filter, History, Bookmark } from 'lucide-react';
+import React from "react";
+import { NavLink } from "react-router-dom";
 
-type Props = { onNavigate: (path: string) => void };
+/**
+ * Left sidebar with icons and active highlight using Light Teal #E0F7F5.
+ */
+export default function Sidebar({ onNavigate }: { onNavigate?: (path: string) => void }) {
+  const linkCls = ({ isActive }: any) =>
+    `flex items-center gap-3 px-3 py-2 rounded-lg ${isActive ? "sidebar-active" : ""}`;
 
-// PUBLIC_INTERFACE
-export default function Sidebar({ onNavigate }: Props) {
-  /** Left sidebar showing quick filters, saved views, and recent activities. */
-  const dispatch = useDispatch();
-  const filters = useSelector((s: RootState) => s.filters);
-
-  const toggleType = (t: string) => {
-    const set = new Set(filters.behaviorTypes);
-    set.has(t) ? set.delete(t) : set.add(t);
-    dispatch(setBehaviorTypes(Array.from(set)));
-  };
-
-  const quickTypes = ['Foraging', 'Resting', 'Grooming', 'Walking', 'Alert'];
+  const baseText = { color: "var(--color-faint-text)" };
 
   return (
-    <div className="h-full p-4 md:p-5 space-y-6">
-      <div className="card p-4">
-        <div className="flex items-center gap-2 mb-3">
-          <Filter className="w-4 h-4 text-sidebarIcon" />
-          <h3 className="font-heading text-sm font-semibold text-secondaryText">Quick Filters</h3>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {quickTypes.map(t => {
-            const active = filters.behaviorTypes.includes(t);
-            return (
-              <button
-                key={t}
-                onClick={() => toggleType(t)}
-                className={`px-2.5 py-1 rounded-full text-xs border ${
-                  active
-                    ? 'bg-sidebarActiveBg text-primary border-primary'
-                    : 'border-neutralBorder text-secondaryText hover:bg-neutralLightBg'
-                }`}
-                aria-pressed={active}
-              >
-                {t}
-              </button>
-            );
-          })}
-        </div>
-        <div className="mt-4 flex gap-2">
-          <button
-            className="px-3 py-1.5 text-xs rounded-md bg-neutralLightBg text-secondaryText hover:bg-sidebarActiveBg border border-neutralBorder"
-            onClick={() => dispatch(clearAll())}
-          >
-            Clear all
-          </button>
-          <button
-            className="px-3 py-1.5 text-xs rounded-md bg-neutralLightBg text-secondaryText hover:bg-sidebarActiveBg border border-neutralBorder"
-            onClick={() => dispatch(setDateRangePreset('7d'))}
-            title="Apply last 7 days"
-          >
-            Last 7 days
-          </button>
-          <button
-            className="px-3 py-1.5 text-xs rounded-md bg-neutralLightBg text-secondaryText hover:bg-sidebarActiveBg border border-neutralBorder"
-            onClick={() => dispatch(setDateRangePreset('30d'))}
-            title="Apply last 30 days"
-          >
-            Last 30 days
-          </button>
-        </div>
-      </div>
-
-      <div className="card p-4">
-        <div className="flex items-center gap-2 mb-3">
-          <Bookmark className="w-4 h-4 text-sidebarIcon" />
-          <h3 className="font-heading text-sm font-semibold text-secondaryText">Saved Views</h3>
-        </div>
-        <ul className="space-y-2 text-sm">
-          {['Morning Foraging', 'High Confidence', 'Camera A'].map(n => (
-            <li key={n} className="flex items-center justify-between">
-              <button className="text-secondaryText hover:text-primary" onClick={() => onNavigate('/timeline')}>{n}</button>
-              <ChevronRight className="w-4 h-4 text-neutralMid" />
-            </li>
-          ))}
-          <li className="pt-2 mt-2 border-t border-neutralBorder">
-            <button className="text-secondaryText hover:text-primary" onClick={() => onNavigate('/reports/saved')}>Saved Reports</button>
-          </li>
-          <li>
-            <button className="text-secondaryText hover:text-primary" onClick={() => onNavigate('/reports/scheduled')}>Scheduled</button>
-          </li>
-          <li>
-            <button className="text-secondaryText hover:text-primary" onClick={() => onNavigate('/settings')}>Settings</button>
-          </li>
-        </ul>
-      </div>
-
-      <div className="card p-4">
-        <div className="flex items-center gap-2 mb-3">
-          <History className="w-4 h-4 text-sidebarIcon" />
-          <h3 className="font-heading text-sm font-semibold text-secondaryText">Recent Activities</h3>
-        </div>
-        <ul className="space-y-2 text-xs text-neutralMid">
-          <li>Viewed video sample1.mp4 - 2m ago</li>
-          <li>Exported Behavior Summary - 1h ago</li>
-          <li>Updated Filter Preset "Morning Foraging" - yesterday</li>
-        </ul>
-      </div>
+    <div className="h-full p-4 space-y-2">
+      <NavLink to="/dashboard" className={linkCls}>
+        <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg" style={{ background: "var(--color-teal-light)", color: "var(--color-teal-dark-text)" }}>🏠</span>
+        <span style={baseText}>Home</span>
+      </NavLink>
+      <NavLink to="/timeline" className={linkCls}>
+        <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg" style={{ background: "var(--color-teal-light)", color: "var(--color-teal-dark-text)" }}>🎞️</span>
+        <span style={baseText}>Video</span>
+      </NavLink>
+      <NavLink to="/dashboard" className={linkCls}>
+        <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg" style={{ background: "var(--color-teal-light)", color: "var(--color-teal-dark-text)" }}>📈</span>
+        <span style={baseText}>Graph</span>
+      </NavLink>
+      <NavLink to="/reports" className={linkCls}>
+        <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg" style={{ background: "var(--color-teal-light)", color: "var(--color-teal-dark-text)" }}>📄</span>
+        <span style={baseText}>Reports</span>
+      </NavLink>
     </div>
   );
 }

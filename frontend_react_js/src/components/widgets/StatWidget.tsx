@@ -17,7 +17,7 @@ export default function StatWidget({ label, value, delta, tone = 'default' }: Pr
       <div className="mt-1 font-mono text-2xl text-secondaryText">{value}</div>
       {delta && (
         <div className="mt-2">
-          <Badge label={delta} tone={tone} />
+          <Badge tone={tone}>{delta}</Badge>
         </div>
       )}
     </div>

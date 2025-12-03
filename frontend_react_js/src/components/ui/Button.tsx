@@ -1,27 +1,25 @@
-import React from 'react';
-import clsx from 'clsx';
+import React from "react";
 
-type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: 'primary' | 'secondary' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
-};
+type Variant = "primary" | "ghost" | "danger" | "secondary";
+type Size = "sm" | "md" | "lg";
+
+type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant; size?: Size };
 
 // PUBLIC_INTERFACE
-export default function Button({ variant = 'primary', size = 'md', className, ...rest }: Props) {
-  /** Button with variants and sizes */
-  return (
-    <button
-      {...rest}
-      className={clsx(
-        'rounded-md font-medium transition-colors',
-        size === 'sm' && 'px-2.5 py-1.5 text-xs',
-        size === 'md' && 'px-3 py-2 text-sm',
-        size === 'lg' && 'px-4 py-2.5',
-        variant === 'primary' && 'bg-primary hover:bg-primaryHover text-white',
-        variant === 'secondary' && 'border border-neutralBorder text-secondaryText hover:bg-neutralLightBg',
-        variant === 'ghost' && 'bg-transparent hover:bg-neutralLightBg text-secondaryText',
-        className
-      )}
-    />
-  );
+export default function Button({ variant = "primary", size = "md", className = "", style, ...rest }: Props) {
+  const base = "rounded-lg font-medium";
+  const sizeCls = size === "sm" ? "px-2.5 py-1.5 text-xs" : size === "lg" ? "px-4 py-2.5" : "px-3 py-2 text-sm";
+
+  let merged: React.CSSProperties = {};
+  if (variant === "primary") {
+    merged = { background: "var(--color-teal-primary)", color: "#fff" };
+  } else if (variant === "danger") {
+    merged = { background: "var(--color-red-delete)", color: "#fff" };
+  } else if (variant === "secondary") {
+    merged = { border: "1px solid var(--color-grey-border)", color: "var(--color-teal-dark-text)", background: "#fff" };
+  } else {
+    // ghost
+    merged = { background: "transparent", color: "var(--color-teal-dark-text)" };
+  }
+  return <button className={`${base} ${sizeCls} ${className}`} style={{ ...merged, ...style }} {...rest} />;
 }

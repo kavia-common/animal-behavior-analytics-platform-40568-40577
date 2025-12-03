@@ -1,76 +1,38 @@
-import React, { useState } from 'react';
-import { Outlet, NavLink, useLocation, useNavigate, Link } from 'react-router-dom';
-import TopNav from '@/components/layout/TopNav';
-import Sidebar from '@/components/layout/Sidebar';
-import DateRangePicker from '@/components/ui/DateRangePicker';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/store';
-import { setDateRange } from '@/store/slices/filterSlice';
+import React from "react";
+import { Outlet, useLocation, Link } from "react-router-dom";
+import TopNav from "@/components/layout/TopNav";
+import Sidebar from "@/components/layout/Sidebar";
 
-const tabs = [
-  { to: '/dashboard', label: 'Dashboard' },
-  { to: '/timeline', label: 'Timeline' },
-  { to: '/reports', label: 'Reports' }
-];
-
-function GlobalDateSelector() {
-  const dispatch = useDispatch();
-  const { dateRange } = useSelector((s: RootState) => s.filters);
-  return (
-    <div className="hidden md:flex items-center gap-2">
-      <DateRangePicker
-        value={dateRange}
-        onChange={(v) => dispatch(setDateRange(v))}
-        hideExtendedPresets
-      />
-    </div>
-  );
-}
-
+/**
+ * Root layout with persistent TopNav and Sidebar. For /login, layout hides navigation.
+ */
 export default function RootLayout() {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { pathname } = useLocation();
+  const isAuth = pathname.startsWith("/login");
+
+  if (isAuth) {
+    return <Outlet />;
+  }
 
   return (
     <div className="app-shell">
-      <header className="topnav sticky top-0 z-40">
-        <TopNav>
-          <div className="flex items-center gap-3">
-            <button className="md:hidden px-2 py-1 rounded hover:bg-neutralLightBg" onClick={() => setSidebarOpen(s => !s)} aria-label="Toggle menu">☰</button>
-            <nav aria-label="Primary" className="hidden md:flex gap-2">
-              {tabs.map(t => (
-                <NavLink
-                  key={t.to}
-                  to={t.to}
-                  className={({ isActive }) =>
-                    `px-3 py-2 rounded-md text-sm font-medium ${
-                      isActive ? 'bg-primary text-white' : 'text-secondaryText hover:bg-neutralLightBg'
-                    }`
-                  }
-                  aria-current={location.pathname === t.to ? 'page' : undefined}
-                >
-                  {t.label}
-                </NavLink>
-              ))}
+      <header className="topnav">
+        <TopNav />
+        {/* Tabs bar */}
+        {!pathname.startsWith("/animals") && (
+          <div className="px-6 border-t" style={{ borderColor: "var(--color-grey-border)" }}>
+            <nav className="flex gap-6 h-11 items-center text-sm">
+              <Link to="/dashboard" className={`h-full inline-flex items-center ${pathname.startsWith("/dashboard") || pathname === "/" ? "tab-active" : ""}`} style={{ color: pathname.startsWith("/dashboard") || pathname === "/" ? "var(--color-teal-dark-text)" : "var(--color-faint-text)" }}>Dashboard</Link>
+              <Link to="/timeline" className={`h-full inline-flex items-center ${pathname.startsWith("/timeline") ? "tab-active" : ""}`} style={{ color: pathname.startsWith("/timeline") ? "var(--color-teal-dark-text)" : "var(--color-faint-text)" }}>Timeline</Link>
+              <Link to="/reports" className={`h-full inline-flex items-center ${pathname.startsWith("/reports") ? "tab-active" : ""}`} style={{ color: pathname.startsWith("/reports") ? "var(--color-teal-dark-text)" : "var(--color-faint-text)" }}>Reports</Link>
             </nav>
-            <div className="flex-1" />
-            <GlobalDateSelector />
-            <div className="hidden md:flex items-center gap-2">
-              <button className="px-2 py-1.5 text-sm rounded hover:bg-neutralLightBg text-secondaryText" onClick={() => alert('Logged out (stub).')}>Logout</button>
-            </div>
           </div>
-        </TopNav>
+        )}
       </header>
-      <aside className={`sidebar ${sidebarOpen ? 'block' : 'hidden'} md:block`}>
-        <Sidebar onNavigate={navigate} />
+      <aside className="sidebar">
+        <Sidebar onNavigate={(p) => { window.location.href = p; }} />
       </aside>
-      <main className="main p-4 md:p-6 overflow-auto">
-        <div className="md:hidden mb-3">
-          <div className="mt-2 flex gap-2">
-            <button className="px-2 py-1.5 text-sm rounded bg-neutralLightBg text-secondaryText" onClick={() => alert('Logged out (stub).')}>Logout</button>
-          </div>
-        </div>
+      <main className="main p-6 overflow-auto">
         <Outlet />
       </main>
     </div>

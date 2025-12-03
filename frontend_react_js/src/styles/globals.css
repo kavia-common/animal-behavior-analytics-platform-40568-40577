@@ -2,83 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --header-height: 64px;
-  --sidebar-width: 280px;
-
-  /* Centralized color tokens */
-  --color-primary: #0E5D61;
-  --color-primary-hover: #0B4B4E;
-  --color-primary-light: #CCF3EE;
-
-  --color-secondary: #0D253F;
-  --color-secondary-text: #1C2D3A;
-
-  --color-accent: #20B2AA;
-
-  --color-success: #4CAF50;
-  --color-warning: #FFC107;
-  --color-error: #F44336;
-
-  --color-neutral-dark: #333333;
-  --color-neutral-mid: #6B7280;
-  --color-neutral-border: #E5E7EB;
-  --color-neutral-light-bg: #F8FAFC;
-
-  --color-surface-bg: #FFFFFF;
-  --color-sidebar-active-bg: #E6F5F0;
-  --color-sidebar-icon: #0E5D61;
-
-  --color-card-bg: #FFFFFF;
-  --color-card-shadow-rgba: rgba(0, 0, 0, 0.08);
-
-  --color-progress-bar: #0EAD9C;
-  --color-highlight-mint: #BDF2E6;
-
-  --color-table-header-bg: #F1F5F9;
-  --color-table-row-hover: #EEF7F4;
-
-  /* Backwards-compatible aliases used in components */
-  --color-background: var(--color-neutral-light-bg);
-  --color-bg: var(--color-neutral-light-bg);
-  --color-surface: var(--color-surface-bg);
-  --color-text: var(--color-secondary-text);
-  --color-muted: var(--color-neutral-mid);
-  --color-border: var(--color-neutral-border);
-
-  /* Elevation tokens */
-  --shadow-soft: rgba(0,0,0,0.06);
-  --shadow-strong: rgba(0,0,0,0.1);
-  --elevation-1: 0 1px 2px var(--color-card-shadow-rgba);
-  --elevation-2: 0 4px 8px var(--shadow-strong);
-
-  /* Card treatments */
-  --card-bg: var(--color-card-bg);
-  --card-text: var(--color-text);
-  --card-border: var(--color-neutral-border);
-  --card-shadow: var(--elevation-1);
-
-  /* Gentle brand gradient */
-  --brand-gradient: linear-gradient(135deg, rgba(14,93,97,0.06), rgba(32,178,170,0.06));
-}
-
 html, body, #root {
   height: 100%;
-  background: var(--color-background);
-  color: var(--color-text);
+  background: var(--color-bg);
+  color: var(--color-teal-dark-text);
 }
 
 .app-shell {
   display: grid;
-  grid-template-rows: var(--header-height) 1fr;
-  grid-template-columns: var(--sidebar-width) 1fr;
+  grid-template-rows: 64px 1fr;
+  grid-template-columns: 240px 1fr;
   grid-template-areas:
     "topnav topnav"
     "sidebar main";
   height: 100%;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1023px) {
   .app-shell {
     grid-template-columns: 1fr;
     grid-template-areas:
@@ -89,43 +29,51 @@ html, body, #root {
 
 .topnav {
   grid-area: topnav;
-  backdrop-filter: saturate(1.2) blur(6px);
-  background-color: color-mix(in oklab, var(--color-surface-bg) 80%, transparent);
-  border-bottom: 1px solid var(--color-neutral-border);
+  background-color: var(--color-bg);
+  border-bottom: 1px solid var(--color-grey-border);
 }
 
 .sidebar {
   grid-area: sidebar;
-  background-color: var(--color-surface-bg);
-  border-right: 1px solid var(--color-neutral-border);
+  background-color: var(--color-bg);
+  border-right: 1px solid var(--color-grey-border);
 }
 
 .main {
   grid-area: main;
 }
 
+/* Card and badge helpers */
 .card {
-  background: var(--card-bg);
-  border-radius: 0.5rem;
-  box-shadow: var(--card-shadow);
-  border: 1px solid var(--card-border);
+  background: var(--color-bg);
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  border: 1px solid var(--color-grey-border);
 }
 
-.badge-success {
-  color: var(--color-success);
-}
-.badge-warning {
-  color: var(--color-warning);
-}
-.badge-error {
-  color: var(--color-error);
-}
+.badge { border-radius: 9999px; padding: 0.125rem 0.5rem; font-weight: 600; font-size: 0.75rem; }
+.badge--completed { background: color-mix(in srgb, var(--color-green-completed) 20%, white); color: #2d6a1f; border: 1px solid var(--color-green-completed); }
+.badge--processing { background: color-mix(in srgb, var(--color-teal-primary) 12%, white); color: var(--color-teal-dark-text); border: 1px solid var(--color-teal-primary); }
+.badge--pending { background: #F7F7F7; color: var(--color-faint-text); border: 1px solid var(--color-grey-border); }
 
-/* Helpers for 24 columns */
-.grid-cols-24 {
-  grid-template-columns: repeat(24, minmax(0, 1fr));
-}
+/* Sidebar active background per requirement */
+.sidebar-active { background: var(--color-teal-light); color: var(--color-teal-dark-text); }
 
-.grid-cols-25 {
-  grid-template-columns: 120px repeat(24, minmax(0, 1fr));
-}
+/* Tab underline */
+.tab-active { border-bottom: 2px solid var(--color-teal-primary); color: var(--color-teal-dark-text); }
+
+/* Table header/row hover */
+.bg-tableHeaderBg { background: #F9FAFA; }
+.hover\:bg-tableRowHover:hover { background: #F5FCFB; }
+
+/* Token shims to match class usage in components (maps to CSS variables) */
+.text-secondaryText { color: var(--color-teal-dark-text); }
+.text-neutralMid { color: var(--color-faint-text); }
+.bg-neutralLightBg { background: var(--color-bg); }
+.bg-surface { background: var(--color-bg); }
+.border-neutralBorder { border-color: var(--color-grey-border); }
+.bg-primary { background: var(--color-teal-primary); }
+.bg-primaryHover { background: #006967; }
+.text-success { color: var(--color-green-completed); }
+.bg-sidebarActiveBg { background: var(--color-teal-light); }
+.text-sidebarIcon { color: var(--color-teal-dark-text); }

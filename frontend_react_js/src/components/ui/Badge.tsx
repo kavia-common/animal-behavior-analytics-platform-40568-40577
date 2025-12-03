@@ -1,21 +1,24 @@
-import React from 'react';
-import clsx from 'clsx';
+import React from "react";
 
+type VizAITone = "completed" | "processing" | "pending";
+type LegacyTone = "default" | "success" | "warning" | "error";
+type Props = { tone?: VizAITone | LegacyTone; children: React.ReactNode };
+
+/** Badge using exact VizAI palette; supports legacy tones for backwards compatibility. */
 // PUBLIC_INTERFACE
-export default function Badge({ label, tone = 'default' }: { label: string; tone?: 'default' | 'success' | 'warning' | 'error' }) {
-  /** Small badge with tones */
-  return (
-    <span
-      className={clsx(
-        'inline-flex items-center px-2 py-0.5 rounded-full text-xs border',
-        tone === 'default' && 'bg-neutralLightBg text-secondaryText border-neutralBorder',
-        tone === 'success' && 'bg-neutralLightBg text-success border-neutralBorder',
-        tone === 'warning' && 'bg-neutralLightBg border-neutralBorder',
-        tone === 'error' && 'bg-neutralLightBg text-error border-neutralBorder'
-      )}
-      style={tone === 'warning' ? { color: 'var(--color-warning)' } : undefined}
-    >
-      {label}
-    </span>
-  );
+export default function Badge({ tone = "pending", children }: Props) {
+  const normalize = (t: VizAITone | LegacyTone): VizAITone => {
+    if (t === "success") return "completed";
+    if (t === "warning") return "pending";
+    if (t === "error") return "pending";
+    if (t === "default") return "pending";
+    return t as VizAITone;
+  };
+  const t = normalize(tone);
+  const classMap: Record<VizAITone, string> = {
+    completed: "badge badge--completed",
+    processing: "badge badge--processing",
+    pending: "badge badge--pending",
+  };
+  return <span className={classMap[t]}>{children}</span>;
 }

@@ -120,7 +120,6 @@ export default function TimelinePage() {
         open={!!previewId}
         onClose={() => setPreviewId(null)}
         src="/src/assets/video/sample1.mp4"
-        meta={filtered.find((f: any) => f.id === previewId)}
       />
     </div>
   );
