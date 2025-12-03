@@ -22,8 +22,8 @@ export default function DashboardPage() {
   const [chartMode, setChartMode] = useState<'pie'|'stacked'>('pie');
   const navigate = useNavigate();
 
-  // Use global date range from Redux so all charts react to changes
-  const range = useSelector((s: RootState) => s.filters.dateRange);
+  // Use global date range from Redux so all charts react to changes (Architecture: shared across tabs)
+  const range = useSelector((s: RootState) => s.ui.globalDateRange);
 
   const animalQ = useQuery({ queryKey: ['selectedAnimal', range], queryFn: api.getSelectedAnimal });
   const countsQ = useQuery({ queryKey: ['behaviorCounts', range], queryFn: api.getBehaviorCounts });
@@ -68,7 +68,7 @@ export default function DashboardPage() {
   const anyError = animalQ.isError || countsQ.isError || durationQ.isError || heatmapQ.isError;
 
   const onBarClick = (type: string) => {
-    // Navigate to timeline with a preset filter hint in query params
+    // Behavior Specs: Clicking a bar drills to Timeline filtered by that behavior
     navigate(`/timeline?behavior=${encodeURIComponent(type)}`);
   };
 

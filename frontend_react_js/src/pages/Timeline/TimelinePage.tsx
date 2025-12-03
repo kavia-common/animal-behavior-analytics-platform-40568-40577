@@ -12,19 +12,29 @@ import { api } from '@/api/queries';
 import { EmptyState } from '@/components/ui/Placeholders';
 import { BehaviorEventsTable } from '@/components/ui/Tables';
 import { useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import type { RootState } from '@/store';
+import { setLastActiveTab } from '@/store/slices/uiSlice';
 
 export default function TimelinePage() {
   const { data: types } = useQuery<string[]>({ queryKey: ['behaviorTypes'], queryFn: api.getBehaviorTypes });
   const { data: behaviors } = useQuery({ queryKey: ['behaviors'], queryFn: api.getBehaviors });
   const [selected, setSelected] = useState<string[]>([]);
   const [duration, setDuration] = useState(120);
-  const [range, setRange] = useState({ start: new Date().toISOString().slice(0, 10), end: new Date().toISOString().slice(0, 10) });
+  const uiRange = useSelector((s: RootState) => s.ui.globalDateRange);
+  const [range, setRange] = useState({ start: uiRange.start, end: uiRange.end });
   const [zoom, setZoom] = useState<'1h' | '6h' | '12h' | '24h' | 'day' | 'week'>('day');
   const [previewId, setPreviewId] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const pageSize = 4;
 
+  const dispatch = useDispatch();
   const location = useLocation();
+
+  useEffect(() => {
+    dispatch(setLastActiveTab('timeline'));
+  }, [dispatch]);
+
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const bh = params.get('behavior');
@@ -119,7 +129,7 @@ export default function TimelinePage() {
       <VideoModal
         open={!!previewId}
         onClose={() => setPreviewId(null)}
-        src="/src/assets/video/sample1.mp4"
+        src="/src/assets/video/sample2.mp4"
       />
     </div>
   );

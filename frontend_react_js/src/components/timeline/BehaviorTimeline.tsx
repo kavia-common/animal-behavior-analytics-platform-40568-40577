@@ -54,7 +54,7 @@ export default function BehaviorTimeline({ segments, onSelect, zoomScale = 'day'
                     `Start: ${startTime}`,
                     `End: ${endTime}`,
                     `Duration: ${duration} min`,
-                    `Confidence: ${s.confidence ?? '—'}%`,
+                    `Confidence: ${s.confidence ?? '—'}`,
                     `Camera: ${s.camera}`
                   ].join('\n');
 

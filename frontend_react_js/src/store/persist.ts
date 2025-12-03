@@ -14,7 +14,13 @@ export function savePersist(state: any) {
     const toPersist = {
       animal: state.animal,
       filters: state.filters,
-      ui: state.ui,
+      // Persist only the fields that define navigation context to avoid bloat
+      ui: {
+        modal: state.ui?.modal ?? null,
+        lastActiveTab: state.ui?.lastActiveTab ?? 'dashboard',
+        globalDateRange: state.ui?.globalDateRange,
+        species: state.ui?.species ?? 'giant-anteater',
+      },
     };
     localStorage.setItem(PERSIST_KEY, JSON.stringify(toPersist));
   } catch {
