@@ -1,163 +1,195 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Card, CardBody, CardHeader } from '@/components/ui/Card';
-import MultiSelect from '@/components/ui/MultiSelect';
-import Slider from '@/components/ui/Slider';
-import DateRangePicker from '@/components/ui/DateRangePicker';
-import TimelineControls from '@/components/timeline/TimelineControls';
-import BehaviorTimeline from '@/components/timeline/BehaviorTimeline';
-import BehaviorGrid from '@/components/behavior/BehaviorGrid';
-import VideoModal from '@/components/video/VideoModal';
-import { useQuery } from '@tanstack/react-query';
-import { api } from '@/api/queries';
-import { EmptyState } from '@/components/ui/Placeholders';
-import { BehaviorEventsTable } from '@/components/ui/Tables';
-import { useLocation } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import type { RootState } from '@/store';
-import { setLastActiveTab } from '@/store/slices/uiSlice';
-import { getAllBehaviorOptions } from '@/lib/behaviorPalette';
-import { EXACT_BEHAVIORS } from '@/lib/behaviors';
+import React, { useMemo, useState } from 'react';
+import { BEHAVIOR_COLORS, BEHAVIOR_KEYS, BEHAVIOR_LABELS, BehaviorKey } from '@/lib/behaviorPalette';
 
-export default function TimelinePage() {
-  const { data: behaviors } = useQuery({ queryKey: ['behaviors'], queryFn: api.getBehaviors });
-  const behaviorOptions = getAllBehaviorOptions();
-  const [selected, setSelected] = useState<string[]>([...(EXACT_BEHAVIORS as readonly string[])]);
-  const [duration, setDuration] = useState(120);
-  const uiRange = useSelector((s: RootState) => s.ui.globalDateRange);
-  const [range, setRange] = useState({ start: uiRange.start, end: uiRange.end });
-  const [zoom, setZoom] = useState<'1h' | '6h' | '12h' | '24h' | 'day' | 'week'>('day');
-  const [previewId, setPreviewId] = useState<string | null>(null);
-  const [page, setPage] = useState(1);
-  const pageSize = 4;
+type EventRow = {
+  id: string;
+  timestamp: string;
+  behavior: BehaviorKey;
+  duration: number;
+};
 
-  const dispatch = useDispatch();
-  const location = useLocation();
+const mockRows: EventRow[] = [
+  { id: 'e1', timestamp: '2025-12-03T10:05:00Z', behavior: 'pacing', duration: 45 },
+  { id: 'e2', timestamp: '2025-12-03T10:12:00Z', behavior: 'foraging', duration: 120 },
+  { id: 'e3', timestamp: '2025-12-03T10:30:00Z', behavior: 'recumbent', duration: 300 },
+  { id: 'e4', timestamp: '2025-12-03T11:05:00Z', behavior: 'scratching', duration: 60 },
+  { id: 'e5', timestamp: '2025-12-03T11:30:00Z', behavior: 'self_directed', duration: 30 },
+];
 
-  useEffect(() => {
-    dispatch(setLastActiveTab('timeline'));
-  }, [dispatch]);
+const TimelinePage: React.FC = () => {
+  const [selectedBehavior, setSelectedBehavior] = useState<BehaviorKey | 'all'>('all');
+  const [openId, setOpenId] = useState<string | null>(null);
 
-  // Read query param and clamp to allowed behaviors
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const bh = params.get('behavior');
-    if (bh && (EXACT_BEHAVIORS as readonly string[]).includes(bh)) {
-      setSelected([bh]);
-      setPage(1);
-    }
-  }, [location.search]);
-
-  const filtered = useMemo(
-    () =>
-      (behaviors ?? []).filter(
-        (b: any) =>
-          (selected.length ? selected.includes(b.type) : true) &&
-          (EXACT_BEHAVIORS as readonly string[]).includes(b.type) &&
-          b.durationMin <= duration
-      ),
-    [behaviors, selected, duration]
+  const rows = useMemo(
+    () => mockRows.filter((r) => (selectedBehavior === 'all' ? true : r.behavior === selectedBehavior)),
+    [selectedBehavior]
   );
-
-  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
-  const pageItems = filtered.slice((page - 1) * pageSize, page * pageSize);
-
-  // Map TimelineControls zoom to BehaviorTimeline zoomScale
-  const zoomToScale = (z: typeof zoom): 'hour' | 'day' | 'week' => {
-    if (z === '1h') return 'hour';
-    if (z === 'week') return 'week';
-    return 'day';
-  };
 
   return (
-    <div className="stack-lg">
-      <div className="page-header">
-        <h1 className="text-xl font-semibold" style={{ color: 'var(--color-text)' }}>Timeline</h1>
-      </div>
-      <Card>
-        <CardHeader title="Filters" />
-        <CardBody>
-          <div className="grid md:grid-cols-4 gap-3">
-            <div>
-              <div className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Behavior Types</div>
-              <MultiSelect
-                options={behaviorOptions}
-                values={selected}
-                onChange={(v) => {
-                  setSelected(v);
-                  setPage(1);
-                }}
-              />
-            </div>
-            <div>
-              <Slider min={0} max={120} value={duration} onChange={(v) => { setDuration(v); setPage(1); }} label="Max Duration (mins)" />
-            </div>
-            <div className="md:col-span-2">
-              <div className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Date Range</div>
-              <DateRangePicker value={range} onChange={(v) => { setRange(v); setPage(1); }} />
+    <div className="page-container space-y-6">
+      {/* Filters */}
+      <div className="card">
+        <div className="flex flex-wrap items-center gap-3">
+          <div>
+            <label className="block text-sm text-neutralMid mb-1">Date Range</label>
+            <input
+              type="date"
+              className="border px-3 py-2"
+              style={{ borderColor: 'var(--color-border)', borderRadius: 'var(--radius-input)' }}
+            />
+          </div>
+          <div>
+            <label className="block text-sm text-neutralMid mb-1">Behaviour</label>
+            <div className="flex gap-2 flex-wrap">
+              <button
+                className={`pill ${selectedBehavior === 'all' ? 'sidebar-active' : ''}`}
+                onClick={() => setSelectedBehavior('all')}
+              >
+                All
+              </button>
+              {BEHAVIOR_KEYS.map((k) => (
+                <button
+                  key={k}
+                  className="pill"
+                  style={{
+                    borderColor: BEHAVIOR_COLORS[k],
+                    color: BEHAVIOR_COLORS[k],
+                    background: selectedBehavior === k ? 'var(--color-sidebar-active-bg)' : '#fff',
+                  }}
+                  onClick={() => setSelectedBehavior(k)}
+                >
+                  {BEHAVIOR_LABELS[k]}
+                </button>
+              ))}
             </div>
           </div>
-        </CardBody>
-      </Card>
-
-      <Card>
-        <CardHeader title="Behavior Timeline" />
-        <CardBody>
-          <div className="inline-controls">
-            <TimelineControls zoom={zoom} onZoomChange={setZoom} onScrollLeft={() => {}} onScrollRight={() => {}} />
-          </div>
-          <div className="mt-3 overflow-x-auto">
-            <div className="min-w-[640px]">
-              <BehaviorTimeline
-                segments={(behaviors ?? [])
-                  .filter((b: any) => (EXACT_BEHAVIORS as readonly string[]).includes(b.type))
-                  .map((b: any) => ({
-                    id: b.id,
-                    type: b.type,
-                    start: b.startMin,
-                    end: b.endMin,
-                    camera: b.camera,
-                    confidence: b.confidence,
-                  }))}
-                onSelect={(id: string) => setPreviewId(id)}
-                zoomScale={zoomToScale(zoom)}
-              />
-            </div>
-          </div>
-        </CardBody>
-      </Card>
-
-      {filtered.length === 0 ? (
-        <EmptyState title="No results found" description="Adjust filters to see behavior events." />
-      ) : (
-        <>
-          <BehaviorGrid items={pageItems} onPreview={setPreviewId} />
-          <div className="flex items-center justify-center gap-2">
-            <button className="px-2 py-1 rounded" style={{ background: 'var(--color-table-header-bg)' }} disabled={page === 1} onClick={() => setPage((p) => Math.max(1, p - 1))}>
-              Prev
-            </button>
-            <div className="text-sm" style={{ color: 'var(--color-text)' }}>
-              Page {page} of {totalPages}
-            </div>
-            <button className="px-2 py-1 rounded" style={{ background: 'var(--color-table-header-bg)' }} disabled={page === totalPages} onClick={() => setPage((p) => Math.min(totalPages, p + 1))}>
-              Next
+          <div className="ml-auto">
+            <label className="block text-sm text-neutralMid mb-1">Animal</label>
+            <button
+              className="pill"
+              style={{
+                background: 'var(--color-accent)',
+                color: '#fff',
+                borderColor: 'var(--color-primary)',
+              }}
+            >
+              Animal Filter
             </button>
           </div>
-        </>
-      )}
-
-      <div className="mt-4">
-        {/* Behavior Events Table */}
-        <div className="font-heading font-semibold mb-2" style={{ color: 'var(--color-text)' }}>
-          Behavior Events
         </div>
+      </div>
+
+      {/* Table */}
+      <div className="card">
+        <div className="card-header px-4 py-2 font-medium">Events</div>
         <div className="overflow-x-auto">
-          <div className="min-w-[640px]">
-            <BehaviorEventsTable items={filtered as any[]} />
-          </div>
+          <table className="min-w-full">
+            <thead>
+              <tr className="text-left text-sm" style={{ background: 'var(--color-table-header-bg)' }}>
+                <th className="px-4 py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>
+                  Timestamp
+                </th>
+                <th className="px-4 py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>
+                  Behaviour
+                </th>
+                <th className="px-4 py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>
+                  Duration
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((r) => (
+                <tr
+                  key={r.id}
+                  className="cursor-pointer row-hover"
+                  onClick={() => setOpenId(r.id)}
+                >
+                  <td className="px-4 py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>
+                    {new Date(r.timestamp).toLocaleString()}
+                  </td>
+                  <td className="px-4 py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>
+                    <span
+                      className="pill"
+                      style={{
+                        borderColor: BEHAVIOR_COLORS[r.behavior],
+                        color: BEHAVIOR_COLORS[r.behavior],
+                        background: '#fff',
+                      }}
+                    >
+                      {BEHAVIOR_LABELS[r.behavior]}
+                    </span>
+                  </td>
+                  <td className="px-4 py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>
+                    {Math.round(r.duration / 60)} mins
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-      </div>
 
-      <VideoModal open={!!previewId} onClose={() => setPreviewId(null)} src="/src/assets/video/sample2.mp4" />
+        {/* Modal */}
+        {openId && (
+          <div className="fixed inset-0 bg-black/20 flex items-end sm:items-center justify-center p-4" onClick={() => setOpenId(null)}>
+            <div
+              className="bg-white w-full sm:w-[520px]"
+              style={{
+                border: '1px solid var(--color-border)',
+                borderRadius: 'var(--radius-card)',
+                boxShadow: 'var(--shadow-elevation)',
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="px-4 py-3 font-semibold border-b" style={{ borderColor: 'var(--color-border)' }}>
+                Event details
+              </div>
+              <div className="p-4">
+                {(() => {
+                  const item = mockRows.find((m) => m.id === openId)!;
+                  return (
+                    <div className="space-y-2">
+                      <div>
+                        <span className="text-sm text-neutralMid">Timestamp: </span>
+                        <span className="font-medium">{new Date(item.timestamp).toLocaleString()}</span>
+                      </div>
+                      <div>
+                        <span className="text-sm text-neutralMid">Behaviour: </span>
+                        <span
+                          className="pill"
+                          style={{
+                            borderColor: BEHAVIOR_COLORS[item.behavior],
+                            color: BEHAVIOR_COLORS[item.behavior],
+                          }}
+                        >
+                          {BEHAVIOR_LABELS[item.behavior]}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-sm text-neutralMid">Duration: </span>
+                        <span className="font-medium">{Math.round(item.duration / 60)} mins</span>
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+              <div className="px-4 py-3 border-t flex justify-end" style={{ borderColor: 'var(--color-border)' }}>
+                <button
+                  className="px-4 py-2"
+                  style={{
+                    border: '1px solid var(--color-border)',
+                    borderRadius: 'var(--radius-button)',
+                  }}
+                  onClick={() => setOpenId(null)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
-}
+};
+
+export default TimelinePage;

@@ -1,40 +1,100 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import Button from '@/components/ui/Button';
-import { api } from '@/api/queries';
-import { downloadFromUrl } from '@/lib/download';
+import React from 'react';
+import { BEHAVIOR_KEYS, BEHAVIOR_LABELS, BEHAVIOR_COLORS } from '@/lib/behaviorPalette';
+import BehaviorCountBarChart from '@/components/charts/BehaviorCountBarChart';
+import DurationPieChart from '@/components/charts/DurationPieChart';
 
-// PUBLIC_INTERFACE
-export default function ReportsPage() {
-  /** Reports hub with links and quick exports */
-  const [reportId, setReportId] = useState('r1');
+const ExportButtons = () => (
+  <div className="flex gap-2">
+    <button className="px-3 py-2 border" style={{ borderColor: 'var(--color-border)', borderRadius: 'var(--radius-button)' }}>
+      CSV
+    </button>
+    <button className="px-3 py-2 border" style={{ borderColor: 'var(--color-border)', borderRadius: 'var(--radius-button)' }}>
+      PDF
+    </button>
+    <button className="px-3 py-2 border" style={{ borderColor: 'var(--color-border)', borderRadius: 'var(--radius-button)' }}>
+      Excel
+    </button>
+  </div>
+);
+
+const ReportsPage: React.FC = () => {
   return (
-    <div className="stack-lg">
-      <div className="page-header">
-        <h1 className="text-xl font-semibold text-gray-900">Reports</h1>
-      </div>
-      <div className="grid md:grid-cols-3 gap-4">
-        <div className="card p-4">
-          <div className="font-heading font-semibold">Report Builder</div>
-          <p className="text-sm text-neutral-600 mb-3">Create and preview reports with templates and exports.</p>
-          <Link to="/reports/builder" className="px-3 py-2 rounded bg-primary text-white inline-block">Open Builder</Link>
+    <div className="page-container space-y-6">
+      {/* Daily Summary */}
+      <div className="card">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-semibold">Daily Summary</h3>
+          <ExportButtons />
         </div>
-        <div className="card p-4">
-          <div className="font-heading font-semibold">Saved Reports</div>
-          <p className="text-sm text-neutral-600 mb-3">Manage saved reports, re-run, and export.</p>
-          <Link to="/reports/saved" className="px-3 py-2 rounded bg-secondary text-white inline-block">View Saved</Link>
-        </div>
-        <div className="card p-4 space-y-2">
-          <div className="font-heading font-semibold">Quick Exports</div>
-          <p className="text-sm text-neutral-600">Trigger exports via backend endpoints.</p>
-          <div className="flex items-center gap-2">
-            <input value={reportId} onChange={(e) => setReportId(e.target.value)} className="border rounded px-2 py-1 text-sm" style={{ width: 140 }} />
-            <Button size="sm" onClick={() => downloadFromUrl(api.exportReportJsonUrl(reportId), `${reportId}.json`)}>JSON</Button>
-            <Button size="sm" variant="secondary" onClick={() => downloadFromUrl(api.exportReportCsvUrl(reportId), `${reportId}.csv`)}>CSV</Button>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="chart-container">
+            <BehaviorCountBarChart behaviors={[...BEHAVIOR_KEYS]} />
           </div>
-          <p className="text-[11px] text-neutral-600">If backend is disabled by feature flags, these links will still resolve but may 404; mocks remain active elsewhere.</p>
+          <div className="chart-container">
+            <DurationPieChart behaviors={[...BEHAVIOR_KEYS]} />
+          </div>
         </div>
+      </div>
+
+      {/* Behaviour Summary (table) */}
+      <div className="card">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-semibold">Behaviour Summary</h3>
+          <ExportButtons />
+        </div>
+        <div className="overflow-x-auto">
+          <table className="min-w-full">
+            <thead>
+              <tr className="text-left text-sm" style={{ background: 'var(--color-table-header-bg)' }}>
+                <th className="px-4 py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>Behaviour</th>
+                <th className="px-4 py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>Count</th>
+                <th className="px-4 py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>Total Duration (mins)</th>
+                <th className="px-4 py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>Avg Duration (mins)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {BEHAVIOR_KEYS.map((k, idx) => (
+                <tr key={k} className="row-hover">
+                  <td className="px-4 py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>
+                    <span className="pill" style={{ borderColor: BEHAVIOR_COLORS[k], color: BEHAVIOR_COLORS[k] }}>
+                      {BEHAVIOR_LABELS[k]}
+                    </span>
+                  </td>
+                  <td className="px-4 py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>
+                    {[140, 90, 120, 70, 60][idx]}
+                  </td>
+                  <td className="px-4 py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>
+                    {[320, 210, 120, 80, 180][idx]}
+                  </td>
+                  <td className="px-4 py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>
+                    {[12, 9, 8, 4, 6][idx]}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Trend Over Time */}
+      <div className="card">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-semibold">Trend Over Time</h3>
+          <ExportButtons />
+        </div>
+        <div className="text-sm text-neutralMid">Trend visualization placeholder; when implemented ensure strict 5-behavior colors.</div>
+      </div>
+
+      {/* Welfare Score Overview */}
+      <div className="card">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-semibold">Welfare Score Overview</h3>
+          <ExportButtons />
+        </div>
+        <div className="text-sm text-neutralMid">Score overview placeholder; style follows tokens.</div>
       </div>
     </div>
   );
-}
+};
+
+export default ReportsPage;

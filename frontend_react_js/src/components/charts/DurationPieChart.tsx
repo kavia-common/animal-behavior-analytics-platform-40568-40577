@@ -1,67 +1,40 @@
-import React, { useEffect, useMemo } from 'react';
-import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
+import React from 'react';
 import { Pie } from 'react-chartjs-2';
-import { getBehaviorColor } from '@/lib/behaviorPalette';
-import { EXACT_BEHAVIORS, type BehaviorId } from '@/lib/behaviors';
+import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
+import { BEHAVIOR_COLORS, BEHAVIOR_LABELS, BehaviorKey } from '@/lib/behaviorPalette';
 
 Chart.register(ArcElement, Tooltip, Legend);
 
-type Props = { data: { label: string; value: number }[] };
+type Props = {
+  behaviors?: BehaviorKey[];
+};
 
-/**
- * PUBLIC_INTERFACE
- * DurationPieChart renders a pie and shows summary metrics for total, average and % of day.
- * Only allowed five behaviors are included and ordered consistently.
- */
-export default function DurationPieChart({ data }: Props) {
-  // Build a map and then output in EXACT_BEHAVIORS order
-  const byLabel = useMemo(() => {
-    const m = new Map<string, number>();
-    (data ?? []).forEach((d) => m.set(d.label, (m.get(d.label) || 0) + (d.value || 0)));
-    return m;
-  }, [data]);
+const DurationPieChart: React.FC<Props> = ({ behaviors }) => {
+  const keys: BehaviorKey[] = behaviors ?? (Object.keys(BEHAVIOR_LABELS) as BehaviorKey[]);
+  const labels = keys.map((k) => BEHAVIOR_LABELS[k]);
+  const data = keys.map((_, i) => [320, 210, 120, 80, 180][i % 5]);
+  const backgroundColor = keys.map((k) => BEHAVIOR_COLORS[k]);
 
-  const labels = (EXACT_BEHAVIORS as readonly BehaviorId[]);
-  const values = [...labels].map((l) => byLabel.get(l) || 0);
-  const colors = [...labels].map((l) => getBehaviorColor(l));
-
-  const chartData = {
-    // Chart.js expects a mutable array type for labels; spread to create one
-    labels: [...labels],
-    datasets: [
-      {
-        data: [...values],
-        backgroundColor: [...colors],
-      },
-    ],
-  };
-  const totals = useMemo(() => {
-    const total = values.reduce((a, b) => a + b, 0);
-    const avg = values.length ? total / values.length : 0;
-    const pct = (total / (24 * 60)) * 100;
-    return { total, avg, pct };
-  }, [values]);
-
-  useEffect(() => {}, [values]);
   return (
-    <div className="w-full">
-      <div className="h-72">
-        <Pie data={chartData} />
-      </div>
-      <div className="mt-3 grid grid-cols-3 gap-2 text-xs" style={{ color: 'var(--color-text)' }}>
-        <div className="card p-2">
-          <div>Total Duration</div>
-          <div className="font-mono text-lg">{totals.total} min</div>
-        </div>
-        <div className="card p-2">
-          <div>Average per Type</div>
-          <div className="font-mono text-lg">{totals.avg.toFixed(1)} min</div>
-        </div>
-        <div className="card p-2">
-          <div>% of Day</div>
-          <div className="font-mono text-lg">{totals.pct.toFixed(1)}%</div>
-        </div>
-      </div>
+    <div style={{ height: 280 }}>
+      <Pie
+        data={{
+          labels,
+          datasets: [{ data, backgroundColor, borderColor: '#FFFFFF', borderWidth: 2 }],
+        }}
+        options={{
+          plugins: {
+            legend: { position: 'bottom' },
+            tooltip: {
+              callbacks: { label: (ctx) => `${ctx.label}: ${ctx.formattedValue} mins` },
+            },
+          },
+          responsive: true,
+          maintainAspectRatio: false,
+        }}
+      />
     </div>
   );
-}
+};
+
+export default DurationPieChart;

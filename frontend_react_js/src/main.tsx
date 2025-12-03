@@ -7,9 +7,7 @@ import RootLayout from './routes/RootLayout';
 import DashboardPage from './pages/Dashboard/DashboardPage';
 import TimelinePage from './pages/Timeline/TimelinePage';
 import ReportsPage from './pages/Reports/ReportsPage';
-import ReportsBuilderPage from './pages/Reports/ReportsBuilderPage';
-import ReportsSavedPage from './pages/Reports/ReportsSavedPage';
-import ReportsScheduledPage from './pages/Reports/ReportsScheduledPage';
+
 import SettingsPage from './pages/Settings/SettingsPage';
 import ProfilePage from './pages/Profile/ProfilePage';
 import NotFoundPage from './pages/System/NotFoundPage';
@@ -36,13 +34,9 @@ const router = createBrowserRouter([
     path: '/',
     element: <RootLayout />,
     children: [
-      { index: true, element: <Navigate to="/dashboard" replace /> },
-      { path: '/dashboard', element: <DashboardPage /> },
+      { index: true, element: <DashboardPage /> },
       { path: '/timeline', element: <TimelinePage /> },
       { path: '/reports', element: <ReportsPage /> },
-      { path: '/reports/builder', element: <ReportsBuilderPage /> },
-      { path: '/reports/saved', element: <ReportsSavedPage /> },
-      { path: '/reports/scheduled', element: <ReportsScheduledPage /> },
       { path: '/settings', element: <SettingsPage /> },
       { path: '/profile', element: <ProfilePage /> },
       { path: '/not-found', element: <NotFoundPage /> },

@@ -12,7 +12,7 @@ export default function ReportPreview({ type }: Props) {
     return (
       <div className="card p-4">
         <div className="font-heading font-semibold mb-2">Behavior Summary</div>
-        <DurationPieChart data={[{ label: 'Foraging', value: 40 }, { label: 'Resting', value: 30 }, { label: 'Grooming', value: 20 }, { label: 'Walking', value: 10 }]} />
+        <DurationPieChart />
       </div>
     );
   }

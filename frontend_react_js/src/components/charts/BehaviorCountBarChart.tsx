@@ -1,91 +1,46 @@
-import React, { useMemo, useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Cell } from 'recharts';
-import { getBehaviorColor } from '@/lib/behaviorPalette';
-import { EXACT_BEHAVIORS, type BehaviorId } from '@/lib/behaviors';
+import React from 'react';
+import { Bar } from 'react-chartjs-2';
+import { Chart, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js';
+import { BEHAVIOR_COLORS, BEHAVIOR_LABELS, BehaviorKey } from '@/lib/behaviorPalette';
+
+Chart.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 type Props = {
-  data: { type: string; count: number }[];
-  onBarClick?: (type: string) => void;
+  behaviors?: BehaviorKey[];
 };
 
-/**
- * PUBLIC_INTERFACE
- * BehaviorCountBarChart with interactive legend to toggle visibility per behavior type.
- * Renders exactly the five allowed behaviors, in fixed order, with strict palette.
- */
-export default function BehaviorCountBarChart({ data, onBarClick }: Props) {
-  /** Vertical bar chart for behavior counts, with legend toggles */
-  const [hidden, setHidden] = useState<Record<BehaviorId, boolean>>({
-    Pacing: false,
-    Recumbent: false,
-    Scratching: false,
-    'Self-directed': false,
-    Foraging: false,
-  });
-
-  // Normalize incoming data to the five-behavior shape and order
-  const normalized = useMemo(() => {
-    const map = new Map<string, number>();
-    (data ?? []).forEach((d) => {
-      if ((EXACT_BEHAVIORS as readonly string[]).includes(d.type)) {
-        map.set(d.type, (map.get(d.type) || 0) + (d.count || 0));
-      }
-    });
-    return (EXACT_BEHAVIORS as readonly BehaviorId[]).map((b) => ({ type: b, count: map.get(b) || 0 }));
-  }, [data]);
-
-  const visibleData = useMemo(() => {
-    return normalized.map((d) => ({
-      ...d,
-      count: hidden[d.type as BehaviorId] ? 0 : d.count,
-    }));
-  }, [normalized, hidden]);
-
-  const toggleType = (t: BehaviorId) => setHidden((h) => ({ ...h, [t]: !h[t] }));
+const BehaviorCountBarChart: React.FC<Props> = ({ behaviors }) => {
+  const keys: BehaviorKey[] = behaviors ?? (Object.keys(BEHAVIOR_LABELS) as BehaviorKey[]);
+  const labels = keys.map((k) => BEHAVIOR_LABELS[k]);
+  const data = keys.map((_, i) => [140, 90, 120, 70, 60][i % 5]);
+  const backgroundColor = keys.map((k) => BEHAVIOR_COLORS[k]);
 
   return (
-    <div className="w-full h-72">
-      <div className="flex flex-wrap gap-2 mb-2">
-        {(EXACT_BEHAVIORS as readonly BehaviorId[]).map((b) => {
-          const isHidden = !!hidden[b];
-          return (
-            <button
-              key={b}
-              onClick={() => toggleType(b)}
-              className={`px-2 py-1 rounded-full text-xs border flex items-center gap-1 ${isHidden ? 'opacity-50' : ''}`}
-              style={{ borderColor: 'var(--color-border)' }}
-              title={`${isHidden ? 'Show' : 'Hide'} ${b}`}
-            >
-              <span
-                aria-hidden
-                className="inline-block w-2.5 h-2.5 rounded"
-                style={{ backgroundColor: getBehaviorColor(b) }}
-              />
-              {b}
-            </button>
-          );
-        })}
-      </div>
-      <ResponsiveContainer>
-        <BarChart data={visibleData} margin={{ top: 8, right: 12, left: 0, bottom: 8 }}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="type" />
-          <YAxis allowDecimals={false} />
-          <Tooltip />
-          <Bar
-            dataKey="count"
-            name="Count"
-            onClick={(entry: any, index: number) => {
-              const t = visibleData?.[index]?.type ?? entry?.type;
-              if (t) onBarClick?.(t);
-            }}
-          >
-            {visibleData.map((entry, idx) => (
-              <Cell key={`cell-${idx}`} fill={getBehaviorColor(entry.type)} />
-            ))}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
+    <div style={{ height: 280 }}>
+      <Bar
+        data={{
+          labels,
+          datasets: [
+            {
+              data,
+              backgroundColor,
+              borderRadius: 8,
+              borderSkipped: false,
+            },
+          ],
+        }}
+        options={{
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { display: false } },
+            y: { grid: { color: '#E5E7EB' }, ticks: { callback: (v) => `${v}` as any } },
+          },
+          responsive: true,
+          maintainAspectRatio: false,
+        }}
+      />
     </div>
   );
-}
+};
+
+export default BehaviorCountBarChart;

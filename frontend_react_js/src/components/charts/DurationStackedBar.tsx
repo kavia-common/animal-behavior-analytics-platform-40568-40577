@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { getBehaviorColor } from '@/lib/behaviorPalette';
-import { EXACT_BEHAVIORS, type BehaviorId } from '@/lib/behaviors';
+import { getBehaviorColor, BEHAVIOR_ORDER, type BehaviorKey as BehaviorId } from '@/lib/behaviorPalette';
 
 type Props = {
   data: any[];
@@ -15,7 +14,7 @@ type Props = {
  */
 export default function DurationStackedBar({ data, keys }: Props) {
   const orderedKeys = useMemo(
-    () => ([...(EXACT_BEHAVIORS as readonly BehaviorId[])]).filter((k) => keys.includes(k)),
+    () => (BEHAVIOR_ORDER as readonly BehaviorId[]).filter((k) => keys.includes(k)),
     [keys]
   );
 

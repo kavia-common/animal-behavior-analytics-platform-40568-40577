@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { getBehaviorColor } from '@/lib/behaviorPalette';
+import { getBehaviorColor, BEHAVIOR_KEYS, type BehaviorKey } from '@/lib/behaviorPalette';
 import { minToTime } from '@/lib/format';
 
 type Segment = {
@@ -66,7 +66,7 @@ export default function BehaviorTimeline({ segments, onSelect, zoomScale = 'day'
                       style={{
                         left: `${leftPct}%`,
                         width: `${Math.max(0.4, widthPct)}%`,
-                        backgroundColor: getBehaviorColor(s.type),
+                        backgroundColor: getBehaviorColor((BEHAVIOR_KEYS as readonly BehaviorKey[]).includes(s.type as any) ? (s.type as BehaviorKey) : 'foraging'),
                         boxShadow: '0 1px 2px var(--color-card-shadow-rgba)',
                         outlineColor: 'var(--color-primary)',
                       }}

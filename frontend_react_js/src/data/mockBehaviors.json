@@ -1,7 +1,7 @@
 [
-  { "id": "b1", "type": "Foraging", "start": "06:10", "end": "06:35", "startMin": 370, "endMin": 395, "durationMin": 25, "confidence": 92, "camera": "Cam A", "thumbnail": "", "videoUrl": "/src/assets/video/sample1.mp4" },
-  { "id": "b2", "type": "Resting or Sleeping", "start": "08:05", "end": "08:50", "startMin": 485, "endMin": 530, "durationMin": 45, "confidence": 78, "camera": "Cam B", "thumbnail": "", "videoUrl": "/src/assets/video/sample1.mp4" },
-  { "id": "b3", "type": "Grooming", "start": "10:20", "end": "10:35", "startMin": 620, "endMin": 635, "durationMin": 15, "confidence": 88, "camera": "Cam A", "thumbnail": "", "videoUrl": "/src/assets/video/sample2.mp4" },
-  { "id": "b4", "type": "Pacing or Movement", "start": "12:10", "end": "12:25", "startMin": 730, "endMin": 745, "durationMin": 15, "confidence": 81, "camera": "Cam B", "thumbnail": "", "videoUrl": "/src/assets/video/sample2.mp4" },
-  { "id": "b5", "type": "Feeding", "start": "16:40", "end": "17:05", "startMin": 1000, "endMin": 1025, "durationMin": 25, "confidence": 95, "camera": "Cam A", "thumbnail": "", "videoUrl": "/src/assets/video/sample1.mp4" }
+  { "id": "foraging", "label": "Foraging", "color": "#8B5CF6" },
+  { "id": "pacing", "label": "Pacing", "color": "#1D4ED8" },
+  { "id": "recumbent", "label": "Recumbent", "color": "#F59E0B" },
+  { "id": "scratching", "label": "Scratching", "color": "#059669" },
+  { "id": "self_directed", "label": "Self-directed", "color": "#DC2626" }
 ]

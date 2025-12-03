@@ -1,142 +1,74 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import logo from "../../assets/vizai-logo.png";
-import { useDispatch, useSelector } from "react-redux";
-import type { RootState } from "@/store";
-import { setGlobalDateRange, setLastActiveTab } from "@/store/slices/uiSlice";
+import React, { useMemo, useState } from 'react';
+import logo from '../../assets/vizai-logo.png';
 
-type TopNavProps = {
-  onMenuClick?: () => void;
-};
-
-/**
- * Top navigation with:
- * - Logo link -> Animal Selection
- * - Mobile menu button (hamburger) to toggle sidebar drawer
- * - Tabs + global date selector (persisted in ui slice)
- * - Live clock + user menu
- */
-export default function TopNav({ onMenuClick }: TopNavProps) {
-  const nav = useNavigate();
-  const dispatch = useDispatch();
-  const [open, setOpen] = useState(false);
-  const [now, setNow] = useState<string>(new Date().toLocaleString());
-  const dateRange = useSelector((s: RootState) => s.ui.globalDateRange);
-  const activeTab = useSelector((s: RootState) => s.ui.lastActiveTab);
-
-  useEffect(() => {
-    const id = setInterval(() => setNow(new Date().toLocaleString()), 1000);
-    return () => clearInterval(id);
-  }, []);
-
-  const goAnimals = (e: React.MouseEvent) => {
-    e.preventDefault();
-    nav("/animals");
-  };
-
-  const setTab = (tab: 'dashboard' | 'timeline' | 'reports' | 'chat', path: string) => {
-    dispatch(setLastActiveTab(tab));
-    nav(path);
-  };
-
-  const onDateChange = (dir: 'today' | '7d' | '30d') => {
-    const end = new Date();
-    let start = new Date(end);
-    if (dir === '7d') {
-      start.setDate(end.getDate() - 6);
-    } else if (dir === '30d') {
-      start.setDate(end.getDate() - 29);
-    }
-    const fmt = (d: Date) => d.toISOString().slice(0, 10);
-    dispatch(setGlobalDateRange({ start: fmt(start), end: fmt(end) }));
-  };
+const TopNav: React.FC = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const now = useMemo(() => new Date().toLocaleString(), []);
 
   return (
-    <div className="w-full h-16 px-4 lg:px-6 flex items-center bg-white" style={{ justifyContent: 'space-between' }}>
-      <div className="flex items-center gap-3">
-        {/* Mobile hamburger */}
+    <header
+      className="w-full bg-white border-b px-6 py-3 flex items-center justify-between"
+      style={{ borderColor: 'var(--color-border)' }}
+    >
+      {/* Left: Logo + Title */}
+      <div className="flex items-center space-x-2">
+        <img src={logo} alt="VizAI" className="h-6" />
+        <span className="font-semibold" style={{ color: 'var(--color-text)' }}>
+          VizAI
+        </span>
+      </div>
+
+      {/* Center: Animal Filter Dropdown - green pill with primary border */}
+      <div className="flex-1 flex justify-center px-4">
         <button
-          aria-label="Open sidebar"
-          onClick={onMenuClick}
-          className="lg:hidden inline-flex items-center justify-center h-10 w-10 rounded-md border"
-          style={{ borderColor: "var(--color-border)", color: "var(--color-text)" }}
+          className="pill"
+          style={{
+            background: 'var(--color-accent)',
+            color: '#fff',
+            borderColor: 'var(--color-primary)',
+          }}
         >
-          <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
+          Animal Filter
         </button>
-
-        <a href="/animals" onClick={goAnimals} className="inline-flex items-center gap-3">
-          <img src={logo} className="h-8" alt="VizAI" />
-          <span className="font-semibold" style={{ color: "var(--color-text)" }}>VizAI</span>
-        </a>
       </div>
 
-      {/* Tabs + date range */}
-      <div className="hidden md:flex items-center gap-6">
-        <nav className="flex items-center gap-2 text-sm">
-          <button
-            className={`px-2 py-1 rounded ${activeTab === 'dashboard' ? 'bg-[var(--color-sidebar-active-bg)]' : ''}`}
-            onClick={() => setTab('dashboard', '/dashboard')}
-          >
-            Dashboard
-          </button>
-          <button
-            className={`px-2 py-1 rounded ${activeTab === 'timeline' ? 'bg-[var(--color-sidebar-active-bg)]' : ''}`}
-            onClick={() => setTab('timeline', '/timeline')}
-          >
-            Timeline
-          </button>
-          <button
-            className={`px-2 py-1 rounded ${activeTab === 'reports' ? 'bg-[var(--color-sidebar-active-bg)]' : ''}`}
-            onClick={() => setTab('reports', '/reports')}
-          >
-            Reports
-          </button>
-        </nav>
-
-        <div className="flex items-center gap-2 text-xs">
-          <span className="text-[var(--color-text-muted)]">Range:</span>
-          <div className="inline-flex rounded border overflow-hidden" style={{ borderColor: "var(--color-border)" }}>
-            <button className="px-2 py-1 hover:bg-[var(--color-sidebar-active-bg)]" onClick={() => onDateChange('today')}>Today</button>
-            <button className="px-2 py-1 hover:bg-[var(--color-sidebar-active-bg)]" onClick={() => onDateChange('7d')}>Last 7d</button>
-            <button className="px-2 py-1 hover:bg-[var(--color-sidebar-active-bg)]" onClick={() => onDateChange('30d')}>Last 30d</button>
-          </div>
-          <span className="text-[var(--color-text-muted)]">
-            {dateRange.start} → {dateRange.end}
-          </span>
+      {/* Right: Date/Time and User Menu */}
+      <div className="flex items-center space-x-3 relative">
+        <div className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
+          {now}
         </div>
-      </div>
-
-      {/* Right widgets */}
-      <div className="flex items-center gap-6 text-sm">
-        <span className="hidden md:block text-[var(--color-text-muted)]">{now}</span>
         <div className="relative">
           <button
-            className="px-3 py-1.5 rounded-lg border"
-            style={{ borderColor: "var(--color-border)" }}
-            onClick={() => setOpen((v) => !v)}
+            className="px-3 py-1 rounded"
+            style={{
+              borderRadius: 'var(--radius-button)',
+              border: '1px solid var(--color-border)',
+              color: 'var(--color-text)',
+              background: 'var(--color-surface)',
+            }}
+            onClick={() => setMenuOpen((s) => !s)}
           >
             User
           </button>
-          {open && (
+          {menuOpen && (
             <div
-              className="absolute right-0 mt-2 w-40 rounded-lg border shadow-md bg-[var(--color-surface)]"
-              style={{ borderColor: "var(--color-border)" }}
+              className="absolute right-0 mt-2 w-40 bg-white border rounded shadow"
+              style={{
+                borderColor: 'var(--color-border)',
+                borderRadius: 'var(--radius-card)',
+                boxShadow: 'var(--shadow-elevation)',
+              }}
             >
-              <button className="w-full text-left px-3 py-2 hover:bg-[var(--color-sidebar-active-bg)]">Profile</button>
-              <button className="w-full text-left px-3 py-2 hover:bg-[var(--color-sidebar-active-bg)]">Settings</button>
+              <a className="block px-3 py-2 hover:bg-gray-50" href="/profile">
+                Profile
+              </a>
+              <a className="block px-3 py-2 hover:bg-gray-50" href="/settings">
+                Settings
+              </a>
               <button
-                className="w-full text-left px-3 py-2"
-                onClick={() => { setOpen(false); nav("/login"); }}
-                style={{}}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'var(--color-logout-hover-bg)';
-                  e.currentTarget.style.color = 'var(--color-logout-text)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'transparent';
-                  e.currentTarget.style.color = 'var(--color-text)';
+                className="w-full text-left px-3 py-2 logout-hover"
+                onClick={() => {
+                  // Implement logout when backend wired
                 }}
               >
                 Logout
@@ -145,6 +77,8 @@ export default function TopNav({ onMenuClick }: TopNavProps) {
           )}
         </div>
       </div>
-    </div>
+    </header>
   );
-}
+};
+
+export default TopNav;

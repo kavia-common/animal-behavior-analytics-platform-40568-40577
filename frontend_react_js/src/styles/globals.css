@@ -2,207 +2,133 @@
 @tailwind components;
 @tailwind utilities;
 
-@import './layout.css';
-
-/* Layout helpers for responsive alignment without changing theme tokens */
-/* Keep sticky top nav height consistent across app */
+/* VizAI Global Design Tokens */
 :root {
-  --topnav-height: 64px; /* matches h-16 */
-  --sidebar-width: 256px; /* matches w-64 */
+  /* Brand Colors */
+  --color-primary: #0F766E;
+  --color-primary-dark: #0E8780;
+  --color-accent: #10B981;
+  --color-secondary: #F59E0B;
+  --color-error: #DC2626;
+
+  /* Text */
+  --color-text: #111827;
+  --color-text-muted: #6B7280;
+
+  /* Surfaces */
+  --color-border: #E5E7EB;
+  --color-bg: #F8FAFC;
+  --color-surface: #FFFFFF;
+
+  /* UI Specific */
+  --color-sidebar-active-bg: #E6F5F0;
+  --color-table-header-bg: #F1F5F9;
+  --color-table-row-hover: #EEF7F4;
+  --color-logout-hover-bg: #FFE8E8;
+  --color-logout-text: #B91C1C;
+
+  /* Shadow and Radii */
+  --shadow-elevation: 0px 1px 2px rgba(0,0,0,0.06);
+  --radius-card: 16px;
+  --radius-input: 10px;
+  --radius-button: 10px;
+  --radius-chart: 16px;
+
+  /* Spacing */
+  --space-outer: 24px;
+  --space-inner: 16px;
+
+  /* Legacy shim tokens used by existing components */
+  --color-grey-border: var(--color-border);
+  --shadow-soft: var(--shadow-elevation);
 }
 
-/* Ensure body background adheres to theme and prevents horizontal overflow */
+/* Base */
 html, body, #root {
   height: 100%;
 }
 
 body {
-  /* Use theme variables for body instead of Tailwind fixed grays to reflect new palette */
-  background-color: var(--color-bg);
+  background: var(--color-bg);
   color: var(--color-text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
-/* Sticky header utility */
-.sticky-topnav {
-  position: sticky;
-  top: 0;
-  z-index: 40; /* above content, below modals */
-  height: var(--topnav-height);
+/* Layout helpers */
+.container-outer { padding: var(--space-outer); }
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-elevation);
+  padding: var(--space-inner);
 }
+.card-header {
+  background: var(--color-table-header-bg);
+  border-top-left-radius: var(--radius-card);
+  border-top-right-radius: var(--radius-card);
+  border-bottom: 1px solid var(--color-border);
+}
+.row-hover:hover { background: var(--color-table-row-hover); }
 
-/* App shell responsive layout */
-.app-shell {
-  display: grid;
-  grid-template-columns: var(--sidebar-width) 1fr;
-  min-height: 100vh;
-}
-
-@media (max-width: 1024px) {
-  /* Tablet and below: collapse sidebar column to 0, sidebar becomes overlay/drawer */
-  .app-shell {
-    grid-template-columns: 0 1fr;
-  }
-}
-
-/* Constrain main content with gutters without forced centering */
-.app-content {
-  width: 100%;
-  max-width: none;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-@media (min-width: 640px) {
-  .app-content {
-    padding-left: 1rem; /* sm:px-4 */
-    padding-right: 1rem;
-  }
-}
-@media (min-width: 1024px) {
-  .app-content {
-    padding-left: 1.5rem; /* lg:px-6 */
-    padding-right: 1.5rem;
-  }
-}
-
-/* Cards grid responsiveness */
-.cards-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem; /* consistent spacing */
-}
-@media (min-width: 640px) {
-  .cards-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
-  }
-}
-@media (min-width: 1024px) {
-  .cards-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1.25rem;
-  }
-}
-
-/* Horizontal scroll containers for tables and charts on narrow viewports */
-.horizontal-scroll {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-.horizontal-scroll > * {
-  min-width: 640px; /* prevents squish on mobile */
-}
-
-/* Filters responsive stacking */
-.filters-row {
-  @apply flex flex-wrap items-center gap-3;
-}
-@media (max-width: 640px) {
-  .filters-row {
-    @apply flex-col items-stretch;
-  }
-}
-
-/* Modal responsive width constraints without changing theme tokens */
-.modal-container {
-  @apply w-full max-w-3xl;
-  max-height: calc(100vh - 2rem);
-}
-
-/* Utility to ensure timeline/charts keep aspect and scroll on mobile */
-.responsive-chart {
-  @apply horizontal-scroll;
-}
-.responsive-chart canvas,
-.responsive-chart svg,
-.responsive-chart > div {
-  min-width: 640px;
-}
-
-/* Table wrapper */
-.table-responsive {
-  @apply horizontal-scroll;
-}
-
-/* Sidebar overlay mode for tablet/mobile */
-.sidebar-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 50;
-  display: none;
-}
-.sidebar-overlay.active {
-  display: block;
-  background-color: rgba(0,0,0,0.3);
-}
-
-/* Sidebar panel when in overlay mode */
-.sidebar-panel {
-  position: fixed;
-  left: 0;
-  top: var(--topnav-height);
-  bottom: 0;
-  width: var(--sidebar-width);
-  z-index: 60;
-  transform: translateX(-100%);
-  transition: transform 200ms ease;
-}
-.sidebar-panel.open {
-  transform: translateX(0);
-}
-
-/* Keep section spacing consistent */
-.section-spacing {
-  @apply space-y-4;
-}
-
-html, body, #root {
-  height: 100%;
-  background: var(--color-bg);
+/* Pills */
+.pill {
+  border-radius: 9999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  line-height: 1;
+  border: 1px solid var(--color-border);
+  background: #fff;
   color: var(--color-text);
 }
 
-/* Removed grid-area overrides to restore original app-shell behavior defined earlier */
-
-/* Card and badge helpers */
-.card {
-  background: var(--color-surface);
-  border-radius: 0.75rem;
-  box-shadow: var(--shadow-soft);
-  border: 1px solid var(--color-border);
+/* Sidebar active state */
+.sidebar-active {
+  background: var(--color-sidebar-active-bg);
+  color: var(--color-primary);
+  font-weight: 600;
 }
 
-.badge { border-radius: 9999px; padding: 0.125rem 0.5rem; font-weight: 600; font-size: 0.75rem; }
-.badge--completed { background: rgba(34,197,94,0.12); color: #065F46; border: 1px solid rgba(34,197,94,0.35); }
-.badge--processing { background: rgba(15,118,110,0.12); color: var(--color-text); border: 1px solid rgba(15,118,110,0.35); }
-.badge--pending { background: #F7F7F7; color: var(--color-text-muted); border: 1px solid var(--color-border); }
+/* Logout hover */
+.logout-hover:hover {
+  background: var(--color-logout-hover-bg);
+  color: var(--color-logout-text);
+}
 
-/* Sidebar active background per requirement */
-.sidebar-active { background: var(--color-sidebar-active-bg); color: var(--color-text); }
+/* Chart container */
+.chart-container {
+  border-radius: var(--radius-chart);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-elevation);
+  padding: var(--space-inner);
+}
 
-/* Tab underline */
-.tab-active { border-bottom: 2px solid var(--color-primary); color: var(--color-text); }
-
-/* Table header/row hover */
+/* Table helpers */
 .bg-tableHeaderBg { background: var(--color-table-header-bg); }
 .hover\:bg-tableRowHover:hover { background: var(--color-table-row-hover); }
-
-/* Accent text classes used in widgets and charts (maps to aqua/amber/green) */
-.text-accent { color: var(--color-primary); }
-.text-accent-secondary { color: var(--color-secondary); }
-.text-success { color: var(--color-export-green); }
-
-/* Token shims to match class usage in components (maps to CSS variables) */
+.border-neutralBorder { border-color: var(--color-border); }
 .text-secondaryText { color: var(--color-text); }
 .text-neutralMid { color: var(--color-text-muted); }
-.bg-neutralLightBg { background: var(--color-bg); }
 .bg-surface { background: var(--color-surface); }
-.border-neutralBorder { border-color: var(--color-border); }
-.bg-primary { background: var(--color-primary); }
-.bg-primaryHover { background: var(--color-primary-600); }
-.text-success { color: #16A34A; }
-.bg-sidebarActiveBg { background: var(--color-sidebar-active-bg); }
-.text-sidebarIcon { color: var(--color-text); }
+
+/* Sticky TopNav helpers used in layout */
+.sticky-topnav { position: sticky; top: 0; z-index: 40; height: 64px; }
+.app-shell { display: grid; grid-template-columns: 256px 1fr; min-height: 100vh; }
+@media (max-width: 1024px) {
+  .app-shell { grid-template-columns: 0 1fr; }
+}
+.app-content { width: 100%; max-width: none; padding-left: 1.5rem; padding-right: 1.5rem; }
+
+/* Sidebar overlay for mobile */
+.sidebar-overlay { position: fixed; inset: 0; z-index: 50; display: none; }
+.sidebar-overlay.active { display: block; background-color: rgba(0,0,0,0.3); }
+.sidebar-panel { position: fixed; left: 0; top: 64px; bottom: 0; width: 256px; z-index: 60; transform: translateX(-100%); transition: transform 200ms ease; }
+.sidebar-panel.open { transform: translateX(0); }
+
+/* Utility spacing */
+.stack-lg > * + * { margin-top: 24px; }
+.page-header { padding: var(--space-outer) var(--space-outer) 0 var(--space-outer); }
+.page-container { padding: var(--space-outer); }
