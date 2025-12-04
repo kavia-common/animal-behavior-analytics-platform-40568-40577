@@ -1,84 +1,15 @@
-import React, { useMemo, useState } from 'react';
-import logo from '../../assets/vizai-logo.png';
+import React from 'react';
 
-const TopNav: React.FC = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const now = useMemo(() => new Date().toLocaleString(), []);
-
+export default function TopNav() {
   return (
-    <header
-      className="w-full bg-white border-b px-6 py-3 flex items-center justify-between"
-      style={{ borderColor: 'var(--color-border)' }}
-    >
-      {/* Left: Logo + Title */}
-      <div className="flex items-center space-x-2">
-        <img src={logo} alt="VizAI" className="h-6" />
-        <span className="font-semibold" style={{ color: 'var(--color-text)' }}>
-          VizAI
-        </span>
-      </div>
-
-      {/* Center: Animal Filter Dropdown - green pill with primary border */}
-      <div className="flex-1 flex justify-center px-4">
-        <button
-          className="pill"
-          style={{
-            background: 'var(--color-surface)',
-            color: 'var(--color-text)',
-            borderColor: 'var(--color-primary)',
-          }}
-        >
-          Animal Filter
-        </button>
-      </div>
-
-      {/* Right: Date/Time and User Menu */}
-      <div className="flex items-center space-x-3 relative">
-        <div className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
-          {now}
+    <header style={{ position:'sticky', top:0, zIndex: 10, background: 'var(--surface)', borderBottom: '1px solid var(--border)' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '10px 16px', display: 'flex', alignItems: 'center', justifyContent:'space-between' }}>
+        <div style={{ display:'flex', alignItems:'center', gap: 10 }}>
+          <div style={{ width: 22, height: 22, borderRadius: 8, background: 'var(--gradient)' }} />
+          <strong>VizAI</strong>
         </div>
-        <div className="relative">
-          <button
-            className="px-3 py-1 rounded"
-            style={{
-              borderRadius: 'var(--radius-button)',
-              border: '1px solid var(--color-border)',
-              color: 'var(--color-text)',
-              background: 'var(--color-surface)',
-            }}
-            onClick={() => setMenuOpen((s) => !s)}
-          >
-            User
-          </button>
-          {menuOpen && (
-            <div
-              className="absolute right-0 mt-2 w-40 bg-white border rounded shadow"
-              style={{
-                borderColor: 'var(--color-border)',
-                borderRadius: 'var(--radius-card)',
-                boxShadow: 'var(--shadow-elevation)',
-              }}
-            >
-              <a className="block px-3 py-2 hover:bg-gray-50" href="/profile">
-                Profile
-              </a>
-              <a className="block px-3 py-2 hover:bg-gray-50" href="/settings">
-                Settings
-              </a>
-              <button
-                className="w-full text-left px-3 py-2 logout-hover"
-                onClick={() => {
-                  // Implement logout when backend wired
-                }}
-              >
-                Logout
-              </button>
-            </div>
-          )}
-        </div>
+        <div style={{ color: 'var(--muted)', fontSize: 12 }}>Species: Giant Anteater</div>
       </div>
     </header>
   );
-};
-
-export default TopNav;
+}

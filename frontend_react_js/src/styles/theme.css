@@ -1,105 +1,197 @@
 :root {
-  /* STRICT GLOBAL THEME TOKENS (updated to match screenshot palette) */
-  /* Primary aqua/teal for accents, numbers on widgets, icons */
-  --color-primary: #00A6B8;            /* aqua accent seen on counts and icons */
-  --color-primary-600: #008EA0;        /* darker hover/focus state */
+  /* Core palette per spec */
+  --primary:#1EA85B;
+  --primary-600:#177148;
+  --secondary:#F59E0B;
+  --error:#DC2626;
+  --bg:#F3F4F6;
+  --surface:#FFFFFF;
+  --text:#111827;
+  --muted:#6B7280;
+  --border:#E5E7EB;
 
-  /* Secondary warm amber used in “Behaviors Detected” card and small icons */
-  --color-secondary: #F5B74D;          /* soft amber */
-  /* Danger/error remains similar but tuned slightly deeper for contrast */
-  --color-error: #D12A2A;
-
-  /* Background/surfaces: very light cool gray canvas, white cards */
-  --color-bg: #F5F7F9;                 /* page background */
-  --color-surface: #FFFFFF;            /* cards, header, sidebar panes */
-
-  /* Text and border neutrals */
-  --color-text: #0F172A;               /* near-slate for strong contrast */
-  --color-text-muted: #6B7280;         /* muted labels */
-  --color-border: #E6E8ED;             /* subtle cool gray borders */
-
-  /* Sidebar and subtle selection states */
-  --color-sidebar-active-bg: #F0FAFB;  /* faint aqua-tinted selection */
-
-  /* Tables */
-  --color-table-header-bg: #F3F6FA;    /* very light blue-gray */
-  --color-table-row-hover: #F0FAFB;    /* match sidebar active tint */
-
-  /* Logout hover/alerts align with danger scale */
-  --color-logout-hover-bg: #FDECEC;
-  --color-logout-text: #B42318;
-
-  /* Shadow remains soft and subtle */
-  --shadow-soft: 0px 1px 2px rgba(16, 24, 40, 0.06);
-
-  /* Derived helpers */
-  --color-primary-light: rgba(0, 166, 184, 0.10);
-  --color-card-shadow-rgba: rgba(16, 24, 40, 0.06);
-
-  /* Additional tokens used by components (mapped to the strict tokens above) */
-  --shadow-card: var(--shadow-soft);
-
-  /* Keep radii unchanged per requirement */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-
-  /* Success used by green “Logout” button and positive badges in screenshot */
-  --color-export-green: #16A34A; /* tailwind green-600 like */
+  /* Effects */
+  --shadow:0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1);
+  --card-hover:rgba(30,168,91,0.08);
+  --table-header-bg:#F9FAFB;
+  --table-row-hover:#F3F4F6;
+  --gradient:linear-gradient(135deg, #1EA85B 0%, #34D399 100%);
 }
 
-/* Global surface and text defaults */
-html, body, #root {
-  background-color: var(--color-bg);
-  color: var(--color-text);
+html, body, #root { height: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
 }
 
-/* Links and interactive */
-a { color: var(--color-primary); }
-a:hover { color: var(--color-primary-600); }
+a { color: var(--primary); text-decoration: none; }
+a:hover { color: var(--primary-600); }
 
-/* Badge tones using theme */
-.badge { border-radius: 9999px; padding: 0.125rem 0.5rem; font-weight: 600; font-size: 0.75rem; border: 1px solid transparent; }
-.badge--completed { background: rgba(34,197,94,0.12); color: #065F46; border-color: rgba(34,197,94,0.35); }
-.badge--processing { background: rgba(15,118,110,0.12); color: var(--color-text); border-color: rgba(15,118,110,0.35); }
-.badge--pending { background: #F7F7F7; color: var(--color-text-muted); border-color: var(--color-border); }
+/* Utility components */
+.ui-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
 
-/* Cards */
-.card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-card); }
+.ui-card-hover:hover { background: var(--card-hover); }
 
-/* Dividers */
-.divider, hr { border-color: var(--color-border); }
+.ui-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-weight: 600;
+}
 
-/* Tables */
-.table thead th { background: var(--color-table-header-bg); color: var(--color-text); }
-.table tr:hover td { background: var(--color-table-row-hover); }
-.table td, .table th { border-color: var(--color-border); }
+.ui-btn-primary { background: var(--primary); color: #fff; }
+.ui-btn-primary:hover { background: var(--primary-600); }
 
-/* Progress bar */
-.progress-track { background: #F1F5F9; border-radius: 9999px; }
-.progress-fill { background: var(--color-primary); border-radius: 9999px; }
+.ui-btn-outline {
+  background: transparent;
+  color: var(--primary);
+  border-color: var(--primary);
+}
+.ui-btn-outline:hover { background: var(--card-hover); }
 
-/* Layout shell helpers used by RootLayout */
-.app-shell { display: grid; grid-template-columns: 15rem 1fr; grid-template-rows: auto 1fr; height: 100vh; background: var(--color-bg); }
-.topnav { grid-column: 1 / -1; background: var(--color-surface); border-bottom: 1px solid var(--color-border); color: var(--color-text); }
-.sidebar { background: var(--color-surface); border-right: 1px solid var(--color-border); }
-.main { background: var(--color-bg); color: var(--color-text); }
+.ui-input, .ui-select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+}
+.ui-label { display:block; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
 
-/* Sidebar + header helpers */
-.app-header { background: var(--color-surface); color: var(--color-text); border-bottom: 1px solid var(--color-border); }
-.app-sidebar { background: var(--color-surface); border-right: 1px solid var(--color-border); }
-.app-sidebar .icon { color: var(--color-text); }
-.app-sidebar .item-active { background: var(--color-sidebar-active-bg); color: var(--color-text); }
+.ui-badge {
+  display: inline-flex; align-items:center; gap:6px;
+  border-radius: 999px; padding: 4px 10px; font-size: 12px;
+  border: 1px solid var(--border);
+  background: var(--table-header-bg);
+  color: var(--muted);
+}
+.ui-badge-secondary {
+  background: rgba(245,158,11,0.12);
+  color: var(--secondary);
+  border-color: rgba(245,158,11,0.35);
+}
 
-/* Tabs underline (primary) */
-.tab-active { border-bottom: 2px solid var(--color-primary); color: var(--color-text); }
+/* Table styles */
+.table { width: 100%; border-collapse: separate; border-spacing: 0; }
+.table th {
+  background: var(--table-header-bg);
+  color: var(--muted);
+  text-align: left;
+  font-weight: 600;
+  font-size: 12px;
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.table td {
+  font-size: 14px;
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.table tr:hover td { background: var(--table-row-hover); }
 
-/* Logout hover style */
-.logout-hover:hover { background: var(--color-logout-hover-bg); color: var(--color-logout-text); }
+/* Floating chat */
+.fab {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  z-index: 50;
+}
+.fab:hover { background: var(--primary-600); }
 
-/* Accessible focus ring using soft shadow */
-:where(button, a, input, select, [role="button"], [tabindex]:not([tabindex="-1"])):focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(0, 166, 184, 0.28);
-  border-radius: var(--radius-sm);
+.chat-window {
+  position: fixed;
+  right: 20px;
+  bottom: 90px;
+  width: 340px;
+  max-height: 60vh;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  overflow: hidden;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+}
+.chat-header {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+  font-weight: 700;
+}
+.chat-body {
+  padding: 12px;
+  overflow: auto;
+  display:flex; flex-direction: column; gap:10px;
+}
+.msg-user {
+  align-self: flex-end;
+  background: var(--primary);
+  color: #fff;
+  padding: 8px 10px;
+  border-radius: 12px 12px 0 12px;
+  max-width: 80%;
+}
+.msg-bot {
+  align-self: flex-start;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 8px 10px;
+  border-radius: 12px 12px 12px 0;
+  max-width: 85%;
+}
+.chat-footer {
+  border-top: 1px solid var(--border);
+  padding: 10px;
+  display:flex; gap:8px; align-items:center;
+}
+.chat-quick {
+  display:flex; gap:8px; padding: 8px 12px; border-top:1px solid var(--border);
+}
+
+/* Video modal */
+.video-modal {
+  background: rgba(0,0,0,0.5);
+  position: fixed; inset: 0;
+  display:flex; align-items:center; justify-content:center;
+  z-index: 60;
+}
+.video-modal-content {
+  width: min(920px, 92vw);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.video-modal-header {
+  display:flex; justify-content: space-between; align-items:center;
+  padding: 12px 14px; border-bottom: 1px solid var(--border);
+}
+.video-modal-controls {
+  display:flex; gap:8px; align-items:center; padding: 10px 14px; border-top:1px solid var(--border);
+}
+.video-close {
+  background: var(--error); color: #fff; border: none; border-radius: 8px; padding: 6px 10px; cursor:pointer;
 }
