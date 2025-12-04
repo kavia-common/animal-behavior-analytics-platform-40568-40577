@@ -1,36 +1,27 @@
-import React, { useMemo } from 'react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { getBehaviorColor, BEHAVIOR_ORDER, type BehaviorKey as BehaviorId } from '@/lib/behaviorPalette';
+import React from 'react';
 
-type Props = {
-  data: any[];
-  keys: string[];
-};
-
-/**
- * PUBLIC_INTERFACE
- * DurationStackedBar renders a horizontal stacked bar using behavior palette colors.
- * Only the five allowed behavior keys are rendered, in strict order.
- */
-export default function DurationStackedBar({ data, keys }: Props) {
-  const orderedKeys = useMemo(
-    () => (BEHAVIOR_ORDER as readonly BehaviorId[]).filter((k) => keys.includes(k)),
-    [keys]
-  );
+// PUBLIC_INTERFACE
+export default function DurationStackedBar({ onSegmentClick, data, keys }: { onSegmentClick?: (behavior: string, window: string) => void; data?: any[]; keys?: string[] }) {
+  const segments = [
+    { behavior: 'Pacing', value: 50, color: 'var(--primary)' },
+    { behavior: 'Moving', value: 120, color: 'var(--primary-600)' },
+    { behavior: 'Scratching', value: 35, color: 'var(--secondary)' },
+    { behavior: 'Recumbent', value: 70, color: 'var(--muted)' },
+    { behavior: 'Non-Recumbent', value: 95, color: '#3B82F6' },
+  ];
+  const total = segments.reduce((s, x) => s + x.value, 0);
 
   return (
-    <div className="w-full h-72">
-      <ResponsiveContainer>
-        <BarChart data={data} layout="vertical" margin={{ top: 8, right: 12, left: 12, bottom: 8 }}>
-          <XAxis type="number" />
-          <YAxis dataKey="name" type="category" width={100} />
-          <Tooltip />
-          <Legend />
-          {orderedKeys.map((k) => (
-            <Bar key={k} dataKey={k} stackId="a" fill={getBehaviorColor(k)} />
-          ))}
-        </BarChart>
-      </ResponsiveContainer>
+    <div className="w-full h-10 flex overflow-hidden rounded border-default">
+      {segments.map(seg => (
+        <div
+          key={seg.behavior}
+          className="h-full cursor-pointer"
+          style={{ width: `${(seg.value / total) * 100}%`, background: seg.color }}
+          title={`${seg.behavior}: ${seg.value}s`}
+          onClick={() => onSegmentClick?.(seg.behavior, 'last-1h')}
+        />
+      ))}
     </div>
   );
 }

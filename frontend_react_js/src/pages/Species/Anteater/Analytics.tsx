@@ -1,49 +1,30 @@
 import React from 'react';
 
 // PUBLIC_INTERFACE
-export default function AnteaterAnalytics() {
-  /** Analytics table and filters styled with theme variables */
-  const rows = Array.from({ length: 12 }).map((_, i) => ({
-    frame: i * 12,
-    ts: new Date(Date.now() - i * 1000 * 60).toLocaleString(),
-    animal: 'ANTEATER-001',
-    label: ['Pacing','Moving','Scratching','Recumbent','Non-Recumbent'][i % 5],
-    src: i % 2 ? 'Cam-1' : 'Cam-2',
-    conf: (90 - i).toFixed(1) + '%',
-    behavior: ['Pacing','Moving','Scratching','Recumbent','Non-Recumbent'][i % 5],
-  }));
-
+export default function Analytics() {
+  /** Analytics dashboard with Smart Filters and data table styled per theme */
+  const rows = [
+    { frame: '00:00:12.032', ts: '2025-01-01T12:00:12Z', id: 'A-001', label: 'Animal', src: 'Cam-A', conf: 0.91, behavior: 'Pacing' },
+  ];
   return (
-    <div style={{ display: 'grid', gap: 12 }}>
-      <div className="ui-card" style={{ padding: 16 }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent:'space-between' }}>
-          <div style={{ fontWeight: 700, color: 'var(--text)' }}>Smart Filters</div>
-          <div style={{ display: 'flex', gap: 8 }}>
-            <button className="ui-btn ui-btn-outline">Clear All</button>
-            <button className="ui-btn ui-btn-primary">Export CSV</button>
-          </div>
+    <div className="bg-app" style={{ minHeight: '100vh', padding: 16 }}>
+      <div className="card" style={{ padding: 16, marginBottom: 16 }}>
+        <div className="text-body" style={{ fontWeight: 700, marginBottom: 12 }}>Smart Filters</div>
+        <div style={{ display:'grid', gridTemplateColumns: 'repeat(5, minmax(0,1fr))', gap: 12 }}>
+          <input className="border-default bg-surface text-body" style={{ padding: 10, borderRadius: 8 }} placeholder="Start Date" type="date" />
+          <input className="border-default bg-surface text-body" style={{ padding: 10, borderRadius: 8 }} placeholder="End Date" type="date" />
+          <input className="border-default bg-surface text-body" style={{ padding: 10, borderRadius: 8 }} placeholder="Label" />
+          <input className="border-default bg-surface text-body" style={{ padding: 10, borderRadius: 8 }} placeholder="Behavior" />
+          <input className="border-default bg-surface text-body" style={{ padding: 10, borderRadius: 8 }} placeholder="Video Source" />
         </div>
-        <div style={{ display:'grid', gridTemplateColumns: 'repeat(4, minmax(0,1fr))', gap: 12, marginTop: 12 }}>
-          <input className="ui-input" placeholder="Search by label..." />
-          <select className="ui-select">
-            <option>Any Source</option>
-            <option>Cam-1</option>
-            <option>Cam-2</option>
-          </select>
-          <select className="ui-select">
-            <option>Any Behavior</option>
-            <option>Pacing</option>
-            <option>Moving</option>
-            <option>Scratching</option>
-            <option>Recumbent</option>
-            <option>Non-Recumbent</option>
-          </select>
-          <input className="ui-input" placeholder="Date Range" />
+        <div style={{ display:'flex', gap: 10, marginTop: 16 }}>
+          <button className="btn-primary" style={{ background:'transparent', color:'var(--primary)', borderColor:'var(--primary)', borderWidth:1, borderStyle:'solid', borderRadius:8, padding:'10px 12px' }}>Clear All</button>
+          <button className="btn-primary" style={{ borderRadius: 8, padding: '10px 12px' }}>Export CSV</button>
         </div>
       </div>
 
-      <div className="ui-card" style={{ padding: 0 }}>
-        <table className="table">
+      <div className="card" style={{ overflowX:'auto' }}>
+        <table className="table" style={{ width:'100%' }}>
           <thead>
             <tr>
               <th>Frame Time</th>
@@ -51,20 +32,20 @@ export default function AnteaterAnalytics() {
               <th>Animal ID</th>
               <th>Label</th>
               <th>Video Source</th>
-              <th>Confidence %</th>
+              <th>Confidence</th>
               <th>Behavior</th>
             </tr>
           </thead>
           <tbody>
-            {rows.map((r, i) => (
-              <tr key={i}>
-                <td>{r.frame}</td>
-                <td>{r.ts}</td>
-                <td>{r.animal}</td>
-                <td>{r.label}</td>
-                <td>{r.src}</td>
-                <td>{r.conf}</td>
-                <td>{r.behavior}</td>
+            {rows.map((r,i)=>(
+              <tr key={i} className="bg-surface">
+                <td className="p-2">{r.frame}</td>
+                <td className="p-2">{r.ts}</td>
+                <td className="p-2">{r.id}</td>
+                <td className="p-2">{r.label}</td>
+                <td className="p-2">{r.src}</td>
+                <td className="p-2">{r.conf}</td>
+                <td className="p-2">{r.behavior}</td>
               </tr>
             ))}
           </tbody>

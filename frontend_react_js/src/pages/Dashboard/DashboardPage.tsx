@@ -2,7 +2,6 @@ import React from 'react';
 import StatWidget from '@/components/widgets/StatWidget';
 import BehaviorCountBarChart from '@/components/charts/BehaviorCountBarChart';
 import DurationPieChart from '@/components/charts/DurationPieChart';
-import { BEHAVIOR_KEYS } from '@/lib/behaviorPalette';
 
 const DashboardPage: React.FC = () => {
   return (
@@ -13,7 +12,7 @@ const DashboardPage: React.FC = () => {
           <StatWidget label="Total behaviours detected" value="1,248" />
         </div>
         <div className="card">
-          <StatWidget label="Most frequent behaviour" value="Foraging" />
+          <StatWidget label="Most frequent behaviour" value="Pacing" />
         </div>
         <div className="card">
           <StatWidget label="Total duration (mins)" value="532" />
@@ -26,13 +25,13 @@ const DashboardPage: React.FC = () => {
       {/* Behavior Counts - Bar Chart */}
       <div className="chart-container">
         <h3 className="font-semibold mb-2">Behavior counts</h3>
-        <BehaviorCountBarChart behaviors={[...BEHAVIOR_KEYS]} />
+        <BehaviorCountBarChart />
       </div>
 
       {/* Duration Breakdown - Pie Chart with summaries */}
       <div className="chart-container">
         <h3 className="font-semibold mb-2">Duration breakdown</h3>
-        <DurationPieChart behaviors={[...BEHAVIOR_KEYS]} />
+        <DurationPieChart />
         <div className="grid mt-4 grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="card">
             <div className="text-sm text-neutralMid">Total Duration</div>

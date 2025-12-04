@@ -1,48 +1,47 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const animals = [
-  { id: 'anteater', name: 'Giant Anteater', active: true },
-  { id: 'redpanda', name: 'Red Panda', active: false },
-  { id: 'snowleopard', name: 'Snow Leopard', active: false },
-  { id: 'riverotter', name: 'River Otter', active: false },
-  { id: 'chimpanzee', name: 'Chimpanzee', active: false },
-  { id: 'giraffe', name: 'Giraffe', active: false },
-  { id: 'lion', name: 'Lion', active: false },
-  { id: 'penguin', name: 'Penguin', active: false },
-];
-
 // PUBLIC_INTERFACE
 export default function SpeciesSelectPage() {
-  /** Species selection grid. Only Anteater is active; others disabled with 'Coming Soon' badge. */
-  const nav = useNavigate();
+  /** Grid of species; only Giant Anteater active; others show Coming Soon badge+tooltip */
+  const navigate = useNavigate();
+  const species = [
+    { name: 'Giant Anteater', active: true },
+    { name: 'Red Panda', active: false },
+    { name: 'Snow Leopard', active: false },
+    { name: 'River Otter', active: false },
+    { name: 'Chimpanzee', active: false },
+    { name: 'Giraffe', active: false },
+    { name: 'Lion', active: false },
+    { name: 'Penguin', active: false },
+  ];
 
   return (
-    <div style={{ padding: 24, minHeight: '100vh' }}>
-      <div style={{ maxWidth: 980, margin: '0 auto' }}>
-        <h1 style={{ marginTop: 10, marginBottom: 18 }}>Select an Animal</h1>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px,1fr))', gap: 16 }}>
-          {animals.map(a => (
+    <div className="bg-app" style={{ minHeight: '100vh', padding: 24 }}>
+      <div style={{ display:'flex', alignItems:'center', gap: 10, marginBottom: 12 }}>
+        <div style={{ width: 28, height: 28, borderRadius: 8, background: 'var(--gradient)' }} />
+        <div className="text-body" style={{ fontWeight: 800, fontSize: 18 }}>VizAi</div>
+      </div>
+      <h1 className="text-body" style={{ fontSize: 22, marginBottom: 16 }}>Select an Animal</h1>
+      <div style={{ display:'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px,1fr))', gap: 16 }}>
+        {species.map(s => {
+          const isAnteater = s.name === 'Giant Anteater';
+          return (
             <div
-              key={a.id}
-              className="ui-card ui-card-hover"
-              onClick={() => a.active && nav('/species/anteater/dashboard')}
-              style={{
-                padding: 16,
-                cursor: a.active ? 'pointer' : 'not-allowed',
-                opacity: a.active ? 1 : 0.5,
-                borderColor: a.active ? 'var(--primary)' : 'var(--border)',
-                position: 'relative'
-              }}
+              key={s.name}
+              className="card card-hover"
+              style={{ padding: 16, cursor: s.active ? 'pointer' : 'not-allowed', opacity: s.active ? 1 : 0.5, borderColor: isAnteater ? 'var(--primary)' : 'var(--border)' }}
+              onClick={() => s.active ? navigate('/species/anteater/dashboard') : undefined}
+              title={s.active ? s.name : 'Coming Soon'}
             >
               <div style={{ height: 120, background: 'var(--table-header-bg)', borderRadius: 8, marginBottom: 10 }} />
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div style={{ fontWeight: 700 }}>{a.name}</div>
-                {!a.active && <span className="ui-badge ui-badge-secondary">Coming Soon</span>}
+              <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                <div className="text-body" style={{ fontWeight: 700 }}>{s.name}</div>
+                {!s.active && <span className="badge-coming" style={{ padding: '4px 8px', borderRadius: 8, fontSize: 12 }}>Coming Soon</span>}
               </div>
             </div>
-          ))}
-        </div>
+          );
+        })}
       </div>
     </div>
   );

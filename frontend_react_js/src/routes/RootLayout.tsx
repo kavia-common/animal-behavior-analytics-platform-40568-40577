@@ -7,9 +7,9 @@ export default function RootLayout() {
   const hideNav = ['/', '/login', '/register', '/select-species'].includes(pathname);
 
   return (
-    <div className="app-root" style={{ minHeight: '100%', background: 'var(--bg)', color: 'var(--text)' }}>
+    <div className="bg-app" style={{ minHeight: '100vh' }}>
       {!hideNav && <TopNav />}
-      <main style={{ padding: hideNav ? '0' : '16px' }}>
+      <main style={{ padding: hideNav ? 0 : 16 }}>
         <Outlet />
       </main>
     </div>

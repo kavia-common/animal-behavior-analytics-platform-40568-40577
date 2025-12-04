@@ -1,37 +1,23 @@
 import React from 'react';
-import GroupedBarChart from '@/components/charts/GroupedBarChart';
 import TrendLineChart from '@/components/charts/TrendLineChart';
-import DurationPieChart from '@/components/charts/DurationPieChart';
-
-type Props = { type: string };
 
 // PUBLIC_INTERFACE
-export default function ReportPreview({ type }: Props) {
-  /** Preview widgets per report type */
-  if (type === 'summary') {
-    return (
-      <div className="card p-4">
-        <div className="font-heading font-semibold mb-2">Behavior Summary</div>
-        <DurationPieChart />
-      </div>
-    );
-  }
-  if (type === 'detailed') {
-    return (
-      <div className="card p-4">
-        <div className="font-heading font-semibold mb-2">Detailed Timeline Activity</div>
-        <TrendLineChart data={[{ d: 'Mon', v: 12 }, { d: 'Tue', v: 18 }, { d: 'Wed', v: 9 }, { d: 'Thu', v: 21 }, { d: 'Fri', v: 15 }]} xKey="d" yKey="v" />
-      </div>
-    );
-  }
+export default function ReportPreview() {
+  /** Simple preview rendering a trend chart using deterministic sample data */
+  const series = [
+    { d: '2025-01-01', v: 12 },
+    { d: '2025-01-02', v: 18 },
+    { d: '2025-01-03', v: 15 },
+    { d: '2025-01-04', v: 20 },
+    { d: '2025-01-05', v: 17 },
+    { d: '2025-01-06', v: 14 },
+    { d: '2025-01-07', v: 19 },
+  ];
+
   return (
-    <div className="card p-4">
-      <div className="font-heading font-semibold mb-2">Comparative Analysis</div>
-      <GroupedBarChart data={[
-        { name: 'Week 1', Foraging: 12, Resting: 8 },
-        { name: 'Week 2', Foraging: 15, Resting: 10 },
-        { name: 'Week 3', Foraging: 9, Resting: 14 }
-      ]} keys={['Foraging', 'Resting']} xKey="name" />
+    <div className="card" style={{ padding: 16 }}>
+      <div className="text-body" style={{ fontWeight: 700, marginBottom: 8 }}>Report Preview</div>
+      <TrendLineChart data={series} xKey="d" yKey="v" />
     </div>
   );
 }

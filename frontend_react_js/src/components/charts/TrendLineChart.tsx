@@ -1,27 +1,36 @@
 import React from 'react';
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid } from 'recharts';
 
-type Props = { data: any[]; xKey: string; yKey: string; color?: string };
+type Props = {
+  data: Array<Record<string, any>>;
+  xKey: string;
+  yKey: string;
+  color?: string;
+  onPointClick?: (ts: string) => void;
+};
 
-/**
- * Simple line chart with a responsive container.
- * Adds a min width to avoid over-squishing on narrow screens;
- * use inside a horizontally scrollable parent if needed.
- */
-export default function TrendLineChart({ data, xKey, yKey, color = 'var(--primary)' }: Props) {
+// PUBLIC_INTERFACE
+export default function TrendLineChart({ data, xKey, yKey, color = 'var(--primary)', onPointClick }: Props) {
+  // Render as a simple column series for event frequency with click support
+  const max = Math.max(...data.map(d => Number(d[yKey]) || 0), 1);
   return (
-    <div className="w-full h-64">
-      <div className="min-w-[640px] w-full h-full">
-        <ResponsiveContainer>
-          <LineChart data={data} margin={{ top: 8, right: 12, bottom: 8, left: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey={xKey} />
-            <YAxis />
-            <Tooltip />
-            <Line type="monotone" dataKey={yKey} stroke={color} strokeWidth={2} dot={false} />
-          </LineChart>
-        </ResponsiveContainer>
+    <div className="w-full">
+      <div className="grid gap-1 items-end" style={{ gridTemplateColumns: `repeat(${data.length}, minmax(0,1fr))`, height: 160 }}>
+        {data.map((d, idx) => {
+          const v = Number(d[yKey]) || 0;
+          const h = Math.max(4, Math.round((v / max) * 150));
+          const label = String(d[xKey]);
+          return (
+            <div
+              key={idx}
+              className="cursor-pointer rounded"
+              style={{ height: h, background: color }}
+              title={`${label}\nEvents: ${v}`}
+              onClick={() => onPointClick?.(label)}
+            />
+          );
+        })}
       </div>
+      <div className="text-xs text-muted mt-2">Events per interval</div>
     </div>
   );
 }

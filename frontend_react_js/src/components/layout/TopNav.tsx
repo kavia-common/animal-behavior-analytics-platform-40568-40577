@@ -8,7 +8,7 @@ export default function TopNav() {
           <div style={{ width: 22, height: 22, borderRadius: 8, background: 'var(--gradient)' }} />
           <strong>VizAI</strong>
         </div>
-        <div style={{ color: 'var(--muted)', fontSize: 12 }}>Species: Giant Anteater</div>
+        <div style={{ color: 'var(--muted)', fontSize: 12 }}>Giant Anteater</div>
       </div>
     </header>
   );

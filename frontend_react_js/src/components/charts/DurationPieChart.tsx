@@ -1,40 +1,33 @@
 import React from 'react';
-import { Pie } from 'react-chartjs-2';
-import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
-import { BEHAVIOR_COLORS, BEHAVIOR_LABELS, BehaviorKey } from '@/lib/behaviorPalette';
-
-Chart.register(ArcElement, Tooltip, Legend);
 
 type Props = {
-  behaviors?: BehaviorKey[];
+  onSliceClick?: (behavior: string) => void;
+  behaviors?: string[]; // compatibility prop to satisfy callers
 };
 
-const DurationPieChart: React.FC<Props> = ({ behaviors }) => {
-  const keys: BehaviorKey[] = behaviors ?? (Object.keys(BEHAVIOR_LABELS) as BehaviorKey[]);
-  const labels = keys.map((k) => BEHAVIOR_LABELS[k]);
-  const data = keys.map((_, i) => [320, 210, 120, 80, 180][i % 5]);
-  const backgroundColor = keys.map((k) => BEHAVIOR_COLORS[k]);
+// PUBLIC_INTERFACE
+export default function DurationPieChart({ onSliceClick }: Props) {
+  const data = [
+    { behavior: 'Pacing', value: 50, color: 'var(--primary)' },
+    { behavior: 'Moving', value: 120, color: 'var(--primary-600)' },
+    { behavior: 'Scratching', value: 35, color: 'var(--secondary)' },
+    { behavior: 'Recumbent', value: 70, color: 'var(--muted)' },
+    { behavior: 'Non-Recumbent', value: 95, color: '#3B82F6' },
+  ];
+  const total = data.reduce((s, x) => s + x.value, 0);
 
   return (
-    <div style={{ height: 280 }}>
-      <Pie
-        data={{
-          labels,
-          datasets: [{ data, backgroundColor, borderColor: 'var(--surface)', borderWidth: 2 }],
-        }}
-        options={{
-          plugins: {
-            legend: { position: 'bottom' },
-            tooltip: {
-              callbacks: { label: (ctx) => `${ctx.label}: ${ctx.formattedValue} mins` },
-            },
-          },
-          responsive: true,
-          maintainAspectRatio: false,
-        }}
-      />
+    <div className="flex gap-4 items-center">
+      <div className="flex-1">
+        <div className="grid grid-cols-1 gap-2">
+          {data.map(d => (
+            <div key={d.behavior} className="flex items-center gap-2 cursor-pointer" onClick={()=>onSliceClick?.(d.behavior)}>
+              <span className="inline-block w-3 h-3 rounded" style={{ background: d.color }} />
+              <span className="text-sm">{d.behavior} ({Math.round((d.value/total)*100)}%)</span>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
-};
-
-export default DurationPieChart;
+}

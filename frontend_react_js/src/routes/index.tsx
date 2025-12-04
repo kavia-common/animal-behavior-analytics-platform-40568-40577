@@ -8,8 +8,8 @@ import SpeciesSelectPage from '../pages/Species/SpeciesSelectPage';
 import SpeciesLayout from '../pages/Species/SpeciesLayout';
 import AnteaterDashboard from '../pages/Species/Anteater/Dashboard';
 import AnteaterTimeline from '../pages/Species/Anteater/Timeline';
-import AnteaterReports from '../pages/Species/Anteater/Reports';
-import AnteaterAnalytics from '../pages/Species/Anteater/Analytics';
+import Reports from '../pages/Species/Anteater/Reports';
+import Analytics from '../pages/Species/Anteater/Analytics';
 import NotFoundPage from '../pages/System/NotFoundPage';
 
 export const router = createBrowserRouter([
@@ -27,8 +27,8 @@ export const router = createBrowserRouter([
         children: [
           { path: 'dashboard', element: <AnteaterDashboard /> },
           { path: 'timeline', element: <AnteaterTimeline /> },
-          { path: 'reports', element: <AnteaterReports /> },
-          { path: 'analytics', element: <AnteaterAnalytics /> },
+          { path: 'reports', element: <Reports /> },
+          { path: 'analytics', element: <Analytics /> },
         ],
       },
       { path: '*', element: <NotFoundPage /> },
