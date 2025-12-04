@@ -25,13 +25,29 @@ const DashboardPage: React.FC = () => {
       {/* Behavior Counts - Bar Chart */}
       <div className="chart-container">
         <h3 className="font-semibold mb-2">Behavior counts</h3>
-        <BehaviorCountBarChart />
+        <BehaviorCountBarChart
+          data={[
+            { id: 'pacing', label: 'Pacing', count: 12, percentage: 12 / (12 + 25 + 8 + 15 + 20) * 100, color: 'var(--primary)' },
+            { id: 'moving', label: 'Moving', count: 25, percentage: 25 / (12 + 25 + 8 + 15 + 20) * 100, color: 'var(--primary-600)' },
+            { id: 'scratching', label: 'Scratching', count: 8, percentage: 8 / (12 + 25 + 8 + 15 + 20) * 100, color: 'var(--secondary)' },
+            { id: 'recumbent', label: 'Recumbent', count: 15, percentage: 15 / (12 + 25 + 8 + 15 + 20) * 100, color: 'var(--muted)' },
+            { id: 'non_recumbent', label: 'Non-Recumbent', count: 20, percentage: 20 / (12 + 25 + 8 + 15 + 20) * 100, color: '#3B82F6' },
+          ]}
+        />
       </div>
 
       {/* Duration Breakdown - Pie Chart with summaries */}
       <div className="chart-container">
         <h3 className="font-semibold mb-2">Duration breakdown</h3>
-        <DurationPieChart />
+        <DurationPieChart
+          data={[
+            { id: 'pacing', label: 'Pacing', value: 50, color: 'var(--primary)' },
+            { id: 'moving', label: 'Moving', value: 120, color: 'var(--primary-600)' },
+            { id: 'scratching', label: 'Scratching', value: 35, color: 'var(--secondary)' },
+            { id: 'recumbent', label: 'Recumbent', value: 70, color: 'var(--muted)' },
+            { id: 'non_recumbent', label: 'Non-Recumbent', value: 95, color: '#3B82F6' },
+          ]}
+        />
         <div className="grid mt-4 grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="card">
             <div className="text-sm text-neutralMid">Total Duration</div>

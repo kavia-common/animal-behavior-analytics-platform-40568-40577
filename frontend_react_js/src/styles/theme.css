@@ -1,6 +1,6 @@
 :root {
-  --primary:#1EA85B;
-  --primary-600:#177148;
+  --primary:#1E3A8A;
+  --primary-600:#15306e;
   --secondary:#F59E0B;
   --error:#DC2626;
   --bg:#F3F4F6;
@@ -8,11 +8,9 @@
   --text:#111827;
   --muted:#6B7280;
   --border:#E5E7EB;
-  --shadow:0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1);
-  --card-hover:rgba(30,138,91,0.08);
+  --shadow:0 2px 6px rgba(0,0,0,0.10);
   --table-header-bg:#F9FAFB;
   --table-row-hover:#F3F4F6;
-  --gradient:linear-gradient(135deg,#1EA85B 0%,#34D399 100%);
 }
 
 html, body, #root { height: 100%; }
@@ -20,37 +18,9 @@ body { margin:0; background:var(--bg); color:var(--text); font-family: Inter, ui
 a { color: var(--primary); text-decoration: none; }
 a:hover { color: var(--primary-600); }
 
-/* Utilities per spec */
 .bg-app { background: var(--bg); }
 .bg-surface { background: var(--surface); }
 .text-body { color: var(--text); }
 .text-muted { color: var(--muted); }
 .border-default { border: 1px solid var(--border); }
-.shadow-default { box-shadow: var(--shadow); }
 .card { background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow); border-radius: 0.5rem; }
-.card-hover:hover { background: var(--card-hover); }
-.btn-primary { background: var(--primary); color: #fff; border: 1px solid var(--primary); }
-.btn-primary:hover { background: var(--primary-600); border-color: var(--primary-600); }
-.btn-secondary { background: var(--secondary); color: #111827; border: 1px solid var(--secondary); }
-.tab-active { border-bottom: 2px solid var(--primary); color: var(--text); }
-.badge-coming { background: var(--secondary); color: #111827; }
-
-/* Table styles */
-.table thead { background: var(--table-header-bg); color: var(--muted); }
-.table tbody tr:hover { background: var(--table-row-hover); }
-
-/* Floating chat */
-.fab { position: fixed; right: 20px; bottom: 20px; width: 56px; height: 56px; border-radius: 50%; background: var(--primary); color: #fff; display:flex; align-items:center; justify-content:center; box-shadow: var(--shadow); cursor: pointer; z-index: 50; }
-.fab:hover { background: var(--primary-600); }
-.chat-window { position: fixed; right: 20px; bottom: 90px; width: 340px; max-height: 60vh; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); overflow: hidden; z-index: 50; display:flex; flex-direction: column; }
-.chat-header { padding: 12px 14px; border-bottom: 1px solid var(--border); display:flex; align-items:center; justify-content:space-between; font-weight: 700; }
-.chat-body { padding: 12px; overflow:auto; display:flex; flex-direction:column; gap:10px; }
-.msg-user { align-self:flex-end; background: var(--primary); color:#fff; padding:8px 10px; border-radius:12px 12px 0 12px; max-width:80%; }
-.msg-bot { align-self:flex-start; background: var(--surface); color: var(--text); border:1px solid var(--border); padding:8px 10px; border-radius:12px 12px 12px 0; max-width:85%; }
-.chat-footer { border-top: 1px solid var(--border); padding:10px; display:flex; gap:8px; align-items:center; }
-
-/* Modal video */
-.video-modal { background: rgba(0,0,0,0.5); position: fixed; inset: 0; display:flex; align-items:center; justify-content:center; z-index: 60; }
-.video-modal-content { width: min(920px, 92vw); background: var(--surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); overflow: hidden; }
-.video-modal-header { display:flex; justify-content:space-between; align-items:center; padding:12px 14px; border-bottom: 1px solid var(--border); }
-.video-modal-controls { display:flex; gap:8px; align-items:center; padding:10px 14px; border-top:1px solid var(--border); }

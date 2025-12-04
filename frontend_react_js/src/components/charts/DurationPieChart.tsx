@@ -1,33 +1,78 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 
-type Props = {
-  onSliceClick?: (behavior: string) => void;
-  behaviors?: string[]; // compatibility prop to satisfy callers
-};
+interface Datum {
+  id: string;
+  label: string;
+  value: number;
+  percentage?: number;
+  color?: string;
+}
+
+interface Props {
+  data: Datum[];
+  showSliceLabels?: boolean;
+  onSliceClick?: (id: string) => void;
+  tooltipFormatter?: (d: Datum) => string;
+}
 
 // PUBLIC_INTERFACE
-export default function DurationPieChart({ onSliceClick }: Props) {
-  const data = [
-    { behavior: 'Pacing', value: 50, color: 'var(--primary)' },
-    { behavior: 'Moving', value: 120, color: 'var(--primary-600)' },
-    { behavior: 'Scratching', value: 35, color: 'var(--secondary)' },
-    { behavior: 'Recumbent', value: 70, color: 'var(--muted)' },
-    { behavior: 'Non-Recumbent', value: 95, color: '#3B82F6' },
-  ];
-  const total = data.reduce((s, x) => s + x.value, 0);
+export default function DurationPieChart({
+  data,
+  showSliceLabels = true,
+  onSliceClick,
+  tooltipFormatter,
+}: Props) {
+  const [hovered, setHovered] = useState<string | null>(null);
+  const total = useMemo(() => data.reduce((a, b) => a + b.value, 0) || 1, [data]);
+  const radius = 70;
+  const center = 90;
+  let acc = 0;
 
   return (
-    <div className="flex gap-4 items-center">
-      <div className="flex-1">
-        <div className="grid grid-cols-1 gap-2">
-          {data.map(d => (
-            <div key={d.behavior} className="flex items-center gap-2 cursor-pointer" onClick={()=>onSliceClick?.(d.behavior)}>
-              <span className="inline-block w-3 h-3 rounded" style={{ background: d.color }} />
-              <span className="text-sm">{d.behavior} ({Math.round((d.value/total)*100)}%)</span>
-            </div>
-          ))}
-        </div>
-      </div>
+    <div className="w-full flex items-center justify-center">
+      <svg width={center * 2} height={center * 2} viewBox={`0 0 ${center * 2} ${center * 2}`} role="img" aria-label="Behavior Duration Pie">
+        {data.map((d) => {
+          const slice = (d.value / total) * Math.PI * 2;
+          const start = acc;
+          const end = acc + slice;
+          acc += slice;
+
+          const x1 = center + Math.cos(start) * radius;
+          const y1 = center + Math.sin(start) * radius;
+          const x2 = center + Math.cos(end) * radius;
+          const y2 = center + Math.sin(end) * radius;
+          const largeArc = slice > Math.PI ? 1 : 0;
+
+          const path = `M ${center} ${center} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2} Z`;
+
+          const mid = (start + end) / 2;
+          const labelX = center + Math.cos(mid) * (radius * 0.65);
+          const labelY = center + Math.sin(mid) * (radius * 0.65);
+          const pct = (d.value / total) * 100;
+
+          const isHover = hovered === d.id;
+
+          return (
+            <g key={d.id}>
+              <path
+                d={path}
+                fill={d.color || 'var(--primary)'}
+                onClick={() => onSliceClick?.(d.id)}
+                onMouseEnter={() => setHovered(d.id)}
+                onMouseLeave={() => setHovered(null)}
+                style={{ cursor: 'pointer', filter: isHover ? 'brightness(1.1)' : 'none', stroke: 'var(--surface)', strokeWidth: 1 }}
+              />
+              <title>{tooltipFormatter ? tooltipFormatter(d) : `${d.label}: ${pct.toFixed(1)}%`}</title>
+              {showSliceLabels && pct >= 4 && (
+                <text x={labelX} y={labelY} textAnchor="middle" dominantBaseline="middle" fontSize="11" fill="var(--text)">
+                  {pct.toFixed(0)}%
+                </text>
+              )}
+            </g>
+          );
+        })}
+      </svg>
+      <div className="sr-only">Click a slice to filter Timeline by behavior</div>
     </div>
   );
 }

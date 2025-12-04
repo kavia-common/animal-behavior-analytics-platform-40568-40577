@@ -55,12 +55,27 @@ export default function ReportsPage() {
         <div style={{ display:'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
           <div>
             <h4 className="text-body" style={{ margin: '4px 0 8px' }}>Behavior Count</h4>
-            {/* component renders internal sample; props kept minimal to avoid TS mismatch */}
-            <BehaviorCountBarChart />
+            <BehaviorCountBarChart
+              data={[
+                { id: 'pacing', label: 'Pacing', count: 12, color: 'var(--primary)' },
+                { id: 'moving', label: 'Moving', count: 25, color: 'var(--primary-600)' },
+                { id: 'scratching', label: 'Scratching', count: 8, color: 'var(--secondary)' },
+                { id: 'recumbent', label: 'Recumbent', count: 15, color: 'var(--muted)' },
+                { id: 'non_recumbent', label: 'Non-Recumbent', count: 20, color: '#3B82F6' },
+              ]}
+            />
           </div>
           <div>
             <h4 className="text-body" style={{ margin: '4px 0 8px' }}>Behavior Distribution</h4>
-            <DurationPieChart />
+            <DurationPieChart
+              data={[
+                { id: 'pacing', label: 'Pacing', value: 50, color: 'var(--primary)' },
+                { id: 'moving', label: 'Moving', value: 120, color: 'var(--primary-600)' },
+                { id: 'scratching', label: 'Scratching', value: 35, color: 'var(--secondary)' },
+                { id: 'recumbent', label: 'Recumbent', value: 70, color: 'var(--muted)' },
+                { id: 'non_recumbent', label: 'Non-Recumbent', value: 95, color: '#3B82F6' },
+              ]}
+            />
           </div>
         </div>
         <div className="text-muted" style={{ fontSize: 12, marginTop: 10 }}>

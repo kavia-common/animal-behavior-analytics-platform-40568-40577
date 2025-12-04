@@ -1,27 +1,75 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
+
+interface Datum {
+  id: string;
+  label: string;
+  value: number;
+  percentage?: number;
+  color?: string;
+}
+
+interface Props {
+  data: Datum[];
+  barWidth?: number;
+  onSegmentClick?: (id: string) => void;
+  tooltipFormatter?: (d: Datum) => string;
+}
 
 // PUBLIC_INTERFACE
-export default function DurationStackedBar({ onSegmentClick, data, keys }: { onSegmentClick?: (behavior: string, window: string) => void; data?: any[]; keys?: string[] }) {
-  const segments = [
-    { behavior: 'Pacing', value: 50, color: 'var(--primary)' },
-    { behavior: 'Moving', value: 120, color: 'var(--primary-600)' },
-    { behavior: 'Scratching', value: 35, color: 'var(--secondary)' },
-    { behavior: 'Recumbent', value: 70, color: 'var(--muted)' },
-    { behavior: 'Non-Recumbent', value: 95, color: '#3B82F6' },
-  ];
-  const total = segments.reduce((s, x) => s + x.value, 0);
+export default function DurationStackedBar({
+  data,
+  barWidth = 60,
+  onSegmentClick,
+  tooltipFormatter,
+}: Props) {
+  const [hovered, setHovered] = useState<string | null>(null);
+  const total = useMemo(() => data.reduce((a, b) => a + b.value, 0) || 1, [data]);
 
   return (
-    <div className="w-full h-10 flex overflow-hidden rounded border-default">
-      {segments.map(seg => (
-        <div
-          key={seg.behavior}
-          className="h-full cursor-pointer"
-          style={{ width: `${(seg.value / total) * 100}%`, background: seg.color }}
-          title={`${seg.behavior}: ${seg.value}s`}
-          onClick={() => onSegmentClick?.(seg.behavior, 'last-1h')}
-        />
-      ))}
+    <div className="w-full">
+      <div
+        className="flex w-full h-10 rounded overflow-hidden border"
+        style={{ borderColor: 'var(--border)', boxShadow: 'var(--shadow)' }}
+      >
+        {data.map((d) => {
+          const pct = (d.value / total) * 100;
+          const isHover = hovered === d.id;
+          return (
+            <button
+              key={d.id}
+              onClick={() => onSegmentClick?.(d.id)}
+              onMouseEnter={() => setHovered(d.id)}
+              onMouseLeave={() => setHovered(null)}
+              className="h-full transition-all"
+              title={tooltipFormatter ? tooltipFormatter(d) : `${d.label}: ${pct.toFixed(1)}%`}
+              style={{
+                width: `${pct}%`,
+                background: d.color || 'var(--primary)',
+                filter: isHover ? 'brightness(1.1)' : 'none',
+                borderRight: '1px solid var(--surface)',
+              }}
+              aria-label={`${d.label} ${Math.round(pct)} percent`}
+            />
+          );
+        })}
+      </div>
+      <div className="flex flex-wrap gap-3 mt-3">
+        {data.map((d) => {
+          const pct = (d.value / total) * 100;
+          return (
+            <button
+              key={d.id}
+              className="flex items-center gap-2 text-sm"
+              onClick={() => onSegmentClick?.(d.id)}
+              title={`${d.label}: ${pct.toFixed(1)}%`}
+            >
+              <span className="inline-block w-3 h-3 rounded" style={{ background: d.color || 'var(--primary)' }} />
+              <span className="text-gray-700">{d.label}</span>
+              <span className="text-gray-500">({pct.toFixed(1)}%)</span>
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }

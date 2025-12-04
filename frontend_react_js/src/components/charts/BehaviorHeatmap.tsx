@@ -1,65 +1,112 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 
-type Props = {
-  onCellClick?: (behavior: string, hourIso: string) => void;
+interface HeatCell {
+  hour: number;
+  intensity: number; // 0..100
+  duration?: number;
 }
 
-/**
- * Simple 24-hour heatmap grid (0-5 intensity) for behaviors.
- * PUBLIC_INTERFACE
- */
-export default function BehaviorHeatmap({ onCellClick }: Props) {
-  const hours = Array.from({ length: 24 }).map((_, i) => i);
-  const behaviors = ['Pacing', 'Moving', 'Scratching', 'Recumbent', 'Non-Recumbent'] as const;
+interface HeatRow {
+  behaviorId: string;
+  cells: HeatCell[];
+}
 
-  // Sample intensities 0–5
-  const intensities: Record<string, number[]> = {
-    'Pacing':        [1,1,0,0,0,0,1,2,3,4,5,4,3,3,2,2,1,1,1,2,3,2,1,1],
-    'Moving':        [0,0,0,1,1,2,3,4,4,3,2,2,2,3,4,3,2,2,1,1,0,0,0,0],
-    'Scratching':    [0,0,0,0,0,1,1,2,2,2,1,1,1,1,2,2,1,1,1,0,0,0,0,0],
-    'Recumbent':     [3,4,5,5,5,4,3,2,1,1,1,2,3,3,3,4,5,5,5,4,4,3,3,3],
-    'Non-Recumbent': [1,1,1,1,1,1,2,3,3,3,3,2,2,2,2,2,2,2,2,1,1,1,1,1],
+interface BehaviorMeta {
+  id: string;
+  label: string;
+  color?: string;
+}
+
+interface Props {
+  behaviors: BehaviorMeta[];
+  rows: HeatRow[];
+  hourLabels?: string[];
+  tooltipFormatter?: (cell: { behaviorId: string; behaviorLabel: string; hour: number; intensity: number; duration: number }) => string;
+  onCellClick?: (behaviorId: string, hour: number) => void;
+  colorScale?: { min: string; max: string };
+  borderColor?: string;
+  hoverShadow?: string;
+}
+
+// PUBLIC_INTERFACE
+export default function BehaviorHeatmap({
+  behaviors,
+  rows,
+  hourLabels,
+  tooltipFormatter,
+  onCellClick,
+  colorScale = { min: 'hsl(215, 20%, 92%)', max: 'var(--primary)' },
+  borderColor = 'var(--border)',
+  hoverShadow = 'var(--shadow)',
+}: Props) {
+  const behaviorMap = useMemo(() => new Map(behaviors.map((b) => [b.id, b])), [behaviors]);
+  const maxIntensity = useMemo(() => {
+    let m = 1;
+    rows.forEach((r) => r.cells.forEach((c) => (m = Math.max(m, c.intensity))));
+    return m;
+  }, [rows]);
+
+  const [hoverKey, setHoverKey] = useState<string | null>(null);
+
+  // simple color interpolation using CSS gradient stop hack
+  const cellBg = (intensity: number) => {
+    const t = Math.max(0, Math.min(1, intensity / maxIntensity));
+    return `linear-gradient(0deg, ${colorScale.max} ${t * 100}%, ${colorScale.min} ${t * 100}%)`;
   };
-
-  const colorFor = (v: number) => {
-    const alpha = v / 5;
-    return `rgba(30, 168, 91, ${alpha})`; // based on --primary
-  };
-
-  const hourIso = (h: number) => `2025-01-01T${String(h).padStart(2,'0')}:00:00Z`;
 
   return (
-    <div className="w-full">
-      <div className="overflow-auto">
-        <table className="w-full text-xs table">
-          <thead>
-            <tr>
-              <th className="text-left p-2">Behavior</th>
-              {hours.map(h => <th key={h} className="p-2 text-center">{h}</th>)}
-            </tr>
-          </thead>
-          <tbody>
-            {behaviors.map(b => (
-              <tr key={b} className="bg-surface">
-                <td className="p-2 text-body">{b}</td>
-                {hours.map(h => {
-                  const v = intensities[b][h];
+    <div className="w-full overflow-x-auto">
+      <table className="min-w-[900px] border-collapse w-full">
+        <thead>
+          <tr>
+            <th className="text-left p-2 text-xs text-gray-500 sticky left-0 bg-white z-10 border-b" style={{ borderColor }}>
+              Behavior
+            </th>
+            {(hourLabels || Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0'))).map((h, i) => (
+              <th key={i} className="p-2 text-xs text-gray-500 border-b" style={{ borderColor }}>
+                {h}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => {
+            const meta = behaviorMap.get(row.behaviorId);
+            return (
+              <tr key={row.behaviorId}>
+                <td className="p-2 text-sm text-gray-700 sticky left-0 bg-white z-10 border-r" style={{ borderColor }}>
+                  {meta?.label || row.behaviorId}
+                </td>
+                {row.cells.map((c, idx) => {
+                  const key = `${row.behaviorId}-${c.hour}`;
+                  const isHover = hoverKey === key;
+                  const label = meta?.label || row.behaviorId;
+                  const content = tooltipFormatter
+                    ? tooltipFormatter({ behaviorId: row.behaviorId, behaviorLabel: label, hour: c.hour, intensity: c.intensity, duration: c.duration || 0 })
+                    : `${label} @ ${String(c.hour).padStart(2, '0')}:00\nIntensity: ${c.intensity}\nDuration: ${c.duration || 0}s`;
                   return (
-                    <td
-                      key={`${b}-${h}`}
-                      className="p-0 cursor-pointer"
-                      title={`${b} @ ${h}:00 — intensity ${v}`}
-                      onClick={() => onCellClick?.(b, hourIso(h))}
-                    >
-                      <div style={{ background: colorFor(v), height: 18 }} />
+                    <td key={idx} className="p-1">
+                      <button
+                        aria-label={`${label} hour ${c.hour}`}
+                        onClick={() => onCellClick?.(row.behaviorId, c.hour)}
+                        onMouseEnter={() => setHoverKey(key)}
+                        onMouseLeave={() => setHoverKey(null)}
+                        className="w-7 h-7 rounded transition-all"
+                        title={content}
+                        style={{
+                          background: cellBg(c.intensity),
+                          border: `1px solid ${borderColor}`,
+                          boxShadow: isHover ? hoverShadow : 'none',
+                        }}
+                      />
                     </td>
                   );
                 })}
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 }
