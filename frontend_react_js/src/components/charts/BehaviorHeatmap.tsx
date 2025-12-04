@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface HeatCell {
   hour: number;
@@ -28,7 +29,11 @@ interface Props {
   hoverShadow?: string;
 }
 
-// PUBLIC_INTERFACE
+/**
+ * PUBLIC_INTERFACE
+ * BehaviorHeatmap renders a heatmap and navigates to Timeline on cell click if onCellClick is not provided.
+ * Default navigation: /timeline?behavior=<id>&hour=<hour>
+ */
 export default function BehaviorHeatmap({
   behaviors,
   rows,
@@ -47,11 +52,20 @@ export default function BehaviorHeatmap({
   }, [rows]);
 
   const [hoverKey, setHoverKey] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   // simple color interpolation using CSS gradient stop hack
   const cellBg = (intensity: number) => {
     const t = Math.max(0, Math.min(1, intensity / maxIntensity));
     return `linear-gradient(0deg, ${colorScale.max} ${t * 100}%, ${colorScale.min} ${t * 100}%)`;
+  };
+
+  const handleClick = (behaviorId: string, hour: number) => {
+    if (onCellClick) return onCellClick(behaviorId, hour);
+    const q = new URLSearchParams();
+    q.append('behavior', behaviorId);
+    q.set('hour', String(hour));
+    navigate({ pathname: '/timeline', search: `?${q.toString()}` });
   };
 
   return (
@@ -88,7 +102,7 @@ export default function BehaviorHeatmap({
                     <td key={idx} className="p-1">
                       <button
                         aria-label={`${label} hour ${c.hour}`}
-                        onClick={() => onCellClick?.(row.behaviorId, c.hour)}
+                        onClick={() => handleClick(row.behaviorId, c.hour)}
                         onMouseEnter={() => setHoverKey(key)}
                         onMouseLeave={() => setHoverKey(null)}
                         className="w-7 h-7 rounded transition-all"

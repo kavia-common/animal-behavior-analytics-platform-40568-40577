@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface Datum {
   id: string;
@@ -18,7 +19,11 @@ interface Props {
   tooltipFormatter?: (d: Datum) => string;
 }
 
-// PUBLIC_INTERFACE
+/**
+ * PUBLIC_INTERFACE
+ * BehaviorCountBarChart renders counts with optional navigation to Timeline when bars are clicked.
+ * If onBarClick prop is omitted, clicking a bar navigates to /timeline?behavior=<id>
+ */
 export default function BehaviorCountBarChart({
   data,
   barWidth = 40,
@@ -32,6 +37,14 @@ export default function BehaviorCountBarChart({
   const max = useMemo(() => Math.max(1, ...data.map((d) => d.count)), [data]);
   const heightPx = 240;
   const scale = (val: number) => (val / max) * (heightPx - 12) + 8;
+  const navigate = useNavigate();
+
+  const handleClick = (id: string) => {
+    if (onBarClick) return onBarClick(id);
+    const q = new URLSearchParams();
+    q.append('behavior', id);
+    navigate({ pathname: '/timeline', search: `?${q.toString()}` });
+  };
 
   return (
     <div className="w-full">
@@ -48,7 +61,7 @@ export default function BehaviorCountBarChart({
               )}
               <button
                 aria-label={`${d.label} ${d.count}`}
-                onClick={() => onBarClick?.(d.id)}
+                onClick={() => handleClick(d.id)}
                 onMouseEnter={() => setHovered(d.id)}
                 onMouseLeave={() => setHovered(null)}
                 className="rounded-t focus:outline-none focus:ring-2 transition-all"
