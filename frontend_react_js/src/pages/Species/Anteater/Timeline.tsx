@@ -1,92 +1,176 @@
 import React, { useMemo, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import VideoModal from './components/VideoModal';
 
-const behaviors = ['Pacing','Moving','Scratching','Recumbent','Non-Recumbent'];
-const behaviorColor: Record<string,string> = {
-  'Pacing': 'var(--primary)',
-  'Moving': 'var(--primary-600)',
-  'Scratching': 'var(--secondary)',
-  'Recumbent': 'var(--muted)',
-  'Non-Recumbent': '#3B82F6',
+type EventItem = {
+  id: string;
+  timestamp: string;
+  behaviorId: string;
+  duration: number;
+  cameraId: string;
+  locationId?: string;
+  videoUrl: string;
 };
+
+const LABELS: Record<string, string> = {
+  pacing: 'Pacing',
+  moving: 'Moving',
+  scratching: 'Scratching',
+  recumbent: 'Recumbent',
+  non_recumbent: 'Non-Recumbent',
+};
+
+// Construct mock events to ensure counts match the bar chart when filtering by a behavior
+const buildEvents = (): EventItem[] => {
+  const now = Date.now();
+  const mk = (behaviorId: string, n: number): EventItem[] =>
+    Array.from({ length: n }, (_, i) => ({
+      id: `${behaviorId}-${i + 1}`,
+      timestamp: new Date(now - (i + 1) * 30 * 60_000).toISOString(),
+      behaviorId,
+      duration: 8 + ((i % 6) + 1) * 6, // varied
+      cameraId: i % 2 === 0 ? 'cam-1' : 'cam-2',
+      locationId: i % 2 === 0 ? 'loc-a' : 'loc-b',
+      videoUrl: i % 2 === 0 ? '/assets/video/sample1.mp4' : '/assets/video/sample2.mp4',
+    }));
+  return [
+    ...mk('pacing', 12),
+    ...mk('moving', 25),
+    ...mk('scratching', 22),
+    ...mk('recumbent', 15),
+    ...mk('non_recumbent', 20),
+  ];
+};
+
+const MOCK_EVENTS: EventItem[] = buildEvents();
 
 // PUBLIC_INTERFACE
 export default function AnteaterTimeline() {
-  /** Timeline with left filter panel and scrollable bars; clicking opens modal */
-  const location = useLocation();
-  const [selected, setSelected] = useState<string[]>(behaviors);
-  const [open, setOpen] = useState<{show:boolean, src?: string, meta?: any}>({ show: false });
+  /**
+   * Timeline table showing events matching filters from Dashboard.
+   * Columns: Timestamp, Duration, Camera, Video thumbnail/action.
+   * Hover state uses var(--card-hover), clicking opens Video Modal with metadata and controls.
+   */
+  const [params] = useSearchParams();
+  const [open, setOpen] = useState<null | EventItem>(null);
 
-  const preset = (location.state as any)?.preset;
+  const behaviorFilter = params.get('behavior');
+  const hourFilter = params.get('hour');
+  const datePreset = params.get('datePreset');
+  const dateFrom = params.get('dateFrom');
+  const dateTo = params.get('dateTo');
+  const cameras = (params.get('cameras') || '').split(',').filter(Boolean);
+  const locations = (params.get('locations') || '').split(',').filter(Boolean);
 
-  const events = useMemo(() => {
-    return Array.from({ length: 25 }).map((_, i) => {
-      const b = behaviors[i % behaviors.length];
-      return {
-        id: 'e' + i, behavior: b,
-        start: i * 2, end: i * 2 + 2,
-        src: '/assets/video/sample1.mp4'
-      };
-    }).filter(e => !preset?.behavior || e.behavior === preset.behavior);
-  }, [preset]);
+  const filtered = useMemo(() => {
+    let rows = MOCK_EVENTS.slice();
+    if (behaviorFilter) rows = rows.filter((r) => r.behaviorId === behaviorFilter);
+    if (hourFilter !== null) {
+      const hourNum = parseInt(hourFilter!, 10);
+      if (!Number.isNaN(hourNum)) {
+        rows = rows.filter((r) => new Date(r.timestamp).getHours() === hourNum);
+      }
+    }
+    if (cameras.length) rows = rows.filter((r) => cameras.includes(r.cameraId));
+    if (locations.length) rows = rows.filter((r) => (r.locationId ? locations.includes(r.locationId) : false));
 
-  const filtered = events.filter(e => selected.includes(e.behavior));
+    const fromTs = dateFrom ? new Date(dateFrom).getTime() : null;
+    const toTs = dateTo ? new Date(dateTo).getTime() : null;
+    if (fromTs || toTs) {
+      rows = rows.filter((r) => {
+        const t = new Date(r.timestamp).getTime();
+        if (fromTs && t < fromTs) return false;
+        if (toTs && t > toTs) return false;
+        return true;
+      });
+    } else if (datePreset === 'today') {
+      const start = new Date();
+      start.setHours(0, 0, 0, 0);
+      rows = rows.filter((r) => new Date(r.timestamp) >= start);
+    } else if (datePreset === 'last7') {
+      const start = new Date(Date.now() - 7 * 24 * 3600_000);
+      rows = rows.filter((r) => new Date(r.timestamp) >= start);
+    } else if (datePreset === 'last30') {
+      const start = new Date(Date.now() - 30 * 24 * 3600_000);
+      rows = rows.filter((r) => new Date(r.timestamp) >= start);
+    }
+
+    return rows;
+  }, [behaviorFilter, hourFilter, datePreset, dateFrom, dateTo, cameras, locations]);
 
   return (
-    <div className="bg-app" style={{ minHeight: '100vh', padding: 16, display: 'grid', gridTemplateColumns: '280px 1fr', gap: 12 }}>
-      <aside className="card" style={{ padding: 14, height: 'fit-content', position: 'sticky', top: 12 }}>
-        <div className="text-body" style={{ fontWeight: 700, marginBottom: 8 }}>Filters</div>
-        <div style={{ display:'grid', gap: 10 }}>
-          <div>
-            <div className="text-muted" style={{ fontSize: 12, marginBottom: 6 }}>Behaviors</div>
-            <div style={{ display:'grid', gap: 8 }}>
-              {behaviors.map(b => (
-                <label key={b} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14 }}>
-                  <input type="checkbox" checked={selected.includes(b)} onChange={(e) => setSelected(s => e.target.checked ? [...s, b] : s.filter(x => x !== b))} />
-                  <span style={{ width: 10, height: 10, background: behaviorColor[b], borderRadius: 2 }} />
-                  {b}
-                </label>
+    <div className="space-y-6">
+      <div className="ui-card p-4">
+        <div className="text-sm" style={{ color: 'var(--muted)' }}>
+          Showing {filtered.length} events
+          {behaviorFilter ? ` for ${LABELS[behaviorFilter] || behaviorFilter}` : ''}
+          {hourFilter ? ` at ${hourFilter}:00` : ''}
+          {cameras.length ? ` • Cameras: ${cameras.join(', ')}` : ''}
+          {locations.length ? ` • Locations: ${locations.join(', ')}` : ''}
+        </div>
+
+        <div className="mt-4 overflow-x-auto">
+          <table className="min-w-[700px] w-full text-sm">
+            <thead style={{ background: 'var(--table-header-bg)' }}>
+              <tr style={{ color: 'var(--muted)' }}>
+                <th className="text-left py-2 px-2">Timestamp</th>
+                <th className="text-left py-2 px-2">Duration (s)</th>
+                <th className="text-left py-2 px-2">Camera</th>
+                <th className="text-left py-2 px-2">Video</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((r) => (
+                <tr key={r.id} className="border-t hover:bg-[var(--card-hover)]" style={{ borderColor: 'var(--border)' }}>
+                  <td className="py-2 px-2" style={{ color: 'var(--text)' }}>
+                    {new Date(r.timestamp).toLocaleString()}
+                  </td>
+                  <td className="py-2 px-2" style={{ color: 'var(--text)' }}>
+                    {r.duration}
+                  </td>
+                  <td className="py-2 px-2" style={{ color: 'var(--text)' }}>
+                    {r.cameraId}
+                  </td>
+                  <td className="py-2 px-2">
+                    <button
+                      className="px-2 py-1 rounded text-white"
+                      style={{ background: 'var(--primary)' }}
+                      onClick={() => setOpen(r)}
+                      title="Open video"
+                    >
+                      Open
+                    </button>
+                  </td>
+                </tr>
               ))}
-            </div>
-          </div>
-          <input className="border-default bg-surface text-body" style={{ padding: 10, borderRadius: 8 }} type="date" />
-          <input className="border-default bg-surface text-body" style={{ padding: 10, borderRadius: 8 }} type="time" />
-          <input className="border-default bg-surface text-body" style={{ padding: 10, borderRadius: 8 }} placeholder="Camera/Location" />
-          <button className="btn-primary" style={{ borderRadius: 8, padding: '10px 12px' }}>Apply</button>
+              {!filtered.length && (
+                <tr>
+                  <td colSpan={4} className="text-center py-6 text-sm" style={{ color: 'var(--muted)' }}>
+                    No events match the selected filters.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
-      </aside>
+      </div>
 
-      <main className="card" style={{ padding: 14 }}>
-        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom: 8 }}>
-          <div>
-            <div className="text-body" style={{ fontWeight: 700 }}>Timeline</div>
-            <div className="text-muted" style={{ fontSize: 12 }}>Hover highlights; click to open video</div>
-          </div>
-          <span className="text-muted" style={{ fontSize: 12 }}>Vertical ruler • Horizontal scroll</span>
-        </div>
-        <div style={{ overflowX: 'auto', paddingBottom: 8 }}>
-          <div style={{ position:'relative', minWidth: 900, padding: '16px 0' }}>
-            <div style={{ position:'absolute', top:0, bottom:0, left:200, width:1, background: 'var(--border)' }} />
-            {filtered.map((e) => (
-              <div key={e.id} style={{ display:'flex', alignItems:'center', gap: 10, marginBottom: 10 }}>
-                <div className="text-muted" style={{ width: 180, fontSize: 12 }}>{e.behavior}</div>
-                <div style={{ position:'relative', height: 18, background: 'var(--table-header-bg)', borderRadius: 8, flex: 1 }}>
-                  <div
-                    title={`${e.behavior} • ${e.start}s`}
-                    onClick={() => setOpen({ show: true, src: e.src, meta: e })}
-                    style={{ position:'absolute', left: 200 + e.start * 8, width: Math.max(10, (e.end - e.start) * 8), height: '100%', background: behaviorColor[e.behavior], borderRadius: 8, cursor: 'pointer', opacity: 0.9, transition: 'opacity .15s' }}
-                    onMouseEnter={(ev) => { (ev.currentTarget as HTMLDivElement).style.opacity = '1'; (ev.currentTarget as HTMLDivElement).style.boxShadow = '0 0 0 4px var(--card-hover)'; }}
-                    onMouseLeave={(ev) => { (ev.currentTarget as HTMLDivElement).style.opacity = '0.9'; (ev.currentTarget as HTMLDivElement).style.boxShadow = 'none'; }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </main>
-
-      {open.show && <VideoModal src={open.src!} meta={open.meta} onClose={() => setOpen({ show: false })} />}
+      {open && (
+        <VideoModal
+          src={open.videoUrl}
+          meta={{
+            id: open.id,
+            behavior: LABELS[open.behaviorId] || open.behaviorId,
+            timestamp: open.timestamp,
+            duration: open.duration,
+            cameraId: open.cameraId,
+            locationId: open.locationId || 'N/A',
+            start: 0,
+            end: open.duration
+          }}
+          onClose={() => setOpen(null)}
+        />
+      )}
     </div>
   );
 }

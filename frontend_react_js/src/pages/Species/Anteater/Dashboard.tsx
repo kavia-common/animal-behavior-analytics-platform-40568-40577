@@ -4,181 +4,133 @@ import BehaviorCountBarChart from '../../../components/charts/BehaviorCountBarCh
 import DurationStackedBar from '../../../components/charts/DurationStackedBar';
 import DurationPieChart from '../../../components/charts/DurationPieChart';
 import BehaviorHeatmap from '../../../components/charts/BehaviorHeatmap';
-import { useSelector } from 'react-redux';
-import type { RootState } from '../../../store';
 import { formatSeconds } from '../../../lib/format';
+import { BEHAVIOR_ORDER, BEHAVIOR_LABELS, BEHAVIOR_COLORS } from '../../../lib/behaviorPalette';
 
 type DatePreset = 'today' | 'last7' | 'last30' | 'custom';
 
-const CAMERA_OPTIONS = [
-  { label: 'All Cameras', value: 'all' },
-  { label: 'Cam A', value: 'cam-a' },
-  { label: 'Cam B', value: 'cam-b' },
-  { label: 'Cam C', value: 'cam-c' },
-];
+const EXACT_COUNTS: Record<string, number> = {
+  pacing: 12,
+  moving: 25,
+  scratching: 22,
+  recumbent: 15,
+  non_recumbent: 20,
+};
 
-const DATE_PRESETS: { label: string; value: DatePreset }[] = [
-  { label: 'Today', value: 'today' },
-  { label: 'Last 7', value: 'last7' },
-  { label: 'Last 30', value: 'last30' },
-  { label: 'Custom', value: 'custom' },
-];
+const EXACT_DURATIONS: Record<string, number> = {
+  pacing: 50,
+  moving: 120,
+  scratching: 80,
+  recumbent: 70,
+  non_recumbent: 95,
+};
+
+function generateHeatmap(selected: string[]) {
+  const rows: { behaviorId: string; cells: { hour: number; intensity: number; duration: number }[] }[] = [];
+  for (const b of selected) {
+    const cells = [];
+    for (let h = 0; h < 24; h++) {
+      let base = 0;
+      if (h % 6 === 0) base = 5;
+      else if (h % 3 === 0) base = 3;
+      else if (h % 2 === 0) base = 1;
+      else base = 0;
+
+      const adj =
+        b === 'moving' ? Math.min(5, base + 1) :
+        b === 'scratching' ? base :
+        b === 'pacing' ? Math.max(0, base - 1) :
+        b === 'recumbent' ? (h >= 22 || h <= 5 ? Math.min(5, base + 2) : base) :
+        b === 'non_recumbent' ? (h >= 8 && h <= 18 ? Math.min(5, base + 1) : base) :
+        base;
+
+      cells.push({ hour: h, intensity: adj, duration: Math.round((EXACT_DURATIONS[b] / 24) * (0.7 + 0.6 * Math.sin(((h + 1) * Math.PI) / 12))) });
+    }
+    rows.push({ behaviorId: b, cells });
+  }
+  // scale intensity 0..5 -> 0..100
+  rows.forEach(r => r.cells.forEach(c => (c.intensity = Math.round((c.intensity / 5) * 100))));
+  return rows;
+}
 
 // PUBLIC_INTERFACE
 export default function AnteaterDashboard() {
-  // Behaviors from store (fallback to defaults if store not populated)
-  const behaviors = useSelector((s: RootState) => (s as any)?.behavior?.items) || [
-    { id: 'pacing', label: 'Pacing', color: 'var(--primary)' },
-    { id: 'moving', label: 'Moving', color: 'var(--primary-600)' },
-    { id: 'scratching', label: 'Scratching', color: 'var(--secondary)' },
-    { id: 'recumbent', label: 'Recumbent', color: 'var(--muted)' },
-    { id: 'non_recumbent', label: 'Non-Recumbent', color: '#3B82F6' },
-  ];
-
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  // Filters
   const [selectedBehaviors, setSelectedBehaviors] = useState<string[]>(
-    searchParams.getAll('behavior') || []
+    BEHAVIOR_ORDER.slice()
   );
-  const [camera, setCamera] = useState<string>(searchParams.get('camera') || 'all');
-  const [datePreset, setDatePreset] = useState<DatePreset>(
-    (searchParams.get('date') as DatePreset) || 'last7'
+  const [datePreset, setDatePreset] = useState<DatePreset>('today');
+  const [dateRange, setDateRange] = useState<{ from: string | null; to: string | null }>({ from: null, to: null });
+  const [cameras, setCameras] = useState<string[]>([]);
+  const [locations, setLocations] = useState<string[]>([]);
+
+  const appliedFilters = useMemo(
+    () => ({
+      datePreset,
+      dateFrom: dateRange.from,
+      dateTo: dateRange.to,
+      cameras,
+      locations,
+    }),
+    [datePreset, dateRange, cameras, locations]
   );
-  const [customRange, setCustomRange] = useState<{ start: Date; end: Date } | undefined>(undefined);
-
-  // URL sync helper
-  const syncUrl = (next: {
-    behaviors?: string[];
-    camera?: string;
-    date?: DatePreset;
-    start?: string;
-    end?: string;
-  }) => {
-    const sp = new URLSearchParams(searchParams);
-    if (next.behaviors) {
-      sp.delete('behavior');
-      next.behaviors.forEach((b) => sp.append('behavior', b));
-    }
-    if (next.camera) sp.set('camera', next.camera);
-    if (next.date) sp.set('date', next.date);
-    if (next.start) sp.set('start', next.start);
-    if (next.end) sp.set('end', next.end);
-    setSearchParams(sp);
-  };
-
-  // Use active behaviors (selected or all)
-  const activeBehaviorIds = selectedBehaviors.length
-    ? selectedBehaviors
-    : behaviors.map((b: any) => b.id);
-
-  // Mock analytics based on filters (deterministic, preview)
-  const counts = useMemo(() => {
-    const base = 25;
-    const obj: Record<string, number> = {};
-    activeBehaviorIds.forEach((id: string, idx: number) => {
-      const camBias = camera === 'all' ? 0 : camera.charCodeAt(0) % 7;
-      const dateBias = datePreset === 'today' ? 1 : datePreset === 'last7' ? 4 : datePreset === 'last30' ? 7 : 5;
-      obj[id] = base + (idx % 5) * 7 + camBias + dateBias;
-    });
-    return obj;
-  }, [activeBehaviorIds, camera, datePreset]);
-
-  const durations = useMemo(() => {
-    const base = 300;
-    const obj: Record<string, number> = {};
-    activeBehaviorIds.forEach((id: string, idx: number) => {
-      obj[id] = base + (idx % 6) * 120 + (camera === 'all' ? 0 : 30);
-    });
-    return obj;
-  }, [activeBehaviorIds, camera]);
-
-  const totalCount = Object.values(counts).reduce((a, b) => a + b, 0) || 1;
-  const totalDuration = Object.values(durations).reduce((a, b) => a + b, 0) || 1;
 
   const byBehavior = useMemo(() => {
-    const map = new Map(behaviors.map((b: any) => [b.id, b]));
-    return activeBehaviorIds.map((id: string) => {
-      const meta: any = map.get(id) || {};
-      return {
-        id,
-        label: meta.label || id,
-        color: meta.color || 'var(--primary)',
-        count: counts[id] || 0,
-        duration: durations[id] || 0,
-        countPct: ((counts[id] || 0) / totalCount) * 100,
-        durationPct: ((durations[id] || 0) / totalDuration) * 100,
-      };
-    });
-  }, [activeBehaviorIds, behaviors, counts, durations, totalCount, totalDuration]);
+    const ids = selectedBehaviors.length ? selectedBehaviors : BEHAVIOR_ORDER.slice();
+    const totalCount = ids.reduce((a, id) => a + (EXACT_COUNTS[id] || 0), 0) || 1;
+    const totalDuration = ids.reduce((a, id) => a + (EXACT_DURATIONS[id] || 0), 0) || 1;
+    return ids.map((id) => ({
+      id,
+      label: (BEHAVIOR_LABELS as any)[id] || id,
+      color: (BEHAVIOR_COLORS as any)[id] || 'var(--primary)',
+      count: EXACT_COUNTS[id] || 0,
+      countPct: ((EXACT_COUNTS[id] || 0) / totalCount) * 100,
+      duration: EXACT_DURATIONS[id] || 0,
+      durationPct: ((EXACT_DURATIONS[id] || 0) / totalDuration) * 100,
+    }));
+  }, [selectedBehaviors]);
 
-  // Heatmap rows
-  const heatmapRows = useMemo(() => {
-    return activeBehaviorIds.map((id: string, idx: number) => {
-      const hours = Array.from({ length: 24 }, (_: unknown, h: number) => {
-        const intensity = Math.max(0, Math.round(60 + 40 * Math.sin((Math.PI * (h + idx)) / 12)));
-        const duration = Math.round((durations[id] / 24) * (0.7 + 0.6 * Math.sin(((h + 1) * Math.PI) / 12)));
-        return { hour: h, intensity, duration };
-      });
-      return { behaviorId: id, cells: hours };
-    });
-  }, [activeBehaviorIds, durations]);
+  const heatmapRows = useMemo(() => generateHeatmap(selectedBehaviors), [selectedBehaviors]);
 
-  const behaviorOptions = behaviors.map((b: any) => ({ label: b.label, value: b.id }));
+  const behaviorOptions = BEHAVIOR_ORDER.map((b) => ({ value: b, label: (BEHAVIOR_LABELS as any)[b] }));
 
   const onNavigateTimeline = (behaviorId: string, extras?: Record<string, string>) => {
     const sp = new URLSearchParams();
-    sp.append('behavior', behaviorId);
-    if (camera && camera !== 'all') sp.set('camera', camera);
-    if (datePreset) sp.set('date', datePreset);
-    if (customRange && datePreset === 'custom') {
-      sp.set('start', customRange.start.toISOString());
-      sp.set('end', customRange.end.toISOString());
-    }
+    sp.set('behavior', behaviorId);
+    if (appliedFilters.datePreset) sp.set('datePreset', appliedFilters.datePreset);
+    if (appliedFilters.dateFrom) sp.set('dateFrom', appliedFilters.dateFrom);
+    if (appliedFilters.dateTo) sp.set('dateTo', appliedFilters.dateTo);
+    if (appliedFilters.cameras?.length) sp.set('cameras', appliedFilters.cameras.join(','));
+    if (appliedFilters.locations?.length) sp.set('locations', appliedFilters.locations.join(','));
     if (extras) Object.entries(extras).forEach(([k, v]) => sp.set(k, v));
     navigate(`/species/anteater/timeline?${sp.toString()}`);
   };
 
   return (
-    <div className="bg-app" style={{ minHeight: '100vh', padding: 16 }}>
-      <div className="card" style={{ padding: 16, marginBottom: 12 }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-          <div>
-            <h2 className="text-body" style={{ margin: 0 }}>Giant Anteater Dashboard</h2>
-            <div className="text-muted" style={{ fontSize: 12 }}>Interactive behavior analytics overview</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Filters */}
-      <div className="card" style={{ padding: 16, marginBottom: 12 }}>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-          <div>
-            <div className="text-muted" style={{ fontSize: 12, marginBottom: 6 }}>Behaviors</div>
+    <div className="space-y-6">
+      <div className="ui-card p-4">
+        <div className="flex flex-wrap gap-4 items-end">
+          {/* Behavior multi-select */}
+          <div className="flex flex-col gap-1">
+            <label className="text-xs" style={{ color: 'var(--muted)' }}>Behavior</label>
             <div className="flex flex-wrap gap-2">
-              {behaviorOptions.map((opt: { label: string; value: string }) => {
-                const active = activeBehaviorIds.includes(opt.value);
+              {behaviorOptions.map((opt) => {
+                const active = selectedBehaviors.includes(opt.value);
                 return (
                   <button
                     key={opt.value}
-                    onClick={() => {
-                      let next: string[] = [];
-                      if (activeBehaviorIds.includes(opt.value)) {
-                        next = activeBehaviorIds.filter((x: string) => x !== opt.value);
-                      } else {
-                        next = [...activeBehaviorIds, opt.value];
-                      }
-                      setSelectedBehaviors(next);
-                      syncUrl({ behaviors: next });
-                    }}
-                    className="border-default"
+                    className="border rounded px-3 py-1 text-sm"
                     style={{
-                      padding: '6px 10px',
-                      borderRadius: 8,
                       background: active ? 'var(--card-hover)' : 'var(--surface)',
+                      borderColor: 'var(--border)',
                       color: 'var(--text)',
-                      fontSize: 13,
+                    }}
+                    onClick={() => {
+                      setSelectedBehaviors((prev) =>
+                        prev.includes(opt.value) ? prev.filter((x) => x !== opt.value) : [...prev, opt.value]
+                      );
                     }}
                   >
                     {opt.label}
@@ -188,86 +140,101 @@ export default function AnteaterDashboard() {
             </div>
           </div>
 
-          <div>
-            <div className="text-muted" style={{ fontSize: 12, marginBottom: 6 }}>Date Range</div>
-            <div className="flex flex-wrap gap-2">
-              {DATE_PRESETS.map((p) => (
-                <button
-                  key={p.value}
-                  onClick={() => {
-                    setDatePreset(p.value);
-                    syncUrl({ date: p.value });
-                  }}
-                  className="border-default"
-                  style={{
-                    padding: '6px 10px',
-                    borderRadius: 8,
-                    background: datePreset === p.value ? 'var(--card-hover)' : 'var(--surface)',
-                    color: 'var(--text)',
-                    fontSize: 13,
-                  }}
-                >
-                  {p.label}
-                </button>
-              ))}
-              {datePreset === 'custom' && (
-                <div className="flex items-center gap-2">
-                  <input
-                    type="date"
-                    className="border-default"
-                    onChange={(e) => {
-                      const d = e.target.value ? new Date(e.target.value) : undefined;
-                      setCustomRange((prev) => ({ start: d || prev?.start || new Date(), end: prev?.end || new Date() }));
+          {/* Date range presets */}
+          <div className="flex flex-col gap-1">
+            <label className="text-xs" style={{ color: 'var(--muted)' }}>Date Range</label>
+            <div className="flex gap-2">
+              {['Today', 'Last 7', 'Last 30', 'Custom'].map((p) => {
+                const val = p === 'Today' ? 'today' : p === 'Last 7' ? 'last7' : p === 'Last 30' ? 'last30' : 'custom';
+                const active = datePreset === (val as DatePreset);
+                return (
+                  <button
+                    key={p}
+                    className="border rounded px-3 py-1 text-sm"
+                    style={{
+                      background: active ? 'var(--card-hover)' : 'var(--surface)',
+                      borderColor: 'var(--border)',
+                      color: 'var(--text)',
                     }}
-                    style={{ padding: 6, borderRadius: 6 }}
-                  />
-                  <input
-                    type="date"
-                    className="border-default"
-                    onChange={(e) => {
-                      const d = e.target.value ? new Date(e.target.value) : undefined;
-                      setCustomRange((prev) => ({ start: prev?.start || new Date(), end: d || prev?.end || new Date() }));
-                    }}
-                    style={{ padding: 6, borderRadius: 6 }}
-                  />
-                </div>
-              )}
+                    onClick={() => setDatePreset(val as DatePreset)}
+                  >
+                    {p}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          <div>
-            <div className="text-muted" style={{ fontSize: 12, marginBottom: 6 }}>Camera/Location</div>
-            <div className="flex flex-wrap gap-2">
-              {CAMERA_OPTIONS.map((c) => (
-                <button
-                  key={c.value}
-                  onClick={() => {
-                    setCamera(c.value);
-                    syncUrl({ camera: c.value });
-                  }}
-                  className="border-default"
-                  style={{
-                    padding: '6px 10px',
-                    borderRadius: 8,
-                    background: camera === c.value ? 'var(--card-hover)' : 'var(--surface)',
-                    color: 'var(--text)',
-                    fontSize: 13,
-                  }}
-                >
-                  {c.label}
-                </button>
-              ))}
+          {/* Camera */}
+          <div className="flex flex-col gap-1">
+            <label className="text-xs" style={{ color: 'var(--muted)' }}>Camera</label>
+            <div className="flex gap-2">
+              {['cam-1', 'cam-2', 'cam-3'].map((c) => {
+                const active = cameras.includes(c);
+                return (
+                  <button
+                    key={c}
+                    className="border rounded px-3 py-1 text-sm"
+                    style={{
+                      background: active ? 'var(--card-hover)' : 'var(--surface)',
+                      borderColor: 'var(--border)',
+                      color: 'var(--text)',
+                    }}
+                    onClick={() =>
+                      setCameras((prev) => (prev.includes(c) ? prev.filter((x) => x !== c) : [...prev, c]))
+                    }
+                  >
+                    {c}
+                  </button>
+                );
+              })}
             </div>
           </div>
+
+          {/* Location */}
+          <div className="flex flex-col gap-1">
+            <label className="text-xs" style={{ color: 'var(--muted)' }}>Location</label>
+            <div className="flex gap-2">
+              {['loc-a', 'loc-b'].map((l) => {
+                const active = locations.includes(l);
+                return (
+                  <button
+                    key={l}
+                    className="border rounded px-3 py-1 text-sm"
+                    style={{
+                      background: active ? 'var(--card-hover)' : 'var(--surface)',
+                      borderColor: 'var(--border)',
+                      color: 'var(--text)',
+                    }}
+                    onClick={() =>
+                      setLocations((prev) => (prev.includes(l) ? prev.filter((x) => x !== l) : [...prev, l]))
+                    }
+                  >
+                    {l}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <button
+            className="px-3 py-2 rounded border text-sm"
+            style={{ background: 'var(--primary)', color: 'white', borderColor: 'var(--primary-600)' }}
+            onClick={() => {
+              // recompute is state-driven; keep for explicit user action
+              // could trigger backend refetch here in future
+            }}
+          >
+            Apply
+          </button>
         </div>
       </div>
 
-      {/* Charts */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        <div className="card" style={{ padding: 16 }}>
-          <h3 className="text-body" style={{ marginTop: 0 }}>Behavior Count</h3>
+        <div className="ui-card p-4">
+          <h3 className="text-base font-semibold mb-3" style={{ color: 'var(--text)' }}>Behavior Count</h3>
           <BehaviorCountBarChart
-            data={byBehavior.map((b: any) => ({
+            data={byBehavior.map((b) => ({
               id: b.id,
               label: b.label,
               count: b.count,
@@ -283,10 +250,10 @@ export default function AnteaterDashboard() {
           />
         </div>
 
-        <div className="card" style={{ padding: 16 }}>
-          <h3 className="text-body" style={{ marginTop: 0 }}>Behavior Duration (Stacked)</h3>
+        <div className="ui-card p-4">
+          <h3 className="text-base font-semibold mb-3" style={{ color: 'var(--text)' }}>Behavior Duration (Stacked)</h3>
           <DurationStackedBar
-            data={byBehavior.map((b: any) => ({
+            data={byBehavior.map((b) => ({
               id: b.id,
               label: b.label,
               value: b.duration,
@@ -299,10 +266,10 @@ export default function AnteaterDashboard() {
           />
         </div>
 
-        <div className="card" style={{ padding: 16 }}>
-          <h3 className="text-body" style={{ marginTop: 0 }}>Behavior Duration (Pie)</h3>
+        <div className="ui-card p-4">
+          <h3 className="text-base font-semibold mb-3" style={{ color: 'var(--text)' }}>Behavior Duration (Pie)</h3>
           <DurationPieChart
-            data={byBehavior.map((b: any) => ({
+            data={byBehavior.map((b) => ({
               id: b.id,
               label: b.label,
               value: b.duration,
@@ -316,20 +283,19 @@ export default function AnteaterDashboard() {
         </div>
       </div>
 
-      {/* Heatmap */}
-      <div className="card" style={{ padding: 16, marginTop: 16 }}>
-        <h3 className="text-body" style={{ marginTop: 0 }}>Daily 24-hour Heatmap</h3>
+      <div className="ui-card p-4">
+        <h3 className="text-base font-semibold mb-3" style={{ color: 'var(--text)' }}>Daily 24-hour Heatmap</h3>
         <BehaviorHeatmap
-          behaviors={byBehavior.map((b: any) => ({ id: b.id, label: b.label, color: b.color }))}
+          behaviors={byBehavior.map((b) => ({ id: b.id, label: b.label, color: b.color }))}
           rows={heatmapRows as any}
           hourLabels={Array.from({ length: 24 }, (_: unknown, h: number) => String(h).padStart(2, '0'))}
-          colorScale={{ min: 'hsl(215, 20%, 92%)', max: 'var(--primary)' }}
+          colorScale={{ min: 'var(--table-row-hover)', max: 'var(--primary)' }}
           borderColor="var(--border)"
           hoverShadow="var(--shadow)"
           tooltipFormatter={(cell) =>
-            `${cell.behaviorLabel} @ ${String(cell.hour).padStart(2, '0')}:00\nIntensity: ${cell.intensity}\nDuration: ${formatSeconds(cell.duration)}`
+            `${cell.behaviorLabel} @ ${String(cell.hour).padStart(2, '0')}:00\nEvents: ${Math.round((cell.intensity / 100) * 5)}\nDuration: ${formatSeconds(cell.duration)}`
           }
-          onCellClick={(behaviorId, hour) => onNavigateTimeline(behaviorId, { hour: String(hour).padStart(2, '0') })}
+          onCellClick={(behaviorId, hour) => onNavigateTimeline(behaviorId, { hour: String(hour) })}
         />
       </div>
     </div>
