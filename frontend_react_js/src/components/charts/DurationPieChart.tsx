@@ -20,7 +20,7 @@ const DurationPieChart: React.FC<Props> = ({ behaviors }) => {
       <Pie
         data={{
           labels,
-          datasets: [{ data, backgroundColor, borderColor: 'var(--color-surface)', borderWidth: 2 }],
+          datasets: [{ data, backgroundColor, borderColor: 'var(--surface)', borderWidth: 2 }],
         }}
         options={{
           plugins: {

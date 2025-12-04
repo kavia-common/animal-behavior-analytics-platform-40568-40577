@@ -66,7 +66,7 @@ export default function BehaviorTimeline({ segments, onSelect, zoomScale = 'day'
                       style={{
                         left: `${leftPct}%`,
                         width: `${Math.max(0.4, widthPct)}%`,
-                        backgroundColor: getBehaviorColor((BEHAVIOR_KEYS as readonly BehaviorKey[]).includes(s.type as any) ? (s.type as BehaviorKey) : 'foraging'),
+                        backgroundColor: getBehaviorColor((BEHAVIOR_KEYS as readonly BehaviorKey[]).includes(s.type as any) ? (s.type as BehaviorKey) : 'pacing'),
                         boxShadow: '0 1px 2px var(--color-card-shadow-rgba)',
                         outlineColor: 'var(--color-primary)',
                       }}

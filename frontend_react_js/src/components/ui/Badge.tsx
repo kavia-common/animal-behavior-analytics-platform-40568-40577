@@ -1,24 +1,11 @@
 import React from "react";
 
-type VizAITone = "completed" | "processing" | "pending";
-type LegacyTone = "default" | "success" | "warning" | "error";
-type Props = { tone?: VizAITone | LegacyTone; children: React.ReactNode };
+type Tone = "default" | "secondary";
+type Props = { tone?: Tone; children: React.ReactNode };
 
-/** Badge using exact VizAI palette; supports legacy tones for backwards compatibility. */
+/** Badge using global theme tokens via utility classes. */
 // PUBLIC_INTERFACE
-export default function Badge({ tone = "pending", children }: Props) {
-  const normalize = (t: VizAITone | LegacyTone): VizAITone => {
-    if (t === "success") return "completed";
-    if (t === "warning") return "pending";
-    if (t === "error") return "pending";
-    if (t === "default") return "pending";
-    return t as VizAITone;
-  };
-  const t = normalize(tone);
-  const classMap: Record<VizAITone, string> = {
-    completed: "badge badge--completed",
-    processing: "badge badge--processing",
-    pending: "badge badge--pending",
-  };
-  return <span className={classMap[t]}>{children}</span>;
+export default function Badge({ tone = "default", children }: Props) {
+  const cls = tone === "secondary" ? "ui-badge ui-badge-secondary" : "ui-badge";
+  return <span className={cls}>{children}</span>;
 }

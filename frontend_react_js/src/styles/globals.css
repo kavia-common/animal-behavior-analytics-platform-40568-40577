@@ -2,34 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
-/* VizAI Global Design Tokens */
+/* VizAI Global Design Tokens - map legacy tokens to theme.css variables for compatibility */
 :root {
-  /* Brand Colors */
-  /* Updated brand to match screenshots (teal/aqua + warm amber) */
-  --color-primary: #00A6B8;
-  --color-primary-dark: #008EA0;
-  --color-accent: #00A6B8; /* keep accent equal to primary for consistent pills */
-  --color-secondary: #F5B74D;
-  --color-error: #D12A2A;
+  /* Backward-compatible aliasing to theme.css tokens */
+  --color-primary: var(--primary);
+  --color-primary-dark: var(--primary-600);
+  --color-accent: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-error: var(--error);
 
   /* Text */
-  --color-text: #0F172A;
-  --color-text-muted: #6B7280;
+  --color-text: var(--text);
+  --color-text-muted: var(--muted);
 
   /* Surfaces */
-  --color-border: #E6E8ED;
-  --color-bg: #F5F7F9;
-  --color-surface: #FFFFFF;
+  --color-border: var(--border);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
 
   /* UI Specific */
-  --color-sidebar-active-bg: #F0FAFB; /* faint aqua-tinted selection */
-  --color-table-header-bg: #F3F6FA;
-  --color-table-row-hover: #F0FAFB;
-  --color-logout-hover-bg: #FDECEC;
-  --color-logout-text: #B42318;
+  --color-sidebar-active-bg: var(--card-hover);
+  --color-table-header-bg: var(--table-header-bg);
+  --color-table-row-hover: var(--table-row-hover);
+  --color-logout-hover-bg: rgba(220,38,38,0.08);
+  --color-logout-text: var(--error);
 
   /* Shadow and Radii */
-  --shadow-elevation: 0px 1px 2px rgba(16,24,40,0.06);
+  --shadow-elevation: var(--shadow);
   --radius-card: 16px;
   --radius-input: 10px;
   --radius-button: 10px;
@@ -40,11 +39,11 @@
   --space-inner: 16px;
 
   /* Legacy shim tokens used by existing components */
-  --color-grey-border: var(--color-border);
-  --shadow-soft: var(--shadow-elevation);
+  --color-grey-border: var(--border);
+  --shadow-soft: var(--shadow);
 
   /* Additional semantic token used by buttons/badges */
-  --color-export-green: #16A34A;
+  --color-export-green: var(--primary-600);
 }
 
 /* Base */

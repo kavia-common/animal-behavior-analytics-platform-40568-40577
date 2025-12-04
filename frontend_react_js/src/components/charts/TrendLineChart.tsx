@@ -8,7 +8,7 @@ type Props = { data: any[]; xKey: string; yKey: string; color?: string };
  * Adds a min width to avoid over-squishing on narrow screens;
  * use inside a horizontally scrollable parent if needed.
  */
-export default function TrendLineChart({ data, xKey, yKey, color = 'var(--color-primary)' }: Props) {
+export default function TrendLineChart({ data, xKey, yKey, color = 'var(--primary)' }: Props) {
   return (
     <div className="w-full h-64">
       <div className="min-w-[640px] w-full h-full">

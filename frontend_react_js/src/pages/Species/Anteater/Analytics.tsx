@@ -17,7 +17,7 @@ export default function AnteaterAnalytics() {
     <div style={{ display: 'grid', gap: 12 }}>
       <div className="ui-card" style={{ padding: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent:'space-between' }}>
-          <div style={{ fontWeight: 700 }}>Smart Filters</div>
+          <div style={{ fontWeight: 700, color: 'var(--text)' }}>Smart Filters</div>
           <div style={{ display: 'flex', gap: 8 }}>
             <button className="ui-btn ui-btn-outline">Clear All</button>
             <button className="ui-btn ui-btn-primary">Export CSV</button>

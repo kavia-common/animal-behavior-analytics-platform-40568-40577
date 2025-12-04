@@ -5,7 +5,7 @@ type Props = {
   label: string;
   value: string | number;
   delta?: string;
-  tone?: 'success' | 'warning' | 'error' | 'default';
+  tone?: 'default' | 'secondary';
 };
 
 // PUBLIC_INTERFACE

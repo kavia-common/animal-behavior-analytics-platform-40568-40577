@@ -10,10 +10,10 @@ type EventRow = {
 
 const mockRows: EventRow[] = [
   { id: 'e1', timestamp: '2025-12-03T10:05:00Z', behavior: 'pacing', duration: 45 },
-  { id: 'e2', timestamp: '2025-12-03T10:12:00Z', behavior: 'foraging', duration: 120 },
+  { id: 'e2', timestamp: '2025-12-03T10:12:00Z', behavior: 'moving', duration: 120 },
   { id: 'e3', timestamp: '2025-12-03T10:30:00Z', behavior: 'recumbent', duration: 300 },
   { id: 'e4', timestamp: '2025-12-03T11:05:00Z', behavior: 'scratching', duration: 60 },
-  { id: 'e5', timestamp: '2025-12-03T11:30:00Z', behavior: 'self_directed', duration: 30 },
+  { id: 'e5', timestamp: '2025-12-03T11:30:00Z', behavior: 'non_recumbent', duration: 30 },
 ];
 
 const TimelinePage: React.FC = () => {

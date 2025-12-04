@@ -20,7 +20,7 @@ type Props = {
 // PUBLIC_INTERFACE
 export default function BehaviorCard({ item, onPreview }: Props) {
   /** Behavior card with preview button and metadata */
-  const legacyTone: 'success' | 'warning' = item.confidence > 80 ? 'success' : 'warning';
+  const legacyTone: 'secondary' | 'default' = item.confidence > 80 ? 'default' : 'secondary';
   return (
     <div className="card p-3 flex gap-3">
       <PlaceholderImage label="Video" className="w-28 h-20" />

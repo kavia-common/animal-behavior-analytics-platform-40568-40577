@@ -9,11 +9,11 @@ export function VideoLibraryTable() {
     { name: "Enclosure-12_2024-08-05_1400.mp4", dt: "2024-08-05 14:00", progress: 0, status: "Pending" },
   ];
   return (
-    <div className="card p-5">
-      <div className="font-semibold mb-3 text-[var(--color-text)]">Video Library</div>
+    <div className="ui-card p-5">
+      <div className="font-semibold mb-3" style={{ color: 'var(--text)' }}>Video Library</div>
       <table className="w-full text-sm">
-        <thead style={{ background: "var(--color-table-header-bg)" }}>
-          <tr style={{ color: "var(--color-text-muted)" }}>
+        <thead style={{ background: "var(--table-header-bg)" }}>
+          <tr style={{ color: "var(--muted)" }}>
             <th className="text-left py-2 px-2">Video Name</th>
             <th className="text-left py-2 px-2">Date & Time</th>
             <th className="text-left py-2 px-2">Upload Progress</th>
@@ -23,28 +23,28 @@ export function VideoLibraryTable() {
         </thead>
         <tbody>
           {rows.map((r) => (
-            <tr key={r.name} className="border-t hover:bg-[var(--color-table-row-hover)]" style={{ borderColor: "var(--color-border)" }}>
+            <tr key={r.name} className="border-t" style={{ borderColor: "var(--border)" }}>
               <td className="py-2 px-2">{r.name}</td>
               <td className="py-2 px-2">{r.dt}</td>
               <td className="py-2 px-2">
-                <div className="h-2 rounded" style={{ background: "#F1F5F9" }}>
-                  <div className="h-full rounded" style={{ width: `${r.progress}%`, background: "var(--color-primary)" }} />
+                <div className="h-2 rounded" style={{ background: "var(--table-row-hover)" }}>
+                  <div className="h-full rounded" style={{ width: `${r.progress}%`, background: "var(--primary)" }} />
                 </div>
               </td>
               <td className="py-2 px-2">
                 {r.status === "Completed" ? (
-                  <Badge tone="completed">Completed</Badge>
+                  <Badge>Completed</Badge>
                 ) : r.status === "Processing" ? (
-                  <Badge tone="processing">Processing</Badge>
+                  <Badge>Processing</Badge>
                 ) : (
-                  <Badge tone="pending">Pending</Badge>
+                  <Badge tone="secondary">Pending</Badge>
                 )}
               </td>
               <td className="py-2 px-2">
                 <div className="flex gap-2">
-                  <button className="px-2 py-1 rounded text-white" style={{ background: "var(--color-primary)" }} title="View">👁</button>
-                  <button className="px-2 py-1 rounded text-white" style={{ background: "#16A34A" }} title="Download">⬇</button>
-                  <button className="px-2 py-1 rounded text-white" style={{ background: "#E8504B" }} title="Delete">🗑</button>
+                  <button className="px-2 py-1 rounded text-white" style={{ background: "var(--primary)" }} title="View">👁</button>
+                  <button className="px-2 py-1 rounded text-white" style={{ background: "var(--primary-600)" }} title="Download">⬇</button>
+                  <button className="px-2 py-1 rounded text-white" style={{ background: "var(--error)" }} title="Delete">🗑</button>
                 </div>
               </td>
             </tr>
@@ -79,25 +79,25 @@ export function BehaviorEventsTable({ items }: { items: any[] }) {
         </select>
       </div>
       <table className="min-w-full text-sm">
-        <thead className="bg-tableHeaderBg">
-          <tr className="border-b border-neutralBorder">
-            <th className="text-left p-2 text-secondaryText">Type</th>
-            <th className="text-left p-2 text-secondaryText">Start</th>
-            <th className="text-left p-2 text-secondaryText">End</th>
-            <th className="text-left p-2 text-secondaryText">Duration (min)</th>
-            <th className="text-left p-2 text-secondaryText">Confidence</th>
-            <th className="text-left p-2 text-secondaryText">Camera</th>
+        <thead style={{ background: 'var(--table-header-bg)' }}>
+          <tr style={{ borderBottom: '1px solid var(--border)' }}>
+            <th className="text-left p-2" style={{ color: 'var(--muted)' }}>Type</th>
+            <th className="text-left p-2" style={{ color: 'var(--muted)' }}>Start</th>
+            <th className="text-left p-2" style={{ color: 'var(--muted)' }}>End</th>
+            <th className="text-left p-2" style={{ color: 'var(--muted)' }}>Duration (min)</th>
+            <th className="text-left p-2" style={{ color: 'var(--muted)' }}>Confidence</th>
+            <th className="text-left p-2" style={{ color: 'var(--muted)' }}>Camera</th>
           </tr>
         </thead>
         <tbody>
           {filtered.map((b: any) => (
-            <tr key={b.id} className="border-b border-neutralBorder hover:bg-tableRowHover">
-              <td className="p-2 text-secondaryText">{b.type}</td>
-              <td className="p-2 text-secondaryText">{b.start}</td>
-              <td className="p-2 text-secondaryText">{b.end}</td>
-              <td className="p-2 text-secondaryText">{b.durationMin}</td>
-              <td className="p-2 text-secondaryText">{b.confidence}%</td>
-              <td className="p-2 text-secondaryText">{b.camera}</td>
+            <tr key={b.id} style={{ borderBottom: '1px solid var(--border)' }} className="hover:bg-[var(--table-row-hover)]">
+              <td className="p-2" style={{ color: 'var(--text)' }}>{b.type}</td>
+              <td className="p-2" style={{ color: 'var(--text)' }}>{b.start}</td>
+              <td className="p-2" style={{ color: 'var(--text)' }}>{b.end}</td>
+              <td className="p-2" style={{ color: 'var(--text)' }}>{b.durationMin}</td>
+              <td className="p-2" style={{ color: 'var(--text)' }}>{b.confidence}%</td>
+              <td className="p-2" style={{ color: 'var(--text)' }}>{b.camera}</td>
             </tr>
           ))}
         </tbody>

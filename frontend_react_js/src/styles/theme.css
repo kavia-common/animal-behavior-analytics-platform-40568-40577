@@ -1,21 +1,21 @@
 :root {
-  /* Core palette per spec */
-  --primary:#1EA85B;
-  --primary-600:#177148;
-  --secondary:#F59E0B;
-  --error:#DC2626;
-  --bg:#F3F4F6;
-  --surface:#FFFFFF;
-  --text:#111827;
-  --muted:#6B7280;
-  --border:#E5E7EB;
+  /* Core palette per spec - EXACT values */
+  --primary: #1EA85B;
+  --primary-600: #177148;
+  --secondary: #F59E0B;
+  --error: #DC2626;
+  --bg: #F3F4F6;
+  --surface: #FFFFFF;
+  --text: #111827;
+  --muted: #6B7280;
+  --border: #E5E7EB;
 
   /* Effects */
-  --shadow:0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1);
-  --card-hover:rgba(30,168,91,0.08);
-  --table-header-bg:#F9FAFB;
-  --table-row-hover:#F3F4F6;
-  --gradient:linear-gradient(135deg, #1EA85B 0%, #34D399 100%);
+  --shadow: 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1);
+  --card-hover: rgba(30,138,91,0.08);
+  --table-header-bg: #F9FAFB;
+  --table-row-hover: #F3F4F6;
+  --gradient: linear-gradient(135deg, #1EA85B 0%, #34D399 100%);
 }
 
 html, body, #root { height: 100%; }
